@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,29 @@ public class GameShape extends GameObject {
   }
 
   @Override
-  public void update() {
+  public void update(Game game) {
+  }
+
+  @Override
+  public void translate(double dx, double dy) {
+    transform.translate(dx, dy);
+  }
+
+  @Override
+  public void rotate(double theta) {
+    transform.rotate(theta);
+  }
+
+  @Override
+  public boolean intersects(Shape object) {
+    var area = new Area(object);
+    area.intersect(new Area(getRelativeShape()));
+    return !area.isEmpty();
+  }
+
+  @Override
+  public Shape getRelativeShape() {
+    return transform.createTransformedShape(shape);
   }
 
 }

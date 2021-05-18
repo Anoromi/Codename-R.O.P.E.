@@ -1,9 +1,9 @@
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Shape;
 
 public abstract class GameObject {
   private int layer;
-  
 
   protected GameObject(int layer) {
     this.layer = layer;
@@ -13,7 +13,15 @@ public abstract class GameObject {
 
   public abstract boolean contains(Point p);
 
-  public abstract void update();
+  public abstract void update(Game game);
+
+  public abstract void translate(double dx, double dy);
+
+  public abstract void rotate(double theta);
+
+  public abstract boolean intersects(Shape object);
+
+  public abstract Shape getRelativeShape();
 
   public int getLayer() {
     return layer;

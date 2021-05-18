@@ -1,8 +1,6 @@
 import static java.lang.System.out;
 
-import java.awt.Canvas;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
@@ -23,7 +21,7 @@ public class Game extends JPanel implements ActionListener {
     t = new Timer((int) DELAY, this);
     DRAWABLES = new ArrayList<>();
     CALL = new ArrayList<>();
-    //DRAWABLES.add(GameSprite.createFrom("icons\\Reload.png", 1))
+    // DRAWABLES.add(GameSprite.createFrom("icons\\Reload.png", 1))
   }
 
   public void start() {
@@ -80,12 +78,26 @@ public class Game extends JPanel implements ActionListener {
 
   private void updateAll() {
     for (GameObject gameObject : DRAWABLES) {
-      gameObject.update();
+      gameObject.update(this);
     }
   }
 
-  public void addCall(Runnable r) {
-    CALL.add(r);
+  public List<GameObject> getElementsAt(Point p) {
+    ArrayList<GameObject> touchedObjects = new ArrayList<>();
+    for (GameObject object : DRAWABLES) {
+      if (object.contains(p))
+        touchedObjects.add(object);
+    }
+    return touchedObjects;
+  }
+
+  public boolean checkForCollision(GameObject object) {
+    for (GameObject collider : DRAWABLES) {
+      if (object.intersects(collider.getRelativeShape())) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }
