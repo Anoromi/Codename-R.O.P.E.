@@ -1,18 +1,20 @@
+import static java.lang.System.out;
+
 import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class Game extends Canvas implements ActionListener {
+public class Game extends JPanel implements ActionListener {
   private Timer t;
 
-  private static final double DELAY = 1000 / 60;
+  private static final double DELAY = 1000 / 30;
   public final List<GameObject> DRAWABLES;
   public final List<Runnable> CALL;
 
@@ -21,14 +23,7 @@ public class Game extends Canvas implements ActionListener {
     t = new Timer((int) DELAY, this);
     DRAWABLES = new ArrayList<>();
     CALL = new ArrayList<>();
-    DRAWABLES.add(new GameShape(new Ellipse2D.Double(10, 10, 50, 50), 2) {
-
-      @Override
-      public void update() {
-        transform.translate(6, 6);
-      }
-
-    });
+    //DRAWABLES.add(GameSprite.createFrom("icons\\Reload.png", 1))
   }
 
   public void start() {
