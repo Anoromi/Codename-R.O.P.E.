@@ -30,5 +30,15 @@ public abstract class RigidGameObj extends GameObject implements RigidBody {
     rigidBody.updateForces();
   }
 
+  @Override
+  public Vector2 getAcceleration() {
+    return rigidBody.getAcceleration();
+  }
+
+  @Override
+  public void setAcceleration(Vector2 acceleration) {
+    rigidBody.setAcceleration(acceleration);
+  }
+
   public abstract AffineTransform getTransform();
 }

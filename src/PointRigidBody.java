@@ -9,17 +9,30 @@ public abstract class PointRigidBody implements RigidBody {
   protected PointRigidBody(double loss) {
     super();
     acceleration = new Vector2();
+    this.loss = loss;
   }
 
   @Override
   public void updateForces() {
     getTransform().translate(acceleration.getX(), acceleration.getY());
-    acceleration.setLocation(acceleration.getX() / loss, acceleration.getY() / loss);
+    acceleration.divideBy(loss);
   }
 
   @Override
   public void impulse(Vector2 vector) {
-    acceleration.setLocation(acceleration.getX() + vector.getX(), acceleration.getY() + vector.getY());
+    acceleration.add(vector);
+  }
+
+
+
+  @Override
+  public Vector2 getAcceleration() {
+    return acceleration;
+  }
+
+  @Override
+  public void setAcceleration(Vector2 acceleration) {
+    this.acceleration = acceleration;
   }
 
   public abstract AffineTransform getTransform();

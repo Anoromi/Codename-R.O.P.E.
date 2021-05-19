@@ -1,13 +1,8 @@
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-import Helpers.ImageHelper;
+import java.awt.geom.Point2D;
 
 public class GameShape extends GameObject {
 
@@ -26,7 +21,7 @@ public class GameShape extends GameObject {
   }
 
   @Override
-  public boolean contains(Point p) {
+  public boolean contains(Point2D p) {
     return shape.contains(p.getX(), p.getY());
   }
 
@@ -39,8 +34,26 @@ public class GameShape extends GameObject {
   }
 
   @Override
+  public GameObject addTags(ObjectTag... tags) {
+    super.addTags(tags);
+    return this;
+  }
+
+  @Override
+  public GameShape setPosition(Vector2 vector) {
+    transform.translate(vector.x, vector.y);
+    return this;
+  }
+
+  @Override
   public void translate(double dx, double dy) {
     transform.translate(dx, dy);
+  }
+
+  @Override
+  public void translate(Vector2 vector) {
+    translate(vector.x, vector.y);
+
   }
 
   @Override

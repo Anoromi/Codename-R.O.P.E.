@@ -3,8 +3,10 @@ import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
@@ -14,7 +16,6 @@ public class GameSprite extends GameObject {
   protected Shape shape;
   protected BufferedImage image;
   protected AffineTransform transform;
-  protected AffineTransform imageTransform;
 
   public static GameSprite createFrom(String imagePath, int layer) {
     return createFrom(new File(imagePath), layer);
@@ -37,12 +38,11 @@ public class GameSprite extends GameObject {
 
   @Override
   public void draw(Graphics2D graphics) {
-    // graphics.drawImage(image, imageTransform, null);
-    graphics.fill(transform.createTransformedShape(shape));
+    graphics.drawImage(image, transform, null);
   }
 
   @Override
-  public boolean contains(Point p) {
+  public boolean contains(Point2D p) {
     return shape.contains(p.getX(), p.getY());
   }
 
@@ -55,9 +55,25 @@ public class GameSprite extends GameObject {
   }
 
   @Override
+  public GameObject addTags(ObjectTag... tags) {
+    super.addTags(tags);
+    return this;
+  }
+
+  @Override
+  public GameSprite setPosition(Vector2 vector) {
+    transform.translate(vector.x, vector.y);
+    return this;
+  }
+
+  @Override
   public void translate(double dx, double dy) {
     transform.translate(dx, dy);
+  }
 
+  @Override
+  public void translate(Vector2 vector) {
+    transform.translate(vector.x, vector.y);
   }
 
   @Override
@@ -98,13 +114,30 @@ public class GameSprite extends GameObject {
     }
 
     @Override
-    public boolean contains(Point p) {
+    public boolean contains(Point2D p) {
       return GameSprite.this.contains(p);
+    }
+
+    @Override
+    public GameObject addTags(ObjectTag... tags) {
+      super.addTags(tags);
+      return this;
+    }
+
+    @Override
+    public RigidSprite setPosition(Vector2 vector) {
+      transform.translate(vector.x, vector.y);
+      return this;
     }
 
     @Override
     public void translate(double dx, double dy) {
       GameSprite.this.translate(dx, dy);
+    }
+
+    @Override
+    public void translate(Vector2 vector) {
+      GameSprite.this.translate(vector);
     }
 
     @Override
@@ -120,6 +153,10 @@ public class GameSprite extends GameObject {
     @Override
     public Shape getRelativeShape() {
       return GameSprite.this.getRelativeShape();
+    }
+
+    public GameSprite getSprite() {
+      return GameSprite.this;
     }
 
   }

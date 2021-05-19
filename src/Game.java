@@ -2,8 +2,6 @@ import static java.lang.System.out;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,15 +11,18 @@ import javax.swing.Timer;
 public class Game extends JPanel implements ActionListener {
   private Timer t;
 
-  private static final double DELAY = 10000;
+  private static final double DELAY = 1000 / 60;
   public final List<GameObject> DRAWABLES;
   public final List<Runnable> CALL;
+  public final Camera camera;
 
   public Game() {
     setDoubleBuffered(true);
     t = new Timer((int) DELAY, this);
     DRAWABLES = new ArrayList<>();
     CALL = new ArrayList<>();
+    camera = new Camera(Vector2.v(0, 0));
+    camera.setTargetScale(0.2);
     DRAWABLES.add(new GameBall("icons\\Ball.png", 1) {
 
       @Override
@@ -29,9 +30,27 @@ public class Game extends JPanel implements ActionListener {
         super.draw(graphics);
       }
     });
+    DRAWABLES
+        .add(GameSprite.createFrom("icons/Rect.png", 1).addTags(ObjectTag.Touchable).setPosition(new Vector2(500, 0)));
     addMouseListener(new MouseAdapter() {
-      public void mouseClicked(MouseEvent e) {
-        out.println(DRAWABLES.get(0).contains(e.getPoint()));
+      Vector2 pressPoint;
+
+      @Override
+      public void mousePressed(MouseEvent e) {
+        pressPoint = Vector2.v(e.getPoint());
+        out.println("Pr " + e.getPoint());
+      }
+
+      @Override
+      public void mouseReleased(MouseEvent e) {
+        CALL.add(() -> {
+          out.println("Rel " + e.getPoint());
+          Vector2 change = Vector2.v(e.getPoint()).subtract(pressPoint);
+          if (change.magnitude() != 0) {
+            // camera.setTarget(change.normalized().multiplyBy(10).add(camera.getTarget()));
+            ((GameBall) DRAWABLES.get(0)).impulse(change.normalized().multipliedBy(10));
+          }
+        });
       }
     });
   }
@@ -44,6 +63,7 @@ public class Game extends JPanel implements ActionListener {
   public void paint(Graphics g) {
     super.paint(g);
     Graphics2D graphics = (Graphics2D) g;
+    camera.adjustCamera(graphics);
     int min = 0;
     int max = 0;
     for (int i = 0; i < DRAWABLES.size(); i++) {
@@ -95,10 +115,10 @@ public class Game extends JPanel implements ActionListener {
     }
   }
 
-  public List<GameObject> getElementsAt(Point p) {
+  public List<GameObject> getElementsAt(Vector2 v) {
     ArrayList<GameObject> touchedObjects = new ArrayList<>();
     for (GameObject object : DRAWABLES) {
-      if (object.contains(p))
+      if (object.hasTag(ObjectTag.Touchable) && object.getRelativeShape().contains(v))
         touchedObjects.add(object);
     }
     return touchedObjects;

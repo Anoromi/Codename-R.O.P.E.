@@ -1,6 +1,7 @@
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
+import java.awt.geom.Point2D;
 import java.util.*;
 
 public abstract class GameObject {
@@ -12,9 +13,10 @@ public abstract class GameObject {
     gameTags = new HashSet<>();
   }
 
-  public void addTags(ObjectTag... tags) {
+  public GameObject addTags(ObjectTag... tags) {
     Collections.addAll(gameTags, tags);
-  }
+    return this;
+    }
 
   public void removeTags(ObjectTag... tags) {
     for (ObjectTag tag : tags) {
@@ -32,11 +34,15 @@ public abstract class GameObject {
 
   public abstract void draw(Graphics2D graphics);
 
-  public abstract boolean contains(Point p);
+  public abstract boolean contains(Point2D p);
 
   public abstract void update(Game game);
 
   public abstract void translate(double dx, double dy);
+
+  public abstract GameObject setPosition(Vector2 vector);
+
+  public abstract void translate(Vector2 vector);
 
   public abstract void rotate(double theta);
 
