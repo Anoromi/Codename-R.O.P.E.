@@ -29,6 +29,11 @@ public class Game extends JPanel implements ActionListener {
         super.draw(graphics);
       }
     });
+    addMouseListener(new MouseAdapter() {
+      public void mouseClicked(MouseEvent e) {
+        out.println(DRAWABLES.get(0).contains(e.getPoint()));
+      }
+    });
   }
 
   public void start() {
