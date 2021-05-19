@@ -2,6 +2,7 @@ import static java.lang.System.out;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,16 +13,22 @@ import javax.swing.Timer;
 public class Game extends JPanel implements ActionListener {
   private Timer t;
 
-  private static final double DELAY = 1000 / 30;
+  private static final double DELAY = 10000;
   public final List<GameObject> DRAWABLES;
   public final List<Runnable> CALL;
 
   public Game() {
-
+    setDoubleBuffered(true);
     t = new Timer((int) DELAY, this);
     DRAWABLES = new ArrayList<>();
     CALL = new ArrayList<>();
-    // DRAWABLES.add(GameSprite.createFrom("icons\\Reload.png", 1))
+    DRAWABLES.add(new GameBall("icons\\Ball.png", 1) {
+
+      @Override
+      public void draw(Graphics2D graphics) {
+        super.draw(graphics);
+      }
+    });
   }
 
   public void start() {
@@ -78,6 +85,7 @@ public class Game extends JPanel implements ActionListener {
 
   private void updateAll() {
     for (GameObject gameObject : DRAWABLES) {
+
       gameObject.update(this);
     }
   }

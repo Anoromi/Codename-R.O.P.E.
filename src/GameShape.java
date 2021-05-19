@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import Helper.GeometryOp;
+import Helpers.ImageHelper;
 
 public class GameShape extends GameObject {
 
