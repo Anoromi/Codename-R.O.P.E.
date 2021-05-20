@@ -18,9 +18,8 @@ public class Camera {
   public void adjustCamera(Graphics2D graphics) {
     Vector2 posChange = target.subtracted(Vector2.v(pos.getTranslateX(), pos.getTranslateY())).dividedBy(10);
     pos.translate(posChange.x, posChange.y);
-    double scaleChange = (targetScale - pos.getScaleX()) / 5;
-    graphics.scale(scaleChange, scaleChange);
-
+    double scaleChange = (targetScale - pos.getScaleX()) / 10;
+    pos.scale(scaleChange + pos.getScaleX(), scaleChange + pos.getScaleY());
     graphics.setTransform(pos);
   }
 

@@ -1,7 +1,7 @@
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 
-public abstract class PointRigidBody implements RigidBody {
+public abstract class PointRigidBody extends RigidBody {
 
   private Vector2 acceleration;
   private double loss;
@@ -13,7 +13,7 @@ public abstract class PointRigidBody implements RigidBody {
   }
 
   @Override
-  public void updateForces() {
+  public void updateForces(Game game) {
     getTransform().translate(acceleration.getX(), acceleration.getY());
     acceleration.divideBy(loss);
   }

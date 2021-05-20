@@ -22,7 +22,7 @@ public class Game extends JPanel implements ActionListener {
     DRAWABLES = new ArrayList<>();
     CALL = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
-    camera.setTargetScale(0.2);
+    // camera.setTargetScale(0.9);
     DRAWABLES.add(new GameBall("icons\\Ball.png", 1) {
 
       @Override
@@ -30,8 +30,11 @@ public class Game extends JPanel implements ActionListener {
         super.draw(graphics);
       }
     });
-    DRAWABLES
-        .add(GameSprite.createFrom("icons/Rect.png", 1).addTags(ObjectTag.Touchable).setPosition(new Vector2(500, 0)));
+    DRAWABLES.add(new GameSprite("icons/Rect.png", 1) {
+      public void update(Game game) {
+        rotate(0.01);
+      }
+    }.addTags(ObjectTag.Touchable).setPosition(new Vector2(500, 0)));
     addMouseListener(new MouseAdapter() {
       Vector2 pressPoint;
 
@@ -48,7 +51,8 @@ public class Game extends JPanel implements ActionListener {
           Vector2 change = Vector2.v(e.getPoint()).subtract(pressPoint);
           if (change.magnitude() != 0) {
             // camera.setTarget(change.normalized().multiplyBy(10).add(camera.getTarget()));
-            ((GameBall) DRAWABLES.get(0)).impulse(change.normalized().multipliedBy(10));
+            ((PointRigidBody) ((GameBall) DRAWABLES.get(0)).getProperty(ObjectProperty.RigidBody))
+                .impulse(change.normalized().multipliedBy(10));
           }
         });
       }
@@ -118,7 +122,7 @@ public class Game extends JPanel implements ActionListener {
   public List<GameObject> getElementsAt(Vector2 v) {
     ArrayList<GameObject> touchedObjects = new ArrayList<>();
     for (GameObject object : DRAWABLES) {
-      if (object.hasTag(ObjectTag.Touchable) && object.getRelativeShape().contains(v))
+      if (object.getRelativeShape().contains(v))
         touchedObjects.add(object);
     }
     return touchedObjects;
