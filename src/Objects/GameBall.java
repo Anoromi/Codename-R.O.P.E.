@@ -1,11 +1,16 @@
 package Objects;
 
+import static java.lang.System.out;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 import Base.Game;
-import Helpers.ImageHelper;
 import Helpers.Vector2;
+import Objects.Hook.HookComponent;
 import Properties.ObjectProperty;
 import Properties.PointRigidBody;
 import Properties.RigidBody;
@@ -13,7 +18,7 @@ import Properties.RigidBody;
 public class GameBall extends GameSprite {
   protected RigidBody rigidBody;
 
-  public GameBall(String path, int layer) {
+  public GameBall(Game game, String path, int layer) {
     super(path, layer);
 
     rigidBody = new PointRigidBody(GameSettings.LOSS) {
@@ -27,6 +32,39 @@ public class GameBall extends GameSprite {
 
     addTags(ObjectTag.Touchable);
     addTags(ObjectTag.GameBall);
+
+    game.addMouseListener(new MouseAdapter() {
+      Vector2 pressPoint;
+
+      @Override
+      public void mousePressed(MouseEvent e) {
+        pressPoint = Vector2.v(e.getPoint());
+        out.println("Pr " + e.getPoint());
+
+      }
+
+      @Override
+      public void mouseReleased(MouseEvent e) {
+        game.CALL.add(() -> {
+          out.println("Rel " + e.getPoint());
+          Vector2 change = Vector2.v(e.getPoint()).subtract(pressPoint);
+          if (change.magnitude() != 0) {
+            // camera.setTarget(change.normalized().multiplyBy(10).add(camera.getTarget()));
+            /*
+             * ((PointRigidBody) ((GameBall)
+             * DRAWABLES.get(0)).getProperty(ObjectProperty.RigidBody))
+             * .impulse(change.normalized().multipliedBy(10));
+             */
+            change = change.normalized();
+            Rectangle2D center = getMesh().getShape().getBounds2D();
+            Vector2 pos = change.multipliedBy(image.getWidth()/2)
+                .added(new Vector2(center.getCenterX(), center.getCenterY()));
+            getTransform().getFullAffine().transform(pos, pos);
+            game.DRAWABLES.add(new HookComponent(pos, change));
+          }
+        });
+      }
+    });
   }
 
   @Override

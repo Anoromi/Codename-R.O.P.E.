@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import Base.Game;
+
 public class GameCompound extends GameObject implements Compound {
   protected List<GameObject> gameObjects;
 
@@ -16,6 +18,14 @@ public class GameCompound extends GameObject implements Compound {
 
   public GameCompound() {
     this(new GameObject[0]);
+  }
+
+  @Override
+  public void update(Game game) {
+    super.update(game);
+    for (GameObject gameObject : gameObjects) {
+      gameObject.update(game);
+    }
   }
 
   @Override

@@ -33,7 +33,7 @@ public class Game extends JPanel implements ActionListener {
     camera = new Camera(Vector2.v(0, 0));
     // camera.setTargetScale(0.9);
 
-    DRAWABLES.add(new GameBall("icons\\Ball.png", 1) {
+    DRAWABLES.add(new GameBall(this, "icons\\Ball.png", 1) {
       {
         getTransform().setPosition(500, 500);
       }
@@ -55,39 +55,6 @@ public class Game extends JPanel implements ActionListener {
         // transform.rotate(0.01);
       }
     }.addTags(ObjectTag.Touchable));
-
-    addMouseListener(new MouseAdapter() {
-      Vector2 pressPoint;
-
-      @Override
-      public void mousePressed(MouseEvent e) {
-        pressPoint = Vector2.v(e.getPoint());
-        out.println(DRAWABLES.get(0).contains(pressPoint));
-        out.println("Pr " + e.getPoint());
-
-      }
-
-      @Override
-      public void mouseReleased(MouseEvent e) {
-        CALL.add(() -> {
-          out.println("Rel " + e.getPoint());
-          Vector2 change = Vector2.v(e.getPoint()).subtract(pressPoint);
-          if (change.magnitude() != 0) {
-            // camera.setTarget(change.normalized().multiplyBy(10).add(camera.getTarget()));
-            /*
-             * ((PointRigidBody) ((GameBall)
-             * DRAWABLES.get(0)).getProperty(ObjectProperty.RigidBody))
-             * .impulse(change.normalized().multipliedBy(10));
-             */
-            GameBall g = (GameBall) DRAWABLES.get(0);
-            Vector2 pos = new Vector2();
-            g.getTransform().getFullAffine().transform(pos, pos);
-            DRAWABLES.add(new HookComponent(pos, change));
-
-          }
-        });
-      }
-    });
   }
 
   public void start() {
@@ -98,7 +65,8 @@ public class Game extends JPanel implements ActionListener {
   public void paint(Graphics g) {
     super.paint(g);
     Graphics2D graphics = (Graphics2D) g;
-    graphics.setRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
+    graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
+    graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
     camera.adjustCamera(graphics);
     int min = 0;
     int max = 0;
@@ -181,7 +149,7 @@ public class Game extends JPanel implements ActionListener {
     return false;
   }
 
-  public List<GameObject> getIntersected(Mesh mesh) {
+  public List<GameObject> getIntersectedObjects(Mesh mesh) {
     return processIntersectionsFor(DRAWABLES, mesh);
   }
 

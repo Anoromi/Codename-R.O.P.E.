@@ -1,4 +1,4 @@
 package Objects;
 public enum ObjectTag {
-  Touchable, GameBall, Compound
+  Touchable, GameBall, Compound, Danger
 }
