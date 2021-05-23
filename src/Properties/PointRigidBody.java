@@ -1,5 +1,9 @@
+package Properties;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+
+import Base.Game;
+import Helpers.Vector2;
 
 public abstract class PointRigidBody extends RigidBody {
 

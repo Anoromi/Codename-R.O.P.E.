@@ -1,14 +1,32 @@
+package Properties;
+
 import java.awt.geom.AffineTransform;
+
+import Helpers.Vector2;
 
 public class Transform extends Property {
   protected AffineTransform t;
+  protected Transform relative;
 
   public Transform() {
     t = new AffineTransform();
   }
 
-  public AffineTransform getTransform() {
+  public Transform(Transform relative) {
+    t = new AffineTransform();
+    this.relative = relative;
+  }
+
+  public AffineTransform getAffine() {
     return t;
+  }
+
+  public AffineTransform getFullAffine() {
+    if (relative == null)
+      return getAffine();
+    AffineTransform transformed = new AffineTransform(relative.getFullAffine());
+    transformed.concatenate(getAffine());
+    return transformed;
   }
 
   public void setTransform(AffineTransform transform) {
@@ -38,6 +56,14 @@ public class Transform extends Property {
   public Transform rotate(double theta) {
     t.rotate(theta);
     return this;
+  }
+
+  public Transform getRelative() {
+    return relative;
+  }
+
+  public void setRelative(Transform relative) {
+    this.relative = relative;
   }
 
 }

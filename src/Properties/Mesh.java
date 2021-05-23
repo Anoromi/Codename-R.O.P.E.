@@ -1,3 +1,4 @@
+package Properties;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -10,6 +11,7 @@ public abstract class Mesh extends Property {
     this.shape = shape;
   }
 
+
   public Shape getRelativeShape() {
     return getTransform().createTransformedShape(shape);
   }
@@ -19,7 +21,7 @@ public abstract class Mesh extends Property {
   }
 
   public boolean contains(Point2D p) {
-    return shape.contains(p.getX(), p.getY());
+    return getRelativeShape().contains(p.getX(), p.getY());
   }
 
   public boolean intersects(Mesh s) {

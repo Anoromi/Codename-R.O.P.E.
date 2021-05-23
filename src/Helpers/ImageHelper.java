@@ -18,7 +18,7 @@ public class ImageHelper {
       for (int j = 0; j < height; j++) {
         if (isOutline(image, i, j)) {
           int h = 1;
-          for (; h < height && image.getRGB(i, j + h) >> 24 != 0x00; h++) {
+          for (; j + h < height && image.getRGB(i, j + h) >> 24 != 0x00; h++) {
           }
           Rectangle r = new Rectangle(i, j, 1, h);
           area.add(new Area(r));

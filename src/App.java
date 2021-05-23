@@ -2,6 +2,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
+import Base.Game;
+
 public class App {
     public static void main(String[] args) throws Exception {
         JFrame f = new JFrame();

@@ -1,12 +1,16 @@
+package Objects;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.*;
 
+import Base.Game;
 import Helpers.Pair;
+import Properties.ObjectProperty;
+import Properties.Property;
 
-public abstract class GameObject implements Drawable, Updatable {
+public abstract class GameObject {
   private final Collection<ObjectTag> gameTags;
   private final Map<ObjectProperty, Property> gameProperty;
 
@@ -41,7 +45,6 @@ public abstract class GameObject implements Drawable, Updatable {
     return false;
   }
 
-
   public GameObject addProperty(ObjectProperty propertyName, Property property) {
     gameProperty.put(propertyName, property);
     return this;
@@ -54,6 +57,8 @@ public abstract class GameObject implements Drawable, Updatable {
   public void update(Game game) {
     gameProperty.forEach((x, y) -> y.update(game));
   }
+
+  public abstract void draw(Graphics2D graphics, int layer);
 
   public abstract boolean contains(Point2D p);
 

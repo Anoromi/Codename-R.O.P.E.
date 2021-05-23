@@ -1,16 +1,14 @@
+package Objects;
+
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class GameCompound extends GameObject {
-
-  public final List<GameObject> gameObjects;
+public class GameCompound extends GameObject implements Compound {
+  protected List<GameObject> gameObjects;
 
   public GameCompound(GameObject... gameObjects) {
     this.gameObjects = new ArrayList<>(Arrays.asList(gameObjects));
@@ -48,5 +46,10 @@ public class GameCompound extends GameObject {
   @Override
   public int[] getLayers() {
     return gameObjects.stream().flatMapToInt(x -> Arrays.stream(x.getLayers())).toArray();
+  }
+
+  @Override
+  public List<GameObject> getGameObjects() {
+    return gameObjects;
   }
 }

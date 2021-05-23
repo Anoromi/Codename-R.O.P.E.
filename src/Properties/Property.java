@@ -1,4 +1,7 @@
+package Properties;
 import java.util.function.Consumer;
+
+import Base.Game;
 
 public class Property {
   protected Consumer<Game> update = g -> {

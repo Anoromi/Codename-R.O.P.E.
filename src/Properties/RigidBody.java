@@ -1,3 +1,7 @@
+package Properties;
+import Base.Game;
+import Helpers.Vector2;
+
 public abstract class RigidBody extends Property {
 
   protected RigidBody() {

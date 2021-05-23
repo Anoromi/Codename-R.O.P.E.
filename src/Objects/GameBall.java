@@ -1,7 +1,14 @@
+package Objects;
+
 import java.awt.geom.AffineTransform;
 import java.util.List;
 
+import Base.Game;
 import Helpers.ImageHelper;
+import Helpers.Vector2;
+import Properties.ObjectProperty;
+import Properties.PointRigidBody;
+import Properties.RigidBody;
 
 public class GameBall extends GameSprite {
   protected RigidBody rigidBody;
@@ -12,13 +19,14 @@ public class GameBall extends GameSprite {
     rigidBody = new PointRigidBody(GameSettings.LOSS) {
       @Override
       public AffineTransform getTransform() {
-        return transform.getTransform();
+        return GameBall.this.getTransform().getFullAffine();
       }
 
     };
     addProperty(ObjectProperty.RigidBody, rigidBody);
 
     addTags(ObjectTag.Touchable);
+    addTags(ObjectTag.GameBall);
   }
 
   @Override
@@ -40,9 +48,9 @@ public class GameBall extends GameSprite {
       Vector2 collision = Vector2.v(ballRadius + distanceToRadius * Math.cos(theta * 3.14 / 180),
           ballRadius + distanceToRadius * Math.sin(theta * 3.14 / 180));
       Vector2 transformed = new Vector2();
-      transform.getTransform().transform(collision, transformed);
+      getTransform().getFullAffine().transform(collision, transformed);
       List<GameObject> collided = game.getElementsAt(transformed);
-      if (collided.stream().parallel().anyMatch(x -> x.hasTags(ObjectTag.Touchable))) {
+      if (collided.stream().parallel().anyMatch(x -> (x != this && x.hasTags(ObjectTag.Touchable)))) {
         pointSumX += collision.x;
         pointSumY += collision.y;
         counter++;
@@ -55,7 +63,7 @@ public class GameBall extends GameSprite {
 
   private void switchDirection(Vector2 collisionPoint, double ballRadius) {
     Vector2 realPos = new Vector2();
-    transform.getTransform().transform(new Vector2(0, 0), realPos);
+    getTransform().getFullAffine().transform(new Vector2(0, 0), realPos);
     Vector2 nCollVect = new Vector2(collisionPoint.x - ballRadius, collisionPoint.y - ballRadius).normalized();
     Vector2 nMoveDir = rigidBody.getAcceleration().normalized();
     double cosine = Math.abs(nCollVect.x * nMoveDir.x + nCollVect.y * nMoveDir.y);

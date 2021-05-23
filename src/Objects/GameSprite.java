@@ -1,16 +1,15 @@
+package Objects;
+
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import Helpers.ImageHelper;
+import Helpers.Vector2;
+import Properties.*;
 
 public class GameSprite extends SingleGameObject {
   protected BufferedImage image;
@@ -25,7 +24,20 @@ public class GameSprite extends SingleGameObject {
     mesh = new Mesh(ImageHelper.areaFromImage(image)) {
       @Override
       protected AffineTransform getTransform() {
-        return transform.getTransform();
+        return transform.getFullAffine();
+      }
+    };
+    addProperty(ObjectProperty.Mesh, mesh);
+  }
+  public GameSprite(BufferedImage image, Shape shape, int layer) {
+    super(layer);
+    this.image = image;
+    transform = new Transform();
+    addProperty(ObjectProperty.Transform, transform);
+    mesh = new Mesh(shape) {
+      @Override
+      protected AffineTransform getTransform() {
+        return transform.getFullAffine();
       }
     };
     addProperty(ObjectProperty.Mesh, mesh);
@@ -38,7 +50,7 @@ public class GameSprite extends SingleGameObject {
   @Override
   public void draw(Graphics2D graphics, int layer) {
     if (this.layer == layer)
-      graphics.drawImage(image, transform.getTransform(), null);
+      graphics.drawImage(image, transform.getFullAffine(), null);
   }
 
   @Override
@@ -52,28 +64,28 @@ public class GameSprite extends SingleGameObject {
   }
 
   public boolean contains(Point2D p) {
-    return mesh.contains(p);
+    return getMesh().contains(p);
   }
 
   public Shape getShape() {
-    return mesh.getShape();
+    return getMesh().getShape();
   }
 
   public GameSprite setPosition(Vector2 vector) {
-    transform.getTransform().translate(vector.x, vector.y);
+    getTransform().getAffine().translate(vector.x, vector.y);
     return this;
   }
 
   public void translate(double dx, double dy) {
-    transform.getTransform().translate(dx, dy);
+    getTransform().getAffine().translate(dx, dy);
   }
 
   public void translate(Vector2 vector) {
-    transform.getTransform().translate(vector.x, vector.y);
+    getTransform().getAffine().translate(vector.x, vector.y);
   }
 
   public void rotate(double theta) {
-    transform.getTransform().rotate(theta);
+    getTransform().getAffine().rotate(theta);
   }
 
   public boolean intersects(Shape object) {
@@ -82,12 +94,16 @@ public class GameSprite extends SingleGameObject {
     return !area.isEmpty();
   }
 
+  public Mesh getMesh() {
+    return mesh;
+  }
+
   public Transform getTransform() {
     return transform;
   }
 
   public Shape getRelativeShape() {
-    return mesh.getRelativeShape();
+    return getMesh().getRelativeShape();
   }
 
 }

@@ -1,3 +1,4 @@
+package Objects;
 public abstract class SingleGameObject extends GameObject {
   protected int layer;
 
