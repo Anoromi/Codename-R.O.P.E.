@@ -1,60 +1,52 @@
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GameCompound extends GameObject {
 
-  List<GameObject> gameObjects;
-  public GameCompound(int layer) {
-    super(layer);
+  public final List<GameObject> gameObjects;
+
+  public GameCompound(GameObject... gameObjects) {
+    this.gameObjects = new ArrayList<>(Arrays.asList(gameObjects));
+  }
+
+  public GameCompound() {
+    this(new GameObject[0]);
   }
 
   @Override
-  public void draw(Graphics2D graphics) {
-    // TODO Auto-generated method stub
-
+  public void draw(Graphics2D graphics, int layer) {
+    for (GameObject gameObject : gameObjects) {
+      gameObject.draw(graphics, layer);
+    }
   }
 
   @Override
   public boolean contains(Point2D p) {
-    // TODO Auto-generated method stub
+    for (GameObject gameObject : gameObjects) {
+      if (gameObject.contains(p))
+        return true;
+    }
     return false;
-  }
-
-  @Override
-  public void translate(double dx, double dy) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public GameObject setPosition(Vector2 vector) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public void translate(Vector2 vector) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void rotate(double theta) {
-    // TODO Auto-generated method stub
-
   }
 
   @Override
   public boolean intersects(Shape object) {
-    // TODO Auto-generated method stub
+    for (GameObject gameObject : gameObjects) {
+      if (gameObject.intersects(object))
+        return true;
+    }
     return false;
   }
 
   @Override
-  public Shape getRelativeShape() {
-    // TODO Auto-generated method stub
-    return null;
+  public int[] getLayers() {
+    return gameObjects.stream().flatMapToInt(x -> Arrays.stream(x.getLayers())).toArray();
   }
 }

@@ -6,13 +6,11 @@ import java.util.*;
 
 import Helpers.Pair;
 
-public abstract class GameObject {
-  private int layer;
+public abstract class GameObject implements Drawable, Updatable {
   private final Collection<ObjectTag> gameTags;
   private final Map<ObjectProperty, Property> gameProperty;
 
-  protected GameObject(int layer) {
-    this.layer = layer;
+  protected GameObject() {
     gameTags = new HashSet<>();
     gameProperty = new EnumMap<>(ObjectProperty.class);
 
@@ -43,6 +41,7 @@ public abstract class GameObject {
     return false;
   }
 
+
   public GameObject addProperty(ObjectProperty propertyName, Property property) {
     gameProperty.put(propertyName, property);
     return this;
@@ -52,34 +51,14 @@ public abstract class GameObject {
     return gameProperty.get(propertyName);
   }
 
-  public abstract void draw(Graphics2D graphics);
+  public void update(Game game) {
+    gameProperty.forEach((x, y) -> y.update(game));
+  }
 
   public abstract boolean contains(Point2D p);
 
-  public void update(Game game) {
-    gameProperty.forEach((x, y) -> {
-      y.update(game);
-    });
-  }
-
-  public abstract void translate(double dx, double dy);
-
-  public abstract GameObject setPosition(Vector2 vector);
-
-  public abstract void translate(Vector2 vector);
-
-  public abstract void rotate(double theta);
-
   public abstract boolean intersects(Shape object);
 
-  public abstract Shape getRelativeShape();
-
-  public int getLayer() {
-    return layer;
-  }
-
-  public void setLayer(int layer) {
-    this.layer = layer;
-  }
+  public abstract int[] getLayers();
 
 }

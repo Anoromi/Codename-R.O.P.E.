@@ -1,3 +1,3 @@
 public enum ObjectTag {
-  Touchable, Untouchable
+  Touchable
 }

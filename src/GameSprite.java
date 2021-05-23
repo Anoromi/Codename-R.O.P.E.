@@ -12,17 +12,23 @@ import javax.imageio.ImageIO;
 
 import Helpers.ImageHelper;
 
-public class GameSprite extends GameObject {
-  protected Shape shape;
+public class GameSprite extends SingleGameObject {
   protected BufferedImage image;
   protected Transform transform;
+  protected Mesh mesh;
 
   public GameSprite(BufferedImage image, int layer) {
     super(layer);
     this.image = image;
-    this.shape = ImageHelper.areaFromImage(image);
     transform = new Transform();
     addProperty(ObjectProperty.Transform, transform);
+    mesh = new Mesh(ImageHelper.areaFromImage(image)) {
+      @Override
+      protected AffineTransform getTransform() {
+        return transform.getTransform();
+      }
+    };
+    addProperty(ObjectProperty.Mesh, mesh);
   }
 
   public GameSprite(String image, int layer) {
@@ -30,61 +36,58 @@ public class GameSprite extends GameObject {
   }
 
   @Override
-  public void draw(Graphics2D graphics) {
-    graphics.drawImage(image, transform.getTransform(), null);
+  public void draw(Graphics2D graphics, int layer) {
+    if (this.layer == layer)
+      graphics.drawImage(image, transform.getTransform(), null);
   }
 
   @Override
+  public GameSprite addTags(ObjectTag... tags) {
+    return (GameSprite) super.addTags(tags);
+  }
+
+  @Override
+  public GameSprite addProperty(ObjectProperty propertyName, Property property) {
+    return (GameSprite) super.addProperty(propertyName, property);
+  }
+
   public boolean contains(Point2D p) {
-    return shape.contains(p.getX(), p.getY());
+    return mesh.contains(p);
   }
 
   public Shape getShape() {
-    return shape;
+    return mesh.getShape();
   }
 
-  @Override
-  public void update(Game game) {
-    super.update(game);
-  }
-
-  @Override
-  public GameObject addTags(ObjectTag... tags) {
-    super.addTags(tags);
-    return this;
-  }
-
-  @Override
   public GameSprite setPosition(Vector2 vector) {
     transform.getTransform().translate(vector.x, vector.y);
     return this;
   }
 
-  @Override
   public void translate(double dx, double dy) {
     transform.getTransform().translate(dx, dy);
   }
 
-  @Override
   public void translate(Vector2 vector) {
     transform.getTransform().translate(vector.x, vector.y);
   }
 
-  @Override
   public void rotate(double theta) {
     transform.getTransform().rotate(theta);
   }
 
-  @Override
   public boolean intersects(Shape object) {
     var area = new Area(object);
     area.intersect(new Area(getRelativeShape()));
     return !area.isEmpty();
   }
 
-  @Override
+  public Transform getTransform() {
+    return transform;
+  }
+
   public Shape getRelativeShape() {
-    return transform.getTransform().createTransformedShape(shape);
+    return mesh.getRelativeShape();
   }
 
 }

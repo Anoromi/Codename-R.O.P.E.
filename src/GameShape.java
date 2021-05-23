@@ -4,29 +4,36 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 
-public class GameShape extends GameObject {
+public class GameShape extends SingleGameObject {
 
-  protected Shape shape;
-  protected AffineTransform transform;
+  protected Transform transform;
+  protected Mesh mesh;
 
   public GameShape(Shape shape, int layer) {
     super(layer);
-    this.shape = shape;
-    transform = new AffineTransform();
+    transform = new Transform();
+    addProperty(ObjectProperty.Transform, transform);
+    addProperty(ObjectProperty.Mesh, new Mesh(shape) {
+      @Override
+      protected AffineTransform getTransform() {
+        return transform.getTransform();
+      }
+    });
   }
 
   @Override
-  public void draw(Graphics2D graphics) {
-    graphics.fill(transform.createTransformedShape(shape));
+  public void draw(Graphics2D graphics, int layer) {
+    if (this.layer == layer)
+      graphics.fill(mesh.getRelativeShape());
   }
 
   @Override
   public boolean contains(Point2D p) {
-    return shape.contains(p.getX(), p.getY());
+    return mesh.contains(p);
   }
 
   public Shape getShape() {
-    return shape;
+    return mesh.getShape();
   }
 
   @Override
@@ -40,37 +47,10 @@ public class GameShape extends GameObject {
   }
 
   @Override
-  public GameShape setPosition(Vector2 vector) {
-    transform.translate(vector.x, vector.y);
-    return this;
-  }
-
-  @Override
-  public void translate(double dx, double dy) {
-    transform.translate(dx, dy);
-  }
-
-  @Override
-  public void translate(Vector2 vector) {
-    translate(vector.x, vector.y);
-
-  }
-
-  @Override
-  public void rotate(double theta) {
-    transform.rotate(theta);
-  }
-
-  @Override
   public boolean intersects(Shape object) {
     var area = new Area(object);
-    area.intersect(new Area(getRelativeShape()));
+    area.intersect(new Area(mesh.getRelativeShape()));
     return !area.isEmpty();
-  }
-
-  @Override
-  public Shape getRelativeShape() {
-    return transform.createTransformedShape(shape);
   }
 
 }

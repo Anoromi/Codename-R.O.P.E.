@@ -28,7 +28,7 @@ public class GameBall extends GameSprite {
   }
 
   private void processCollisions(Game game) {
-    if (!game.checkForCollision(this))
+    if (!game.checkForCollision(mesh))
       return;
     double ballRadius = image.getWidth() / 2;
     double distanceToRadius = (ballRadius + 1) / Math.cos(3.14 / ballRadius / 2);

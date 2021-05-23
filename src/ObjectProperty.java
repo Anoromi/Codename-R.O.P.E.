@@ -1,3 +1,3 @@
 public enum ObjectProperty {
-  RigidBody, Transform
+  RigidBody, Transform, Mesh
 }
