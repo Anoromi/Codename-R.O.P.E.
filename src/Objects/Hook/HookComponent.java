@@ -69,9 +69,9 @@ public class HookComponent extends GameCompound {
             } catch (NoninvertibleTransformException e) {
               e.printStackTrace();
             }
-            HookComponent.this.transform.setPosition(pos)
-                .setRotation(HookComponent.this.transform.getFullRotation() - this.transform.getFullRotation())
-                .setRotation(0)
+            double fullRotation = HookComponent.this.transform.getFullRotation();
+            HookComponent.this.transform.setPosition(pos).setRotation(fullRotation - parentTransform.getFullRotation())
+                // .setRotation(0)
                 .setRelative(parentTransform);
             // HookComponent.this.transform.setRelative();
           }
