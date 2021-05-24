@@ -1,4 +1,5 @@
 package Helpers;
+
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
@@ -96,6 +97,19 @@ public class Vector2 extends Point2D.Double {
 
   public Vector2 added(Vector2 value) {
     return copy().add(value);
+  }
+
+  public Vector2 degRotateBy(double angle) {
+    double rad = Math.toRadians(angle);
+    double curX = x;
+    double curY = y;
+    x = curX * Math.cos(rad) - curY * Math.sin(rad);
+    y = curX * Math.sin(rad) + curY * Math.cos(rad);
+    return this;
+  }
+
+  public Vector2 degRotatedBy(double angle) {
+    return copy().degRotateBy(angle);
   }
 
   public Vector2 copy() {

@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -20,16 +21,19 @@ import Properties.PointRigidBody;
 public class Game extends JPanel implements ActionListener {
   private Timer t;
 
-  private static final double DELAY = 1000 / 60;
+  private static final double DELAY = 1000 / 500;
   public final List<GameObject> DRAWABLES;
-  public final List<Runnable> CALL;
+  public static final List<Consumer<Game>> CALL = new ArrayList<>();
   public final Camera camera;
+  public final int STEP = 4;
+  public int currentStep = STEP;
+
+  public int frames = 0;
 
   public Game() {
     setDoubleBuffered(true);
     t = new Timer((int) DELAY, this);
     DRAWABLES = new ArrayList<>();
-    CALL = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
     // camera.setTargetScale(0.9);
 
@@ -39,22 +43,23 @@ public class Game extends JPanel implements ActionListener {
       }
     });
 
-    DRAWABLES.add(new GameSprite("icons/Rect.png", 1) {
+    DRAWABLES.add(new GameSprite("icons/QRect.png", 1) {
       {
-        getTransform().setPosition(new Vector2(500, 0));
+        getTransform().setPosition(new Vector2(500, 200));
         addTags(ObjectTag.Touchable);
       }
-
-      public boolean contains(java.awt.geom.Point2D p) {
-        return super.contains(p);
-      };
 
       @Override
       public void update(Game game) {
         super.update(game);
-        // transform.rotate(0.01);
+        transform.rotate(0.001);
       }
     }.addTags(ObjectTag.Touchable));
+
+    new Timer(1000, e -> {
+      System.out.println(frames);
+      frames = 0;
+    }).start();
   }
 
   public void start() {
@@ -63,6 +68,7 @@ public class Game extends JPanel implements ActionListener {
 
   @Override
   public void paint(Graphics g) {
+    frames++;
     super.paint(g);
     Graphics2D graphics = (Graphics2D) g;
     graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
@@ -105,12 +111,16 @@ public class Game extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     updateAll();
     processCalls();
-    repaint();
+    if (STEP == currentStep) {
+      repaint();
+      currentStep = 0;
+    }
+    currentStep++;
   }
 
   private void processCalls() {
-    for (Runnable runnable : CALL) {
-      runnable.run();
+    for (var runnable : CALL) {
+      runnable.accept(this);
     }
     CALL.clear();
   }
@@ -166,5 +176,4 @@ public class Game extends JPanel implements ActionListener {
     }
     return touchedObjects;
   }
-
 }

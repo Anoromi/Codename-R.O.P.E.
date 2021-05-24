@@ -53,6 +53,11 @@ public class Transform extends Property {
     return this;
   }
 
+  public Transform setRotation(double theta) {
+    t.rotate(theta - getRotation());
+    return this;
+  }
+
   public Transform rotate(double theta) {
     t.rotate(theta);
     return this;
@@ -64,6 +69,15 @@ public class Transform extends Property {
 
   public void setRelative(Transform relative) {
     this.relative = relative;
+  }
+
+  public double getRotation() {
+    return Math.atan2(t.getShearY(), t.getScaleY());
+  }
+
+  public double getFullRotation() {
+    AffineTransform full = getFullAffine();
+    return Math.atan2(full.getShearY(), full.getScaleY());
   }
 
 }

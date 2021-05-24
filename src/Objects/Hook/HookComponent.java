@@ -4,7 +4,12 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import Base.Game;
 import Helpers.GeometryHelper;
@@ -20,6 +25,7 @@ public class HookComponent extends GameCompound {
   private static BufferedImage hookBallImage;
   private static Shape hookShape;
   private static Shape hookBallShape;
+  private boolean stuck = false;
 
   static {
     hookImage = ImageHelper.imageOrNull("icons/Hook.png");
@@ -28,13 +34,48 @@ public class HookComponent extends GameCompound {
     hookBallShape = ImageHelper.areaFromImage(hookBallImage);
   }
 
-  public HookComponent(Vector2 pos, Vector2 dir) {
+  public HookComponent(GameBall ball, Vector2 pos, Vector2 dir) {
     super();
     transform = new Transform();
     transform.setPosition(pos.x, pos.y).rotate(GeometryHelper.vectorToAngle(dir.inverted()));
     GameSprite hook = new GameSprite(hookImage, hookShape, 3) {
       {
         transform = new Transform(HookComponent.this.transform);
+      }
+
+      @Override
+      public void update(Game game) {
+        super.update(game);
+        if (!stuck) {
+          List<GameObject> intersected = game.getIntersectedObjects(mesh);
+          boolean danger = false;
+          intersected.removeIf(x -> x.hasAny(ObjectTag.GameBall) || !x.hasAny(ObjectTag.Touchable));
+          for (GameObject gameObject : intersected) {
+            if (gameObject.hasTags(ObjectTag.Danger))
+              danger = true;
+          }
+          if (danger) {
+            ball.removeHook();
+            return;
+          }
+          if (!intersected.isEmpty()) {
+            rigidBody.setAcceleration(new Vector2());
+            GameObject parent = intersected.get(0);
+            Transform parentTransform = ((Transform) parent.getProperty(ObjectProperty.Transform));
+            Vector2 pos = new Vector2();
+            HookComponent.this.transform.getFullAffine().transform(pos, pos);
+            try {
+              parentTransform.getFullAffine().inverseTransform(pos, pos);
+            } catch (NoninvertibleTransformException e) {
+              e.printStackTrace();
+            }
+            HookComponent.this.transform.setPosition(pos)
+                .setRotation(HookComponent.this.transform.getFullRotation() - this.transform.getFullRotation())
+                .setRotation(0)
+                .setRelative(parentTransform);
+            // HookComponent.this.transform.setRelative();
+          }
+        }
       }
     };
 
@@ -45,7 +86,7 @@ public class HookComponent extends GameCompound {
       }
     };
 
-    rigidBody.impulse(new Vector2(-1, 0).multipliedBy(50));
+    rigidBody.impulse(new Vector2(-1, 0).multipliedBy(10));
 
     GameSprite hookBall = new GameSprite(hookBallImage, hookBallShape, 3) {
       {
@@ -61,13 +102,7 @@ public class HookComponent extends GameCompound {
       }
 
       @Override
-      public void update(Game game) {
-        super.update(game);
-        var intersected = game.getIntersectedObjects(mesh);
-        if (intersected.stream().filter(x -> !x.hasAny(ObjectTag.Danger) && x.hasTags(ObjectTag.Touchable))
-            .count() > 0) {
-          rigidBody.setAcceleration(new Vector2());
-        }
+      public void draw(Graphics2D graphics, int layer) {
       }
     };
     addProperty(ObjectProperty.Transform, transform);
@@ -75,6 +110,13 @@ public class HookComponent extends GameCompound {
 
     gameObjects.add(hook);
     gameObjects.add(hookBall);
-    gameObjects.add(collisionShape);
+  }
+
+  public Transform getTransform() {
+    return transform;
+  }
+
+  public static int getHeight() {
+    return hookImage.getHeight();
   }
 }

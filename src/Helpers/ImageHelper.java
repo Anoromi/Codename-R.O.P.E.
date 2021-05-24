@@ -1,7 +1,10 @@
 package Helpers;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -44,5 +47,14 @@ public class ImageHelper {
     } catch (IOException e) {
       return null;
     }
+  }
+
+  public static BufferedImage rescale(BufferedImage image, int width, int height) {
+    BufferedImage changed = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D gr = changed.createGraphics();
+    gr.drawImage(image.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
+    gr.dispose();
+    return changed;
+
   }
 }

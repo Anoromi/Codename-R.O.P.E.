@@ -17,6 +17,7 @@ import Properties.RigidBody;
 
 public class GameBall extends GameSprite {
   protected RigidBody rigidBody;
+  protected HookComponent hook;
 
   public GameBall(Game game, String path, int layer) {
     super(path, layer);
@@ -45,7 +46,7 @@ public class GameBall extends GameSprite {
 
       @Override
       public void mouseReleased(MouseEvent e) {
-        game.CALL.add(() -> {
+        game.CALL.add(x -> {
           out.println("Rel " + e.getPoint());
           Vector2 change = Vector2.v(e.getPoint()).subtract(pressPoint);
           if (change.magnitude() != 0) {
@@ -57,10 +58,16 @@ public class GameBall extends GameSprite {
              */
             change = change.normalized();
             Rectangle2D center = getMesh().getShape().getBounds2D();
-            Vector2 pos = change.multipliedBy(image.getWidth()/2)
+            Vector2 pos = change.multipliedBy(image.getWidth() / 2)
                 .added(new Vector2(center.getCenterX(), center.getCenterY()));
             getTransform().getFullAffine().transform(pos, pos);
-            game.DRAWABLES.add(new HookComponent(pos, change));
+            if (hook != null) {
+              game.DRAWABLES.remove(hook);
+            }
+
+            hook = new HookComponent(GameBall.this, pos, change);
+            hook.getTransform().translate(0, -HookComponent.getHeight() / 2);
+            game.DRAWABLES.add(hook);
           }
         });
       }
@@ -109,5 +116,13 @@ public class GameBall extends GameSprite {
     Vector2 move = new Vector2(nMoveDir.x - nCollVect.x, nMoveDir.y - nCollVect.y).normalized();
     move.multiplyBy(rigidBody.getAcceleration().magnitude());
     rigidBody.setAcceleration(move);
+  }
+
+  public void removeHook() {
+    Game.CALL.add(x -> {
+      x.DRAWABLES.remove(hook);
+      hook = null;
+    });
+
   }
 }
