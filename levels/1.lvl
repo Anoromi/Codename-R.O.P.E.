@@ -1,0 +1,7 @@
+level{levels\terrain\1lvl.png}
+startingPoint{0;0}
+
+rocketTurret{0;0;0}
+trap{0;0;0}
+
+

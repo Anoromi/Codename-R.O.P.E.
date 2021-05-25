@@ -34,7 +34,7 @@ public class GameBall extends GameSprite {
     addTags(ObjectTag.Touchable);
     addTags(ObjectTag.GameBall);
 
-    game.addMouseListener(new MouseAdapter() {
+    game.getCanvas().addMouseListener(new MouseAdapter() {
       Vector2 pressPoint;
 
       @Override

@@ -11,7 +11,7 @@ public class App {
         Game g = new Game();
         g.start();
 
-        f.add(g);
+        f.add(g.getCanvas());
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setSize(1000, 1000);
         f.setVisible(true);

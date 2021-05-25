@@ -4,6 +4,7 @@ import static java.lang.System.out;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -18,19 +19,21 @@ import Properties.Mesh;
 import Properties.ObjectProperty;
 import Properties.PointRigidBody;
 
-public class Game extends JPanel implements ActionListener {
-  private Timer t;
+public class Game implements Runnable {
+  private Thread t;
+  private Canvas canvas;
 
-  private static final double DELAY = 1000 / 500;
   public final List<GameObject> DRAWABLES;
   public static final List<Consumer<Game>> CALL = new ArrayList<>();
   public final Camera camera;
   public final int STEP = 4;
   public int currentStep = STEP;
 
+  private static final double DELAY = 1000 / 500;
   public int frames = 0;
   public int updates = 0;
   public final int second = 500;
+  private boolean running;
 
   private int curLayer;
   private Graphics2D curGraphics;
@@ -38,14 +41,12 @@ public class Game extends JPanel implements ActionListener {
   private Consumer<GameObject> draw = x -> x.draw(curGraphics, curLayer);
 
   public Game() {
-    setDoubleBuffered(true);
-    t = new Timer((int) DELAY, this);
-
+    canvas = new Canvas();
     DRAWABLES = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
     // camera.setTargetScale(0.9);
 
-    DRAWABLES.add(new GameBall(this, "icons\\Ball.png", 1) {
+    DRAWABLES.add(new GameBall(this, "icons\\Ball.png", 4) {
       {
         getTransform().setPosition(500, 500);
       }
@@ -71,17 +72,23 @@ public class Game extends JPanel implements ActionListener {
       updates = 0;
     }).start();
 
+    t = new Thread(this);
   }
 
   public void start() {
+    running = true;
     t.start();
   }
 
-  @Override
-  public void paint(Graphics g) {
+  public void render() {
     frames++;
-    super.paint(g);
-    Graphics2D graphics = (Graphics2D) g;
+    BufferStrategy bs = canvas.getBufferStrategy();
+    if (bs == null) {
+      canvas.createBufferStrategy(3);
+      bs = canvas.getBufferStrategy();
+    }
+    Graphics2D graphics = (Graphics2D) bs.getDrawGraphics();
+    graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     curGraphics = graphics;
     graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
     graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
@@ -101,6 +108,8 @@ public class Game extends JPanel implements ActionListener {
       DRAWABLES.parallelStream().forEach(draw);
     }
 
+    bs.show();
+    graphics.dispose();
   }
 
   private int nextSmallest(int min, int max) {
@@ -117,15 +126,26 @@ public class Game extends JPanel implements ActionListener {
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
-    updateAll();
-    processCalls();
-    if (STEP == currentStep) {
-      repaint();
-      currentStep = 0;
-    }
-    currentStep++;
+  public void run() {
+    double timePerTick = 1000000000 / 60;
+    double delta = 0;
+    long now;
+    long lastTime = System.nanoTime();
+    while (running) {
+      now = System.nanoTime();
+      delta += (now - lastTime) / timePerTick;
+      lastTime = now;
 
+      if (delta >= 1) {
+        updateAll();
+        processCalls();
+        if (STEP == currentStep) {
+          render();
+          currentStep = 0;
+        }
+        currentStep++;
+      }
+    }
   }
 
   private void processCalls() {
@@ -158,12 +178,12 @@ public class Game extends JPanel implements ActionListener {
   }
 
   public boolean checkForCollision(Mesh mesh) {
-    return DRAWABLES.parallelStream().anyMatch(collider ->{
+    return DRAWABLES.parallelStream().anyMatch(collider -> {
       var inter = collider.getProperty(ObjectProperty.Mesh);
       if (inter != mesh && inter != null && ((Mesh) inter).intersects(mesh)) {
         return true;
       }
-    return false;
+      return false;
     });
   }
 
@@ -185,5 +205,9 @@ public class Game extends JPanel implements ActionListener {
       }
     }
     return touchedObjects;
+  }
+
+  public Canvas getCanvas() {
+    return canvas;
   }
 }
