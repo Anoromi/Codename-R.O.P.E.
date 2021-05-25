@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import Helpers.Vector2;
@@ -127,7 +128,7 @@ public class Game implements Runnable {
 
   @Override
   public void run() {
-    double timePerTick = 1000000000 / 60;
+    double timePerTick = 1000000000 / 240;
     double delta = 0;
     long now;
     long lastTime = System.nanoTime();
@@ -135,7 +136,7 @@ public class Game implements Runnable {
       now = System.nanoTime();
       delta += (now - lastTime) / timePerTick;
       lastTime = now;
-
+      //System.out.println(delta);
       if (delta >= 1) {
         updateAll();
         processCalls();
@@ -144,6 +145,7 @@ public class Game implements Runnable {
           currentStep = 0;
         }
         currentStep++;
+        delta = 0;
       }
     }
   }
