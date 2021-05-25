@@ -29,10 +29,18 @@ public class Game extends JPanel implements ActionListener {
   public int currentStep = STEP;
 
   public int frames = 0;
+  public int updates = 0;
+  public final int second = 500;
+
+  private int curLayer;
+  private Graphics2D curGraphics;
+
+  private Consumer<GameObject> draw = x -> x.draw(curGraphics, curLayer);
 
   public Game() {
     setDoubleBuffered(true);
     t = new Timer((int) DELAY, this);
+
     DRAWABLES = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
     // camera.setTargetScale(0.9);
@@ -58,8 +66,11 @@ public class Game extends JPanel implements ActionListener {
 
     new Timer(1000, e -> {
       System.out.println(frames);
+      System.out.println(updates);
       frames = 0;
+      updates = 0;
     }).start();
+
   }
 
   public void start() {
@@ -71,6 +82,7 @@ public class Game extends JPanel implements ActionListener {
     frames++;
     super.paint(g);
     Graphics2D graphics = (Graphics2D) g;
+    curGraphics = graphics;
     graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
     graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
     camera.adjustCamera(graphics);
@@ -85,11 +97,8 @@ public class Game extends JPanel implements ActionListener {
           min = l;
       }
     }
-    for (int layer = min; layer <= max; layer = nextSmallest(layer, max)) {
-      for (int j = 0; j < DRAWABLES.size(); j++) {
-        var next = DRAWABLES.get(j);
-        next.draw(graphics, layer);
-      }
+    for (curLayer = min; curLayer <= max; curLayer = nextSmallest(curLayer, max)) {
+      DRAWABLES.parallelStream().forEach(draw);
     }
 
   }
@@ -116,6 +125,7 @@ public class Game extends JPanel implements ActionListener {
       currentStep = 0;
     }
     currentStep++;
+
   }
 
   private void processCalls() {
@@ -126,10 +136,8 @@ public class Game extends JPanel implements ActionListener {
   }
 
   private void updateAll() {
-    for (GameObject gameObject : DRAWABLES) {
-
-      gameObject.update(this);
-    }
+    DRAWABLES.parallelStream().forEach(x -> x.update(this));
+    updates++;
   }
 
   public List<GameObject> getElementsAt(Vector2 point) {
@@ -150,13 +158,13 @@ public class Game extends JPanel implements ActionListener {
   }
 
   public boolean checkForCollision(Mesh mesh) {
-    for (GameObject collider : DRAWABLES) {
+    return DRAWABLES.parallelStream().anyMatch(collider ->{
       var inter = collider.getProperty(ObjectProperty.Mesh);
       if (inter != mesh && inter != null && ((Mesh) inter).intersects(mesh)) {
         return true;
       }
-    }
     return false;
+    });
   }
 
   public List<GameObject> getIntersectedObjects(Mesh mesh) {
@@ -169,6 +177,8 @@ public class Game extends JPanel implements ActionListener {
       if (collider.hasTags(ObjectTag.Compound)) {
         touchedObjects.addAll(processIntersectionsFor(((Compound) collider).getGameObjects(), mesh));
       }
+      if (!collider.hasAny(ObjectTag.Touchable))
+        continue;
       var inter = collider.getProperty(ObjectProperty.Mesh);
       if (inter != mesh && inter != null && ((Mesh) inter).intersects(mesh)) {
         touchedObjects.add(collider);

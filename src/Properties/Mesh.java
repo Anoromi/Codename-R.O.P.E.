@@ -28,7 +28,6 @@ public abstract class Mesh extends Property {
   }
 
   public boolean intersects(Mesh s) {
-
     if (!s.getRelativeRectangleBounds().intersects(getRelativeRectangleBounds().getBounds2D()))
       return false;
     var area = new Area(getRelativeShape());
