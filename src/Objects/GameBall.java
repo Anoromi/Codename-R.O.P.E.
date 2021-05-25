@@ -62,7 +62,7 @@ public class GameBall extends GameSprite {
                 .added(new Vector2(center.getCenterX(), center.getCenterY()));
             getTransform().getFullAffine().transform(pos, pos);
             if (hook != null) {
-              game.DRAWABLES.remove(hook);
+              //game.DRAWABLES.remove(hook);
             }
 
             hook = new HookComponent(GameBall.this, pos, change);
