@@ -1,6 +1,8 @@
 package Properties;
+
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 
 import Base.Game;
 import Helpers.Vector2;
@@ -27,10 +29,18 @@ public abstract class PointRigidBody extends RigidBody {
     acceleration.add(vector);
   }
 
-
+  public void realImpulse(Vector2 vector) {
+    var copy = vector.copy();
+    try {
+      getTransform().createInverse().deltaTransform(copy, copy);
+    } catch (NoninvertibleTransformException e) {
+      e.printStackTrace();
+    }
+    acceleration.add(copy.normalized().multipliedBy(vector.magnitude()));
+  }
 
   @Override
-  public Vector2 getAcceleration() {
+  public Vector2 getSpeed() {
     return acceleration;
   }
 

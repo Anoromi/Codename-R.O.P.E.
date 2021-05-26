@@ -29,6 +29,7 @@ public class GameSprite extends SingleGameObject {
     };
     addProperty(ObjectProperty.Mesh, mesh);
   }
+
   public GameSprite(BufferedImage image, Shape shape, int layer) {
     super(layer);
     this.image = image;
@@ -41,6 +42,14 @@ public class GameSprite extends SingleGameObject {
       }
     };
     addProperty(ObjectProperty.Mesh, mesh);
+  }
+
+  public GameSprite(String image, Shape shape, int layer) {
+    this(ImageHelper.imageOrNull(image), shape, layer);
+  }
+
+  public GameSprite(String image, String shape, int layer) {
+    this(ImageHelper.imageOrNull(image), ImageHelper.areaFromFile(shape), layer);
   }
 
   public GameSprite(String image, int layer) {

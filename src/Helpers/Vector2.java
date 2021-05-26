@@ -119,4 +119,8 @@ public class Vector2 extends Point2D.Double {
   public Point toPoint() {
     return new Point(Math.round((float) x), Math.round((float) y));
   }
+
+  public double dotProduct(Vector2 vector) {
+    return x * vector.x + y * vector.y;
+  }
 }

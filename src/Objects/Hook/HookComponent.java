@@ -26,7 +26,7 @@ public class HookComponent extends GameCompound {
   private static Shape hookShape;
   private static Shape hookBallShape;
   private boolean stuck = false;
-
+  private GameSprite hookBall;
   static {
     hookImage = ImageHelper.imageOrNull("icons/Hook.png");
     hookBallImage = ImageHelper.imageOrNull("icons/HookBall.png");
@@ -59,6 +59,7 @@ public class HookComponent extends GameCompound {
             return;
           }
           if (!intersected.isEmpty()) {
+            stuck = true;
             rigidBody.setAcceleration(new Vector2());
             GameObject parent = intersected.get(0);
             Transform parentTransform = ((Transform) parent.getProperty(ObjectProperty.Transform));
@@ -88,7 +89,7 @@ public class HookComponent extends GameCompound {
 
     rigidBody.impulse(new Vector2(-1, 0).multipliedBy(10));
 
-    GameSprite hookBall = new GameSprite(hookBallImage, hookBallShape, 3) {
+    hookBall = new GameSprite(hookBallImage, hookBallShape, 3) {
       {
         transform = new Transform(HookComponent.this.transform);
         getTransform().setPosition(hook.getShape().getBounds2D().getWidth() - 1, 0);
@@ -118,5 +119,13 @@ public class HookComponent extends GameCompound {
 
   public static int getHeight() {
     return hookImage.getHeight();
+  }
+
+  public GameSprite getHookBall() {
+    return hookBall;
+  }
+
+  public boolean isStuck() {
+    return stuck;
   }
 }

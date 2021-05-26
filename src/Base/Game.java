@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
+import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Objects.*;
 import Objects.Hook.HookComponent;
@@ -47,7 +48,7 @@ public class Game implements Runnable {
     camera = new Camera(Vector2.v(0, 0));
     // camera.setTargetScale(0.9);
 
-    DRAWABLES.add(new GameBall(this, "icons\\Ball.png", 4) {
+    DRAWABLES.add(new GameBall(this, "icons\\Ball.png") {
       {
         getTransform().setPosition(500, 500);
       }
@@ -62,10 +63,21 @@ public class Game implements Runnable {
       @Override
       public void update(Game game) {
         super.update(game);
-        transform.rotate(0.001);
+        // transform.rotate(0.001);
       }
     }.addTags(ObjectTag.Touchable));
 
+    DRAWABLES.add(new GameSprite("icons/QRect.png", 1) {
+      {
+        getTransform().setPosition(200, 200);
+        addTags(ObjectTag.Touchable);
+      }
+    });
+    DRAWABLES.add(new GameSprite("icons/Lvl.png", "levels\\lvl.shp", 1) {
+      {
+        addTags(ObjectTag.Touchable);
+      }
+    });
     new Timer(1000, e -> {
       System.out.println(frames);
       System.out.println(updates);
@@ -136,7 +148,7 @@ public class Game implements Runnable {
       now = System.nanoTime();
       delta += (now - lastTime) / timePerTick;
       lastTime = now;
-      //System.out.println(delta);
+      // System.out.println(delta);
       if (delta >= 1) {
         updateAll();
         processCalls();
@@ -151,8 +163,8 @@ public class Game implements Runnable {
   }
 
   private void processCalls() {
-    for (var runnable : CALL) {
-      runnable.accept(this);
+    for (int i = 0; i < CALL.size(); i++) {
+      CALL.get(i).accept(this);
     }
     CALL.clear();
   }

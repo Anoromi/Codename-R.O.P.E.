@@ -1,13 +1,10 @@
 package Helpers;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import javax.imageio.ImageIO;
 
@@ -20,15 +17,25 @@ public class ImageHelper {
     for (int i = 0; i < width; i++) {
       for (int j = 0; j < height; j++) {
         if (isOutline(image, i, j)) {
-          int h = 1;
+          int h = 1, w = 1;
           for (; j + h < height && image.getRGB(i, j + h) >> 24 != 0x00; h++) {
           }
-          Rectangle r = new Rectangle(i, j, 1, h);
+          Rectangle r = new Rectangle(i, j, w, h);
           area.add(new Area(r));
         }
       }
     }
     return area;
+  }
+
+  public static Shape areaFromFile(String path) {
+    try (FileInputStream fileInputStream = new FileInputStream(path);
+        ObjectInputStream reader = new ObjectInputStream(fileInputStream)) {
+      return (Shape) reader.readObject();
+    } catch (Exception e) {
+      return null;
+    }
+
   }
 
   public static boolean isOutline(BufferedImage image, int x, int y) {
