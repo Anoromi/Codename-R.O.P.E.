@@ -48,7 +48,7 @@ public class GameBall extends GameSprite {
         if (e.getButton() == MouseEvent.BUTTON1) {
           pressPoint = Vector2.v(e.getPoint());
           out.println("Pr " + e.getPoint());
-        } else if (e.getButton() == MouseEvent.BUTTON2)
+        } else if (e.getButton() == MouseEvent.BUTTON3)
           tied = true;
 
       }
@@ -85,7 +85,7 @@ public class GameBall extends GameSprite {
               });
             }
           });
-        } else if (e.getButton() == MouseEvent.BUTTON2)
+        } else if (e.getButton() == MouseEvent.BUTTON3)
           tied = false;
       }
     });
