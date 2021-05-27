@@ -114,5 +114,4 @@ public class GameSprite extends SingleGameObject {
   public Shape getRelativeShape() {
     return getMesh().getRelativeShape();
   }
-
 }

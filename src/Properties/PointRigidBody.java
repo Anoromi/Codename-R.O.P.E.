@@ -11,17 +11,29 @@ public abstract class PointRigidBody extends RigidBody {
 
   private Vector2 acceleration;
   private double loss;
+  private boolean linear;
 
   protected PointRigidBody(double loss) {
     super();
     acceleration = new Vector2();
     this.loss = loss;
+    linear = false;
+  }
+
+  protected PointRigidBody(double loss, boolean linear) {
+    super();
+    acceleration = new Vector2();
+    this.loss = loss;
+    this.linear = linear;
   }
 
   @Override
   public void updateForces(Game game) {
     getTransform().translate(acceleration.getX(), acceleration.getY());
-    acceleration.divideBy(loss);
+    if (linear && acceleration.magnitude() != 0) {
+      acceleration.subtract(acceleration.normalized().multiplyBy(loss));
+    } else if (!linear)
+      acceleration.divideBy(loss);
   }
 
   @Override

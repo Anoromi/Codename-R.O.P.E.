@@ -28,7 +28,7 @@ public class GameBall extends GameSprite {
   public GameBall(Game game, String path) {
     super(path, GameSettings.BALL_LAYER);
 
-    rigidBody = new PointRigidBody(GameSettings.LOSS) {
+    rigidBody = new PointRigidBody(GameSettings.BALL_LOSS, true) {
       @Override
       public AffineTransform getTransform() {
         return GameBall.this.getTransform().getFullAffine();
@@ -123,7 +123,10 @@ public class GameBall extends GameSprite {
         rope = new Rope(this, hook);
         Game.CALL.add(x -> x.DRAWABLES.add(rope));
         ropeLength = rope.getDirection().magnitude();
+        rope.update(game);
       }
+      if (!rope.isAlive())
+        return;
       var curLength = rope.getDirection().magnitude();
       var hookBallBounds = hook.getHookBall().getMesh().getRelativeRectangleBounds().getBounds2D();
       var hookBallCenter = new Vector2(hookBallBounds.getCenterX(), hookBallBounds.getCenterY());
@@ -142,6 +145,11 @@ public class GameBall extends GameSprite {
       }
       if (approach && ropeDir.magnitude() != 0) {
         getRigidBody().realImpulse(ropeDir.normalized().invert().multiplyBy(GameSettings.APPROACH_SPEED));
+      }
+      if (shift && ropeDir.magnitude() != 0) {
+        getRigidBody().realImpulse(ropeDir.normalized().invert().multiplyBy(GameSettings.SHIFT_SPEED));
+        removeHook();
+        shift = false;
       }
       ropeLength = curLength;
     }
@@ -188,7 +196,9 @@ public class GameBall extends GameSprite {
   public void removeHook() {
     Game.CALL.add(x -> {
       x.DRAWABLES.remove(hook);
+      x.DRAWABLES.remove(rope);
       hook = null;
+      rope = null;
     });
 
   }

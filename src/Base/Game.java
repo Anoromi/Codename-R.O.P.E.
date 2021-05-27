@@ -140,7 +140,7 @@ public class Game implements Runnable {
 
   @Override
   public void run() {
-    double timePerTick = 1000000000 / 240;
+    double timePerTick = 1000000000 / 60;
     double delta = 0;
     long now;
     long lastTime = System.nanoTime();
@@ -150,12 +150,12 @@ public class Game implements Runnable {
       lastTime = now;
       // System.out.println(delta);
       if (delta >= 1) {
-        updateAll();
-        processCalls();
-        if (STEP == currentStep) {
-          render();
-          currentStep = 0;
+        for (int i = 0; i < STEP; i++) {
+          updateAll();
+          processCalls();
         }
+        render();
+        currentStep = 0;
         currentStep++;
         delta = 0;
       }
@@ -207,17 +207,17 @@ public class Game implements Runnable {
 
   private List<GameObject> processIntersectionsFor(List<GameObject> elements, Mesh mesh) {
     ArrayList<GameObject> touchedObjects = new ArrayList<>();
-    for (GameObject collider : elements) {
+    elements.stream().parallel().forEach(collider -> {
       if (collider.hasTags(ObjectTag.Compound)) {
         touchedObjects.addAll(processIntersectionsFor(((Compound) collider).getGameObjects(), mesh));
       }
       if (!collider.hasAny(ObjectTag.Touchable))
-        continue;
+        return;
       var inter = collider.getProperty(ObjectProperty.Mesh);
       if (inter != mesh && inter != null && ((Mesh) inter).intersects(mesh)) {
         touchedObjects.add(collider);
       }
-    }
+    });
     return touchedObjects;
   }
 

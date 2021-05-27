@@ -1,3 +1,8 @@
 {
-  "java.dependency.syncWithFolderExplorer": false
+  "java.dependency.syncWithFolderExplorer": false,
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar",
+    "imgscalr-lib-4.2.jar",
+    "imgscalr-lib-4.2-sources.jar"
+  ]
 }

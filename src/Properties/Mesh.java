@@ -12,11 +12,15 @@ public abstract class Mesh extends Property {
   }
 
   public Shape getRelativeShape() {
-    return getTransform().createTransformedShape(shape);
+    return getTransform().createTransformedShape(getShape());
   }
 
   public Shape getShape() {
     return shape;
+  }
+
+  public void setShape(Shape shape) {
+    this.shape = shape;
   }
 
   public boolean contains(Point2D p) {
