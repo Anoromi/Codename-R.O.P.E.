@@ -37,6 +37,8 @@ public class Game implements Runnable {
   public final int second = 500;
   private boolean running;
 
+  private GameBall ball;
+
   private int curLayer;
   private Graphics2D curGraphics;
 
@@ -46,13 +48,13 @@ public class Game implements Runnable {
     canvas = new Canvas();
     DRAWABLES = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
-    // camera.setTargetScale(0.9);
 
-    DRAWABLES.add(new GameBall(this, "icons\\Ball.png") {
+    ball = new GameBall(this, "icons\\Ball.png") {
       {
         getTransform().setPosition(500, 500);
       }
-    });
+    };
+    DRAWABLES.add(ball);
 
     DRAWABLES.add(new GameSprite("icons/QRect.png", 1) {
       {
@@ -73,7 +75,7 @@ public class Game implements Runnable {
         addTags(ObjectTag.Touchable);
       }
     });
-    DRAWABLES.add(new GameSprite("icons/Lvl.png", "levels\\lvl.shp", 1) {
+    DRAWABLES.add(new GameSprite("icons/Lvldec.png", 1) {
       {
         addTags(ObjectTag.Touchable);
       }
@@ -104,7 +106,10 @@ public class Game implements Runnable {
     graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     curGraphics = graphics;
     graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
-    graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+    graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED));
+    graphics.addRenderingHints(
+        new RenderingHints(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED));
+    camera.updateTarget(this, ball);
     camera.adjustCamera(graphics);
     int min = 0;
     int max = 0;
