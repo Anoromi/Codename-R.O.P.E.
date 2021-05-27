@@ -97,10 +97,9 @@ public class GameSprite extends SingleGameObject {
     getTransform().getAffine().rotate(theta);
   }
 
-  public boolean intersects(Shape object) {
-    var area = new Area(object);
-    area.intersect(new Area(getRelativeShape()));
-    return !area.isEmpty();
+  @Override
+  public boolean intersects(Mesh mesh) {
+    return getMesh().intersects(mesh);
   }
 
   public Mesh getMesh() {

@@ -75,10 +75,8 @@ public class GameShape extends SingleGameObject {
   }
 
   @Override
-  public boolean intersects(Shape object) {
-    var area = new Area(object);
-    area.intersect(new Area(mesh.getRelativeShape()));
-    return !area.isEmpty();
+  public boolean intersects(Mesh mesh) {
+    return getMesh().intersects(mesh);
   }
 
   public Mesh getMesh() {

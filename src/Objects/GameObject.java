@@ -1,12 +1,10 @@
 package Objects;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.*;
 
 import Base.Game;
-import Helpers.Pair;
+import Properties.Mesh;
 import Properties.ObjectProperty;
 import Properties.Property;
 
@@ -62,7 +60,7 @@ public abstract class GameObject {
 
   public abstract boolean contains(Point2D p);
 
-  public abstract boolean intersects(Shape object);
+  public abstract boolean intersects(Mesh mesh);
 
   public abstract int[] getLayers();
 

@@ -3,9 +3,9 @@ package Properties;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
 public abstract class RectangleMesh extends Mesh {
-  protected Rectangle shape;
 
   protected RectangleMesh(Rectangle shape) {
     super(shape);
@@ -14,12 +14,12 @@ public abstract class RectangleMesh extends Mesh {
 
   @Override
   public Rectangle getShape() {
-    return shape;
+    return (Rectangle) shape;
   }
 
   @Override
   public boolean intersects(Mesh s) {
-    return s.getRelativeShape().intersects(shape);
+    return super.intersects(s);
   }
 
   public void setShape(Rectangle shape) {

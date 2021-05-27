@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import Base.Game;
+import Properties.Mesh;
 
 public class GameCompound extends GameObject implements Compound {
   protected List<GameObject> gameObjects;
@@ -45,9 +46,9 @@ public class GameCompound extends GameObject implements Compound {
   }
 
   @Override
-  public boolean intersects(Shape object) {
+  public boolean intersects(Mesh mesh) {
     for (GameObject gameObject : gameObjects) {
-      if (gameObject.intersects(object))
+      if (gameObject.intersects(mesh))
         return true;
     }
     return false;

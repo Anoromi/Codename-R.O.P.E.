@@ -1,10 +1,12 @@
 package Base;
+
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 
 import Helpers.Vector2;
+import Objects.GameBall;
 
 public class Camera {
   private AffineTransform pos;
@@ -24,6 +26,18 @@ public class Camera {
     double scaleChange = (targetScale - pos.getScaleX()) / 10;
     pos.scale(scaleChange + pos.getScaleX(), scaleChange + pos.getScaleY());
     graphics.setTransform(pos);
+  }
+
+  public void updateTarget(Game game, GameBall ball) {
+    var ballBounds = ball.getRelativeShape().getBounds2D();
+    setCenter(game, new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY()));
+
+  }
+
+  private void setCenter(Game game, Vector2 newTarget) {
+    newTarget.x -= game.getCanvas().getWidth() / 2;
+    newTarget.y -= game.getCanvas().getHeight() / 2;
+    target = newTarget;
   }
 
   public void setTarget(Vector2 target) {
