@@ -7,15 +7,13 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import Base.Game;
 import Helpers.GeometryHelper;
 import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Objects.*;
+import Objects.Entities.GameBall;
 import Properties.*;
 
 public class HookComponent extends GameCompound {

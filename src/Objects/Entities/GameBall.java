@@ -1,8 +1,7 @@
-package Objects;
+package Objects.Entities;
 
 import static java.lang.System.out;
 
-import java.awt.RenderingHints.Key;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
@@ -10,6 +9,7 @@ import java.util.List;
 
 import Base.Game;
 import Helpers.Vector2;
+import Objects.*;
 import Objects.Hook.HookComponent;
 import Properties.ObjectProperty;
 import Properties.PointRigidBody;

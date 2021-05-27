@@ -1,20 +1,18 @@
-package Objects;
-
-import static java.lang.System.out;
+package Objects.Entities;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 import Base.Game;
 import Helpers.GeometryHelper;
 import Helpers.ImageHelper;
 import Helpers.Vector2;
+import Objects.GameSettings;
+import Objects.GameSprite;
 import Objects.Hook.HookComponent;
-import Properties.Mesh;
+import Objects.ObjectTag;
 import Properties.RectangleMesh;
 
 public class Rope extends GameSprite {
