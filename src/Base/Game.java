@@ -1,25 +1,21 @@
 package Base;
 
-import static java.lang.System.out;
-
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Objects.*;
-import Objects.Hook.HookComponent;
+import Objects.Entities.BulletTurret;
+import Objects.Entities.GameBall;
+import Objects.Entities.JumpPad;
+import Objects.Entities.Spikes;
 import Properties.Mesh;
 import Properties.ObjectProperty;
-import Properties.PointRigidBody;
 
 public class Game implements Runnable {
   private Thread t;
@@ -78,6 +74,34 @@ public class Game implements Runnable {
         addTags(ObjectTag.Touchable);
       }
     });
+    DRAWABLES.add(new JumpPad() {
+      {
+        getTransform().setPosition(150,500);
+        getTransform().setRotation(Math.toRadians(-90));
+      }
+    });
+
+    DRAWABLES.add(new JumpPad() {
+      {
+        getTransform().setPosition(250,700);
+        getTransform().setRotation(Math.toRadians(0));
+      }
+    });
+
+    DRAWABLES.add(new Spikes() {
+      {
+        getTransform().setPosition(600,700);
+        getTransform().setRotation(Math.toRadians(0));
+      }
+    });
+
+    DRAWABLES.add(new BulletTurret() {
+      {
+        getTransform().setPosition(600,100);
+        getTransform().setRotation(Math.toRadians(0));
+      }
+    });
+
     new Timer(1000, e -> {
       System.out.println(frames);
       System.out.println(updates);
