@@ -71,7 +71,7 @@ public class Game implements Runnable {
         addTags(ObjectTag.Touchable);
       }
     });
-    DRAWABLES.add(new GameSprite("icons/Lvldec.png", 1) {
+    DRAWABLES.add(new GameSprite("icons/Lvl.png", "levels\\Lvl.shp", 1) {
       {
         addTags(ObjectTag.Touchable);
       }

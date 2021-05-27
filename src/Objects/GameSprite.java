@@ -98,8 +98,12 @@ public class GameSprite extends SingleGameObject {
   }
 
   @Override
-  public boolean intersects(Mesh mesh) {
-    return getMesh().intersects(mesh);
+  public boolean intersects(Shape shape) {
+    if (!shape.getBounds2D().intersects(getMesh().getRelativeRectangleBounds().getBounds2D()))
+      return false;
+    var area = new Area(shape);
+    area.intersect(new Area(getMesh().getRelativeShape()));
+    return !area.isEmpty();
   }
 
   public Mesh getMesh() {

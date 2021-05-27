@@ -46,9 +46,9 @@ public class GameCompound extends GameObject implements Compound {
   }
 
   @Override
-  public boolean intersects(Mesh mesh) {
+  public boolean intersects(Shape shape) {
     for (GameObject gameObject : gameObjects) {
-      if (gameObject.intersects(mesh))
+      if (gameObject.intersects(shape))
         return true;
     }
     return false;

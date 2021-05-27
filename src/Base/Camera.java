@@ -1,12 +1,10 @@
 package Base;
 
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 
 import Helpers.Vector2;
-import Objects.GameBall;
+import Objects.Entities.GameBall;
 
 public class Camera {
   private AffineTransform pos;

@@ -1,5 +1,6 @@
 package Objects;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.*;
 
@@ -60,7 +61,7 @@ public abstract class GameObject {
 
   public abstract boolean contains(Point2D p);
 
-  public abstract boolean intersects(Mesh mesh);
+  public abstract boolean intersects(Shape shape);
 
   public abstract int[] getLayers();
 
