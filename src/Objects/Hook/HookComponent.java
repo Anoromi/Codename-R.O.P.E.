@@ -85,7 +85,7 @@ public class HookComponent extends GameCompound {
       }
     };
 
-    rigidBody.impulse(new Vector2(-1, 0).multipliedBy(10));
+    rigidBody.impulse(new Vector2(-1, 0).multipliedBy(GameSettings.HOOK_SPEED));
 
     hookBall = new GameSprite(hookBallImage, hookBallShape, 3) {
       {

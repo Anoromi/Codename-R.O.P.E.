@@ -1,8 +1,6 @@
 package Helpers;
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -60,7 +58,7 @@ public class ImageHelper {
   public static BufferedImage rescale(BufferedImage image, int width, int height) {
     BufferedImage changed = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D gr = changed.createGraphics();
-    gr.drawImage(image, 0, 0, width, height, null);
+    gr.drawImage(image.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
     gr.dispose();
     return changed;
 

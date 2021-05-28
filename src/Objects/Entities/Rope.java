@@ -21,6 +21,7 @@ public class Rope extends GameSprite {
   private HookComponent hook;
   private Vector2 direction;
   private boolean alive;
+  private BufferedImage curImage;
 
   public Rope(GameBall ball, HookComponent hook) {
     super(ROPE_IMAGE, new Rectangle(), GameSettings.ROPE_LAYER);
@@ -40,6 +41,7 @@ public class Rope extends GameSprite {
     super.update(game);
     updatePos();
     getMesh().setShape(new Rectangle(0, 0, (int) direction.magnitude(), GameSettings.ROPE_HEIGHT));
+    curImage = ImageHelper.rescale(image, (int) direction.magnitude(), GameSettings.ROPE_HEIGHT);
     if (game.getIntersectedObjects(mesh).stream()
         .anyMatch(x -> !x.hasTags(ObjectTag.GameBall) && x.hasTags(ObjectTag.Touchable))) {
       alive = false;
@@ -61,9 +63,8 @@ public class Rope extends GameSprite {
   @Override
   public void draw(Graphics2D graphics, int layer) {
     if (this.layer == layer) {
-      if (alive)
-        graphics.drawImage(ImageHelper.rescale(image, (int) direction.magnitude(), GameSettings.ROPE_HEIGHT),
-            transform.getFullAffine(), null);
+      if (alive && curImage != null)
+        graphics.drawImage(curImage, transform.getFullAffine(), null);
     }
   }
 

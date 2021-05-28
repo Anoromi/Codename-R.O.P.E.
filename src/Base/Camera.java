@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import Helpers.Vector2;
+import Objects.GameSettings;
 import Objects.Entities.GameBall;
 
 public class Camera {
@@ -19,9 +20,11 @@ public class Camera {
   }
 
   public void adjustCamera(Graphics2D graphics) {
-    Vector2 posChange = target.subtracted(Vector2.v(pos.getTranslateX(), pos.getTranslateY())).dividedBy(20);
+    Vector2 posChange = target.subtracted(Vector2.v(pos.getTranslateX(), pos.getTranslateY()));// .dividedBy(20);
     // posChange.invert();
-    pos.translate(posChange.x, posChange.y);
+    pos = new AffineTransform();
+    pos.translate(-target.x, -target.y);
+    // pos.translate(-posChange.x, -posChange.y);
     double scaleChange = (targetScale - pos.getScaleX()) / 10;
     pos.scale(scaleChange + pos.getScaleX(), scaleChange + pos.getScaleY());
     graphics.setTransform(pos);
@@ -29,13 +32,13 @@ public class Camera {
 
   public void updateTarget(Game game, GameBall ball) {
     var ballBounds = ball.getRelativeShape().getBounds2D();
-    setCenter(game, new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY()).invert());
+    setCenter(game, new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY()));
 
   }
 
   private void setCenter(Game game, Vector2 newTarget) {
-    newTarget.x +=game.getCanvas().getWidth()/2;
-    newTarget.y += game.getCanvas().getHeight() / 2;
+    newTarget.x -= GameSettings.FRAME_WIDTH/2;
+    newTarget.y -= GameSettings.FRAME_HEIGHT/2;
     target = newTarget;
   }
 
