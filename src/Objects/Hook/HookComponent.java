@@ -70,9 +70,7 @@ public class HookComponent extends GameCompound {
             }
             double fullRotation = HookComponent.this.transform.getFullRotation();
             HookComponent.this.transform.setPosition(pos).setRotation(fullRotation - parentTransform.getFullRotation())
-                // .setRotation(0)
                 .setRelative(parentTransform);
-            // HookComponent.this.transform.setRelative();
           }
         }
       }

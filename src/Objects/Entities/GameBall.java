@@ -125,6 +125,7 @@ public class GameBall extends GameSprite {
         ropeLength = rope.getDirection().magnitude();
         rope.update(game);
       }
+      rope.realUpdate(game);
       if (!rope.isAlive())
         return;
       var curLength = rope.getDirection().magnitude();

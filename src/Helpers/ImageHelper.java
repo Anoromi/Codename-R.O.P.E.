@@ -56,6 +56,8 @@ public class ImageHelper {
   }
 
   public static BufferedImage rescale(BufferedImage image, int width, int height) {
+    if (width < 1 || height < 1)
+      return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     BufferedImage changed = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D gr = changed.createGraphics();
     gr.drawImage(image.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
