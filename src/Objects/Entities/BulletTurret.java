@@ -151,7 +151,6 @@ class Bullet extends GameSprite {
         super(BULLET_IMAGE, 2);
         this.turret = turret;
         addTags(ObjectTag.Danger);
-        addTags(ObjectTag.Touchable);
 
         setPosition(new Vector2(position.x, position.y));
 
