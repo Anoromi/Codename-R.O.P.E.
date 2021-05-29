@@ -1,5 +1,5 @@
 /*
-File: BulletTurret.java
+File: GravityFields.java
 Author: Danylo Nechyporchuk
 Task: make a class which describe gravitational fields. Special areas where ball gravitate to specific object
  */
@@ -12,7 +12,7 @@ import Objects.GameSprite;
 import java.awt.image.BufferedImage;
 
 public class GravityFields extends GameSprite {
-    private static final BufferedImage GRAVITY_FIELDS_IMAGE = null;
+    public static final BufferedImage GRAVITY_FIELDS_IMAGE = null;
 
     public GravityFields() {
         super(GRAVITY_FIELDS_IMAGE, 2);
