@@ -1,7 +1,14 @@
-level{levels\terrain\1lvl.png}
-startingPoint{0;0}
+start{500,500}
 
-rocketTurret{0;0;0}
-trap{0;0;0}
+walls{icons/Lvldec.png}
+
+jump{150,500,-90}
+jump{250,750,0}
+
+trap{600,700,0}
+
+bullet{600,100}
+
+movingTrap{150,850,180,950,0}
 
 
