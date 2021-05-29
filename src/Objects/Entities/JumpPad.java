@@ -18,7 +18,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public class JumpPad extends GameSprite {
-    private static final BufferedImage JUMP_PAD_IMAGE =
+    public static final BufferedImage JUMP_PAD_IMAGE =
             ImageHelper.rescale(ImageHelper.imageOrNull("icons/JumpPad.png"), 100, 20);
 
     public JumpPad() {

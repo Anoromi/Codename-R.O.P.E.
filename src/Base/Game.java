@@ -1,6 +1,8 @@
 package Base;
 
 import java.awt.*;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +10,10 @@ import java.util.function.Consumer;
 
 import javax.swing.Timer;
 
+import Helpers.LevelReader;
 import Helpers.Vector2;
 import Objects.*;
-import Objects.Entities.BulletTurret;
-import Objects.Entities.GameBall;
-import Objects.Entities.JumpPad;
-import Objects.Entities.Spikes;
+import Objects.Entities.*;
 import Properties.Mesh;
 import Properties.ObjectProperty;
 
@@ -45,11 +45,12 @@ public class Game implements Runnable {
     DRAWABLES = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
 
-    ball = new GameBall(this, "icons\\Ball.png") {
+    ball = new GameBall(this, "icons\\Ball.png");
+/*    {
       {
         getTransform().setPosition(500, 500);
       }
-    };
+    };*/
     DRAWABLES.add(ball);
 
     DRAWABLES.add(new GameSprite("icons/QRect.png", 1) {
@@ -71,7 +72,9 @@ public class Game implements Runnable {
         addTags(ObjectTag.Touchable);
       }
     });
-    DRAWABLES.add(new GameSprite("icons/Lvldec.png", 1) {
+
+    LevelReader.createLevel(this,1);
+/*    DRAWABLES.add(new GameSprite("icons/Lvldec.png", 1) {
       {
         addTags(ObjectTag.Touchable);
       }
@@ -79,7 +82,8 @@ public class Game implements Runnable {
     DRAWABLES.add(new JumpPad() {
       {
         getTransform().setPosition(150,500);
-        getTransform().setRotation(Math.toRadians(-90));
+        getTransform().getFullAffine().rotate(Math.toRadians(-90),
+                JUMP_PAD_IMAGE.getWidth() / 2.0, JUMP_PAD_IMAGE.getHeight() / 2.0);
       }
     });
 
@@ -97,12 +101,16 @@ public class Game implements Runnable {
       }
     });
 
-    DRAWABLES.add(new BulletTurret() {
+    DRAWABLES.add(new BulletTurret(this, 600,100) {
       {
-        getTransform().setPosition(600,100);
-        getTransform().setRotation(Math.toRadians(0));
       }
     });
+
+    DRAWABLES.add(new MovingSpikes(150,850, 180, 950){
+      {
+
+      }
+    });*/
 
     new Timer(1000, e -> {
       System.out.println(frames);
