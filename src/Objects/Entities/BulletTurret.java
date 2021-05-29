@@ -10,6 +10,8 @@ package Objects.Entities;
 import Base.Game;
 import Helpers.ImageHelper;
 import Helpers.Vector2;
+import Objects.GameObject;
+import Objects.GameSettings;
 import Objects.GameSprite;
 import Objects.ObjectTag;
 import Properties.Mesh;
@@ -21,11 +23,12 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Optional;
 
 public class BulletTurret extends GameSprite {
     public static final BufferedImage BULLET_TURRET_IMAGE = ImageHelper.imageOrNull("icons/BulletTurret.png");
 
-    private GameBall ball;
+    private Optional<GameObject> ball;
     private Rectangle2D ballBounds;
 
     private Rectangle2D turretBounds;
@@ -44,18 +47,14 @@ public class BulletTurret extends GameSprite {
         setPosition(new Vector2(x, y));
         turretCenter = new Vector2(getMesh().getRelativeRectangleBounds().getBounds2D().getCenterX(),
                 getMesh().getRelativeRectangleBounds().getBounds2D().getCenterY());
-
-        rotateTurret(game);
-        if (ballInSight(game))
-            openFire(game);
     }
 
     @Override
     public void update(Game game) {
         super.update(game);
         rotateTurret(game);
-//        if (ballInSight(game))
-//         openFire(game);
+        if (ballInSight(game))
+            openFire();
     }
 
     /**
@@ -64,9 +63,9 @@ public class BulletTurret extends GameSprite {
      * @param game object of a class Game to get info about the ball
      */
     private void rotateTurret(Game game) {
-        ball = (GameBall) game.DRAWABLES.get(0);
+        ball = game.DRAWABLES.stream().filter(x -> (x.hasTags(ObjectTag.GameBall))).findFirst();
 
-        ballBounds = ball.getMesh().getRelativeRectangleBounds().getBounds2D();
+        ballBounds = ((GameBall) ball.get()).getMesh().getRelativeRectangleBounds().getBounds2D();
         turretBounds = getMesh().getRelativeRectangleBounds().getBounds2D();
 
         AffineTransform at = transform.getFullAffine();
@@ -78,9 +77,11 @@ public class BulletTurret extends GameSprite {
         }
     }
 
+
     /**
      * Check if there is a ball in sight of turret to open fire
      *
+     * @param game object of a class Game to get DRAWABLES collection
      * @return true if ball is in sight
      */
     private boolean ballInSight(Game game) {
@@ -89,7 +90,7 @@ public class BulletTurret extends GameSprite {
         double distance = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY()).
                 subtract(turretCenter).magnitude();
 
-        Rectangle line = new Rectangle((int) turretBounds.getWidth()/2, (int) turretBounds.getHeight()/2,
+        Rectangle line = new Rectangle((int) turretBounds.getWidth() / 2, (int) turretBounds.getHeight() / 2,
                 (int) distance, 1);
         Shape checkLine = getTransform().getFullAffine().createTransformedShape(line.getBounds2D());
         Mesh lineMesh = new Mesh(checkLine) {
@@ -101,7 +102,8 @@ public class BulletTurret extends GameSprite {
 
         game.DRAWABLES.forEach(n -> {
             if (n.getProperty(ObjectProperty.Mesh) != null &&
-                ((Mesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh) && !n.equals(ball) && !n.equals(this))
+                ((Mesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh) &&
+                !n.hasTags(ObjectTag.GameBall) && !n.equals(this))
                 //if (n.intersects(checkLine) && !n.equals(ball) && !n.equals(this))
                 tmpBoolean = false;
         });
@@ -111,13 +113,13 @@ public class BulletTurret extends GameSprite {
     /**
      * Shoot some bullets which are deadly for the ball
      */
-    private void openFire(Game game) {
+    private void openFire() {
         if (bulletOnScreen)
             return;
 
         initBullet();
 
-        game.DRAWABLES.add(bullet);
+        Game.CALL.add(x -> x.DRAWABLES.add(bullet));
 
         bulletOnScreen = !bulletOnScreen;
     }
@@ -136,9 +138,6 @@ public class BulletTurret extends GameSprite {
         this.bulletOnScreen = bulletOnScreen;
     }
 
-    public boolean isBulletOnScreen() {
-        return bulletOnScreen;
-    }
 }
 
 class Bullet extends GameSprite {
@@ -147,7 +146,6 @@ class Bullet extends GameSprite {
 
     private RigidBody rigidBody;
     private BulletTurret turret;
-    private boolean wasDestroyed = false;
 
     public Bullet(BulletTurret turret, Vector2 position, Vector2 direction) {
         super(BULLET_IMAGE, 2);
@@ -164,7 +162,7 @@ class Bullet extends GameSprite {
             }
 
         };
-        rigidBody.impulse(direction.subtract(position).normalized().multipliedBy(1));
+        rigidBody.impulse(direction.subtract(position).normalized().multipliedBy(4));
 
         addProperty(ObjectProperty.RigidBody, rigidBody);
     }
@@ -172,20 +170,18 @@ class Bullet extends GameSprite {
     @Override
     public void update(Game game) {
         super.update(game);
-        processCollisions(game);
+        if (game.getIntersectedObjects(mesh).stream()
+                .anyMatch(x -> !x.hasTags(ObjectTag.GameBall) && !x.equals(turret) && x.hasTags(ObjectTag.Touchable))) {
+            processCollisions();
+        }
     }
 
 
     /**
      * Remove the bullet if it collide any Touchable object
-     *
-     * @param game object of a class Game to get info about collisions
      */
-    private void processCollisions(Game game) {
-        if (!game.checkForCollision(mesh))
-            return;
-        //game.DRAWABLES.remove(game.DRAWABLES.size() - 1);
+    private void processCollisions() {
+        Game.CALL.add(x -> x.DRAWABLES.remove(this));
         turret.setBulletOnScreen(false);
-        wasDestroyed = true;
     }
 }
