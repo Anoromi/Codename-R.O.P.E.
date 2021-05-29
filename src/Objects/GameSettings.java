@@ -12,7 +12,7 @@ public class GameSettings {
   public static final int COLLIDER_EDGES = 100;
   public static final int ROPE_LAYER = 2;
   public static final int BALL_LAYER = 3;
-  public static final int ROPE_HEIGHT = 10;
+  public static final int ROPE_HEIGHT = 5;
   public static final double HOOK_SPEED = 15;
   public static final double APPROACH_SPEED = 0.01;
   public static final double SHIFT_SPEED = 3;

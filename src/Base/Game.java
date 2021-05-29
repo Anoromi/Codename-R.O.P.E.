@@ -137,7 +137,7 @@ public class Game implements Runnable {
     Graphics2D graphics = (Graphics2D) bs.getDrawGraphics();
     graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     curGraphics = graphics;
-    graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
+    graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF));
     graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED));
     graphics.addRenderingHints(
         new RenderingHints(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED));
@@ -155,7 +155,7 @@ public class Game implements Runnable {
       }
     }
     for (curLayer = min; curLayer <= max; curLayer = nextSmallest(curLayer, max)) {
-      DRAWABLES.parallelStream().forEach(draw);
+      DRAWABLES.parallelStream().forEachOrdered(draw);
     }
 
     bs.show();
@@ -207,7 +207,7 @@ public class Game implements Runnable {
   }
 
   private void updateAll() {
-    DRAWABLES.parallelStream().forEach(x -> x.update(this));
+    DRAWABLES.parallelStream().forEachOrdered(x -> x.update(this));
     updates++;
   }
 
@@ -244,7 +244,7 @@ public class Game implements Runnable {
 
   private List<GameObject> processIntersectionsFor(List<GameObject> elements, Mesh mesh) {
     ArrayList<GameObject> touchedObjects = new ArrayList<>();
-    elements.stream().parallel().forEach(collider -> {
+    elements.stream().parallel().forEachOrdered(collider -> {
       if (collider.hasTags(ObjectTag.Compound)) {
         touchedObjects.addAll(processIntersectionsFor(((Compound) collider).getGameObjects(), mesh));
       }

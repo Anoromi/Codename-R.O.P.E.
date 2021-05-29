@@ -113,8 +113,8 @@ public class GameBall extends GameSprite {
   @Override
   public void update(Game game) {
     super.update(game);
-    processCollisions(game);
     processRope(game);
+    processCollisions(game);
   }
 
   private void processRope(Game game) {
@@ -157,8 +157,10 @@ public class GameBall extends GameSprite {
   }
 
   private void processCollisions(Game game) {
-    if (!game.checkForCollision(mesh))
+    var collided = game.getIntersectedObjects(getMesh());
+    if (collided.isEmpty())
       return;
+    collided.removeIf(x -> !x.hasTags(ObjectTag.Touchable));
     double ballRadius = image.getWidth() / 2;
     double distanceToRadius = (ballRadius + 1) / Math.cos(3.14 / ballRadius / 2);
     double pointSumX = 0, pointSumY = 0;
@@ -170,8 +172,14 @@ public class GameBall extends GameSprite {
           ballRadius + distanceToRadius * Math.sin(theta * 3.14 / 180));
       Vector2 transformed = new Vector2();
       getTransform().getFullAffine().transform(collision, transformed);
-      List<GameObject> collided = game.getElementsAt(transformed);
-      if (collided.stream().parallel().anyMatch(x -> (x != this && x.hasTags(ObjectTag.Touchable)))) {
+      boolean present = false;
+      for (GameObject gameObject : collided) {
+        if (gameObject.contains(transformed)) {
+          present = true;
+          break;
+        }
+      }
+      if (present) {
         pointSumX += collision.x;
         pointSumY += collision.y;
         counter++;
