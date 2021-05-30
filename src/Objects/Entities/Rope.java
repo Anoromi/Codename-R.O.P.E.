@@ -9,10 +9,7 @@ import Base.Game;
 import Helpers.GeometryHelper;
 import Helpers.ImageHelper;
 import Helpers.Vector2;
-import Objects.GameSettings;
-import Objects.GameSprite;
-import Objects.Hook.HookComponent;
-import Objects.ObjectTag;
+import Objects.*;
 import Properties.RectangleMesh;
 
 public class Rope extends GameSprite {

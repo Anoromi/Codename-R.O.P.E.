@@ -11,15 +11,11 @@ import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Properties.*;
 
-public class GameSprite extends SingleGameObject {
-  protected BufferedImage image;
-  protected Transform transform;
+public class GameSprite extends BlankSprite {
   protected Mesh mesh;
 
   public GameSprite(BufferedImage image, int layer) {
-    super(layer);
-    this.image = image;
-    transform = new Transform();
+    super(image, layer);
     addProperty(ObjectProperty.Transform, transform);
     mesh = new Mesh(ImageHelper.areaFromImage(image)) {
       @Override
@@ -31,9 +27,7 @@ public class GameSprite extends SingleGameObject {
   }
 
   public GameSprite(BufferedImage image, Shape shape, int layer) {
-    super(layer);
-    this.image = image;
-    transform = new Transform();
+    super(image, layer);
     addProperty(ObjectProperty.Transform, transform);
     mesh = new Mesh(shape) {
       @Override
@@ -80,21 +74,44 @@ public class GameSprite extends SingleGameObject {
     return getMesh().getShape();
   }
 
+  public GameSprite setPosition(double x, double y) {
+    getTransform().translate(x, y);
+    return this;
+  }
+
   public GameSprite setPosition(Vector2 vector) {
+    getTransform().translate(vector.x, vector.y);
+    return this;
+  }
+
+  public GameSprite setRotation(double theta, double anchorX, double anchorY) {
+    getTransform().setRotation(theta, anchorX, anchorY);
+    return this;
+  }
+
+  public GameSprite setRotation(double theta) {
+    getTransform().setRotation(theta);
+    return this;
+  }
+
+  public GameSprite translate(double dx, double dy) {
+    getTransform().getAffine().translate(dx, dy);
+    return this;
+  }
+
+  public GameSprite translate(Vector2 vector) {
     getTransform().getAffine().translate(vector.x, vector.y);
     return this;
   }
 
-  public void translate(double dx, double dy) {
-    getTransform().getAffine().translate(dx, dy);
-  }
-
-  public void translate(Vector2 vector) {
-    getTransform().getAffine().translate(vector.x, vector.y);
-  }
-
-  public void rotate(double theta) {
+  public GameSprite rotate(double theta) {
     getTransform().getAffine().rotate(theta);
+    return this;
+  }
+
+  public GameSprite rotate(double theta, double anchorX, double anchorY) {
+    getTransform().getAffine().rotate(theta, anchorX, anchorY);
+    return this;
   }
 
   @Override

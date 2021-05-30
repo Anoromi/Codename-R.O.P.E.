@@ -1,4 +1,4 @@
-package Objects.Hook;
+package Objects;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;

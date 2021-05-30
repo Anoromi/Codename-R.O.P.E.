@@ -107,13 +107,8 @@ public class LevelReader {
                 double y = Double.parseDouble(info.substring(0, indexOfComma));
                 double angle = Double.parseDouble(info.substring(indexOfComma + 1));
 
-                game.DRAWABLES.add(new Spikes() {
-                    {
-                        getTransform().setPosition(x, y);
-                        getTransform().getFullAffine().rotate(Math.toRadians(angle),
-                                SPIKES_IMAGE.getWidth() / 2.0, SPIKES_IMAGE.getHeight() / 2.0);
-                    }
-                });
+                game.DRAWABLES.add(new Spikes().setPosition(x, y).setRotation(Math.toRadians(angle),
+                        Spikes.SPIKES_IMAGE.getWidth() / 2.0, Spikes.SPIKES_IMAGE.getHeight() / 2.0));
 
                 return;
             }
@@ -144,12 +139,9 @@ public class LevelReader {
                 }
 
                 double finalAngle = angle;
-                game.DRAWABLES.add(new MovingSpikes(x1, y1, x2, y2) {
-                    {
-                        getTransform().getFullAffine().rotate(Math.toRadians(finalAngle),
-                                MOVING_SPIKES_IMAGE.getWidth() / 2.0, MOVING_SPIKES_IMAGE.getHeight() / 2.0);
-                    }
-                });
+                game.DRAWABLES.add(new MovingSpikes(x1, y1, x2, y2).setRotation(Math.toRadians(finalAngle),
+                        MovingSpikes.MOVING_SPIKES_IMAGE.getWidth() / 2.0,
+                        MovingSpikes.MOVING_SPIKES_IMAGE.getHeight() / 2.0));
 
                 return;
             }
@@ -163,13 +155,15 @@ public class LevelReader {
                 double y = Double.parseDouble(info.substring(0, indexOfComma));
                 double angle = Double.parseDouble(info.substring(indexOfComma + 1));
 
-                game.DRAWABLES.add(new JumpPad() {
+                game.DRAWABLES.add(new JumpPad().setPosition(x, y).setRotation(Math.toRadians(angle),
+                        JumpPad.JUMP_PAD_IMAGE.getWidth() / 2.0, JumpPad.JUMP_PAD_IMAGE.getHeight() / 2.0));
+                /*game.DRAWABLES.add(new JumpPad() {
                     {
                         getTransform().setPosition(x, y);
                         getTransform().getFullAffine().rotate(Math.toRadians(angle),
                                 JUMP_PAD_IMAGE.getWidth() / 2.0, JUMP_PAD_IMAGE.getHeight() / 2.0);
                     }
-                });
+                });*/
 
                 return;
             }

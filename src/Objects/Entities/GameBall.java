@@ -10,7 +10,6 @@ import java.util.List;
 import Base.Game;
 import Helpers.Vector2;
 import Objects.*;
-import Objects.Hook.HookComponent;
 import Properties.ObjectProperty;
 import Properties.PointRigidBody;
 import Properties.RigidBody;

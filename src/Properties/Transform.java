@@ -58,6 +58,12 @@ public class Transform extends Property {
     return this;
   }
 
+  public Transform setRotation(double theta, double anchorX, double anchorY) {
+    t.rotate(-getRotation());
+    t.rotate(theta, anchorX, anchorY);
+    return this;
+  }
+
   public Transform rotate(double theta) {
     t.rotate(theta);
     return this;
