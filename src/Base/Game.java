@@ -26,6 +26,7 @@ public class Game implements Runnable {
   public final Camera camera;
   public final int STEP = 4;
   public int currentStep = STEP;
+  private Goal goal;
 
   private static final double DELAY = 1000 / 500;
   public int frames = 0;
@@ -48,6 +49,7 @@ public class Game implements Runnable {
     DRAWABLES.add(ball);
 
     LevelReader.createLevel(this, 1);
+    DRAWABLES.add(new Pointer());
     /*
      * { { getTransform().setPosition(500, 500); } };
      */
@@ -235,5 +237,17 @@ public class Game implements Runnable {
 
   public Canvas getCanvas() {
     return canvas;
+  }
+
+  public GameBall getBall() {
+    return ball;
+  }
+
+  public Goal getGoal() {
+    return goal;
+  }
+
+  public void setGoal(Goal goal) {
+    this.goal = goal;
   }
 }

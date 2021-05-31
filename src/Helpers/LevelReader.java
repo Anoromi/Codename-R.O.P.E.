@@ -91,6 +91,23 @@ public class LevelReader {
                 return;
             }
 
+            if (name.equals("goal")) {
+                int indexOfComma = info.indexOf(',');
+                double x = Double.parseDouble(info.substring(0, indexOfComma));
+                double y = Double.parseDouble(info.substring(indexOfComma + 1));
+
+                startingPoint = new Vector2(x, y);
+
+                Goal goal = new Goal();
+                goal.setStart(gl -> {
+                    Goal g = (Goal) gl;
+                    g.getTransform().setPosition(x, y);
+                });
+                game.DRAWABLES.add(goal);
+                game.setGoal(goal);
+                return;
+            }
+
             if (name.equals("background")) {
                 game.DRAWABLES.add(new BlankSprite(info, 0));
             }

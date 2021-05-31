@@ -1,4 +1,4 @@
-package Objects;
+package Objects.Entities;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -13,7 +13,6 @@ import Helpers.GeometryHelper;
 import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Objects.*;
-import Objects.Entities.GameBall;
 import Properties.*;
 
 public class HookComponent extends GameCompound {

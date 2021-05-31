@@ -37,8 +37,8 @@ public class Camera {
   }
 
   private void setCenter(Game game, Vector2 newTarget) {
-    newTarget.x -= GameSettings.FRAME_WIDTH/2;
-    newTarget.y -= GameSettings.FRAME_HEIGHT/2;
+    newTarget.x -= GameSettings.FRAME_WIDTH / 2;
+    newTarget.y -= GameSettings.FRAME_HEIGHT / 2;
     target = newTarget;
   }
 
@@ -54,15 +54,19 @@ public class Camera {
     return targetScale;
   }
 
-  public void setTargetFromWindow(Vector2 target) {
-    pos.transform(target, this.target);
-  }
-
   public void setTargetScale(double targetScale) {
     this.targetScale = targetScale;
   }
 
   public AffineTransform getPos() {
     return pos;
+  }
+
+  public Vector2 getUpperBound() {
+    return target.added(new Vector2(GameSettings.FRAME_WIDTH, GameSettings.FRAME_HEIGHT));
+  }
+
+  public Vector2 getLowerBound() {
+    return target.copy();
   }
 }

@@ -54,12 +54,12 @@ public class BlankSprite extends SingleGameObject {
   }
 
   public BlankSprite setPosition(double x, double y) {
-    getTransform().translate(x, y);
+    getTransform().setPosition(x, y);
     return this;
   }
 
   public BlankSprite setPosition(Vector2 vector) {
-    getTransform().translate(vector.x, vector.y);
+    getTransform().setPosition(vector.x, vector.y);
     return this;
   }
 

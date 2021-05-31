@@ -1,4 +1,5 @@
 start{300,500}
+goal{1000,1000}
 
 walls{icons/Lvldec.png}
 
@@ -7,7 +8,7 @@ jump{250,750,0}
 
 trap{600,700,0}
 
-bullet{600,100}
+bullet{2000,1000}
 
 movingTrap{150,850,180,950,0}
 
