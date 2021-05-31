@@ -1,6 +1,0 @@
-start{3500,2880}
-goal{5980,3160}
-
-
-background{icons/backgrounds/back10k.png}
-walls{icons/walls/simpleBeams10k.png}

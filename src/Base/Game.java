@@ -50,7 +50,8 @@ public class Game implements Runnable {
 
     //LevelReader.createLevel(this, 1);
     //LevelReader.createLevel(this, 2);
-    LevelReader.createLevel(this, 3);
+    //LevelReader.createLevel(this, 3);
+    LevelReader.createLevel(this, 4);
     DRAWABLES.add(new Pointer());
     /*
      * { { getTransform().setPosition(500, 500); } };
