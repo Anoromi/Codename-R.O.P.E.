@@ -1,0 +1,6 @@
+start{3300,2700}
+goal{5600,2970}
+
+
+background{icons/backgrounds/SimpleBack9k.png}
+walls{icons/walls/simpleBeams9k.png}
