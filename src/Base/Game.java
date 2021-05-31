@@ -97,6 +97,7 @@ public class Game implements Runnable {
     for (GameObject object : DRAWABLES) {
       object.start();
     }
+    processCalls();
   }
 
   public void render() {

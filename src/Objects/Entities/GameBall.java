@@ -5,7 +5,10 @@ import static java.lang.System.out;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+
+import javax.sound.sampled.*;
 
 import Base.Game;
 import Helpers.Vector2;
@@ -23,6 +26,9 @@ public class GameBall extends GameSprite {
   protected boolean shift;
 
   protected double ropeLength;
+
+  protected Clip approachClip;
+  protected Clip bounceClip;
 
   public GameBall(Game game, String path) {
     super(path, GameSettings.BALL_LAYER);
@@ -117,6 +123,9 @@ public class GameBall extends GameSprite {
   }
 
   private void processRope(Game game) {
+    if (hook == null || !hook.isStuck()) {
+      stopApproachSound();
+    }
     if (hook != null && hook.isStuck()) {
       if (rope == null) {
         rope = new Rope(this, hook);
@@ -125,8 +134,10 @@ public class GameBall extends GameSprite {
         rope.update(game);
       }
       rope.realUpdate(game);
-      if (!rope.isAlive())
+      if (!rope.isAlive()) {
+        stopApproachSound();
         return;
+      }
       var curLength = rope.getDirection().magnitude();
       var hookBallBounds = hook.getHookBall().getMesh().getRelativeRectangleBounds().getBounds2D();
       var hookBallCenter = new Vector2(hookBallBounds.getCenterX(), hookBallBounds.getCenterY());
@@ -145,13 +156,33 @@ public class GameBall extends GameSprite {
       }
       if (approach && ropeDir.magnitude() != 0) {
         getRigidBody().realImpulse(ropeDir.normalized().invert().multiplyBy(GameSettings.APPROACH_SPEED));
-      }
+        approachSound();
+      } else if (!approach)
+        stopApproachSound();
       if (shift && ropeDir.magnitude() != 0) {
         getRigidBody().realImpulse(ropeDir.normalized().invert().multiplyBy(GameSettings.SHIFT_SPEED));
         removeHook();
         shift = false;
+        shiftSound();
       }
       ropeLength = curLength;
+    }
+  }
+
+  private void approachSound() {
+    if (approachClip != null && !approachClip.isActive()) {
+      approachClip.loop(-1);
+      approachClip.start();
+    }
+  }
+
+  private void stopApproachSound() {
+    if (approachClip != null)
+      approachClip.stop();
+  }
+
+  private void shiftSound() {
+    if (approachClip == null) {
     }
   }
 
@@ -159,6 +190,32 @@ public class GameBall extends GameSprite {
   public void start() {
     super.start();
     removeHook();
+    if (bounceClip == null) {
+      try {
+        AudioInputStream audioInputStream;
+        audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Bounce.wav").getAbsoluteFile());
+        bounceClip = AudioSystem.getClip();
+        bounceClip.open(audioInputStream);
+        FloatControl control = (FloatControl) bounceClip.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue((float) (Math.log(0.05) / Math.log(10.0) * 20.0));
+      } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+        e.printStackTrace();
+      }
+    } else
+      bounceClip.stop();
+    if (approachClip == null) {
+      try {
+        AudioInputStream audioInputStream;
+        audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Approach.wav").getAbsoluteFile());
+        approachClip = AudioSystem.getClip();
+        approachClip.open(audioInputStream);
+        FloatControl control = (FloatControl) approachClip.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue((float) (Math.log(0.05) / Math.log(10.0) * 20.0));
+      } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+        e.printStackTrace();
+      }
+    } else
+      approachClip.stop();
   }
 
   private void processCollisions(Game game) {
@@ -173,7 +230,7 @@ public class GameBall extends GameSprite {
     }
     collided.removeIf(x -> !x.hasTags(ObjectTag.Touchable));
     double ballRadius = image.getWidth() / 2;
-    double distanceToRadius = (ballRadius + 1) / Math.cos(3.14 / ballRadius / 2);
+    double distanceToRadius = (ballRadius) / Math.cos(3.14 / ballRadius / 2);
     double pointSumX = 0, pointSumY = 0;
     int colliderEdges = GameSettings.COLLIDER_EDGES;
     int counter = 0;
@@ -197,6 +254,18 @@ public class GameBall extends GameSprite {
     }
     if (counter == 0)
       return;
+    if (getRigidBody().getSpeed().magnitude() > 0.01)
+      try {
+        AudioInputStream audioInputStream;
+        audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Bounce.wav").getAbsoluteFile());
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInputStream);
+        FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue((float) (Math.log(0.05) / Math.log(10.0) * 20.0));
+        clip.start();
+      } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+        e.printStackTrace();
+      }
     switchDirection(new Vector2(pointSumX / counter, pointSumY / counter), ballRadius);
   }
 
