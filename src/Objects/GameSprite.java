@@ -6,6 +6,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.function.Consumer;
 
 import Helpers.ImageHelper;
 import Helpers.Vector2;
@@ -16,7 +17,6 @@ public class GameSprite extends BlankSprite {
 
   public GameSprite(BufferedImage image, int layer) {
     super(image, layer);
-    addProperty(ObjectProperty.Transform, transform);
     mesh = new Mesh(ImageHelper.areaFromImage(image)) {
       @Override
       protected AffineTransform getTransform() {
@@ -28,7 +28,6 @@ public class GameSprite extends BlankSprite {
 
   public GameSprite(BufferedImage image, Shape shape, int layer) {
     super(image, layer);
-    addProperty(ObjectProperty.Transform, transform);
     mesh = new Mesh(shape) {
       @Override
       protected AffineTransform getTransform() {
@@ -66,6 +65,8 @@ public class GameSprite extends BlankSprite {
     return (GameSprite) super.addProperty(propertyName, property);
   }
 
+
+  @Override
   public boolean contains(Point2D p) {
     return getMesh().contains(p);
   }
@@ -74,6 +75,7 @@ public class GameSprite extends BlankSprite {
     return getMesh().getShape();
   }
 
+  @Override
   public GameSprite setPosition(double x, double y) {
     getTransform().translate(x, y);
     return this;

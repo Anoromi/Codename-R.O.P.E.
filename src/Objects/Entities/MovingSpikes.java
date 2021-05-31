@@ -17,8 +17,8 @@ import Objects.ObjectTag;
 import java.awt.image.BufferedImage;
 
 public class MovingSpikes extends GameSprite {
-    public static final BufferedImage MOVING_SPIKES_IMAGE =
-            ImageHelper.rescale(ImageHelper.imageOrNull("icons/Spikes.png"), 100, 20);
+    public static final BufferedImage MOVING_SPIKES_IMAGE = ImageHelper
+            .rescale(ImageHelper.imageOrNull("icons/Spikes.png"), 100, 20);
 
     private double x1;
     private double y1;
@@ -34,8 +34,6 @@ public class MovingSpikes extends GameSprite {
         super(MOVING_SPIKES_IMAGE, 3);
         addTags(ObjectTag.Danger);
         addTags(ObjectTag.Touchable);
-        setPosition(new Vector2(x1, y1));
-
         if (x1 > x2) {
             double tmp = x2;
             x2 = x1;
@@ -52,15 +50,20 @@ public class MovingSpikes extends GameSprite {
         this.x2 = x2;
         this.y2 = y2;
 
-        increaseX = x2 - x1 > y2 - y1 ?
-                GameSettings.SPIKES_SPEED : (x2 - x1) * GameSettings.SPIKES_SPEED / (y2 - y1);
-        increaseY = increaseX == GameSettings.SPIKES_SPEED ?
-                (y2 - y1) * GameSettings.SPIKES_SPEED / (x2 - x1) : GameSettings.SPIKES_SPEED;
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        increaseX = x2 - x1 > y2 - y1 ? GameSettings.SPIKES_SPEED : (x2 - x1) * GameSettings.SPIKES_SPEED / (y2 - y1);
+        increaseY = increaseX == GameSettings.SPIKES_SPEED ? (y2 - y1) * GameSettings.SPIKES_SPEED / (x2 - x1)
+                : GameSettings.SPIKES_SPEED;
 
         startingX1 = x1;
         startingY1 = y1;
 
         movingDown = true;
+        setPosition(new Vector2(x1, y1));
     }
 
     @Override
@@ -71,11 +74,11 @@ public class MovingSpikes extends GameSprite {
     }
 
     /**
-     * Move spikes from x1,y1 to x2,y2, then move them back from x2,y2 to x1,y1 and repeat than movements
+     * Move spikes from x1,y1 to x2,y2, then move them back from x2,y2 to x1,y1 and
+     * repeat than movements
      */
     private void moveSpikes() {
-        if (movingDown && (x1 >= x2 || y1 >= y2) ||
-            !movingDown && (x1 <= x2 || y1 <= y2)) {
+        if (movingDown && (x1 >= x2 || y1 >= y2) || !movingDown && (x1 <= x2 || y1 <= y2)) {
             movingDown = !movingDown;
 
             increaseX = -increaseX;

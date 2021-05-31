@@ -105,6 +105,8 @@ public class HookComponent extends GameCompound {
     addProperty(ObjectProperty.Transform, transform);
     addProperty(ObjectProperty.RigidBody, rigidBody);
 
+    addTags(ObjectTag.Disposable);
+
     gameObjects.add(hook);
     gameObjects.add(hookBall);
   }

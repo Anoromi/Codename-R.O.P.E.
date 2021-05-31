@@ -39,5 +39,6 @@ public abstract class Mesh extends Property {
     return !area.isEmpty();
   }
 
+
   protected abstract AffineTransform getTransform();
 }

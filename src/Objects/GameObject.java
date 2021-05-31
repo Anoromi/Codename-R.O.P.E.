@@ -1,11 +1,12 @@
 package Objects;
+
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.function.Consumer;
 
 import Base.Game;
-import Properties.Mesh;
 import Properties.ObjectProperty;
 import Properties.Property;
 
@@ -51,6 +52,21 @@ public abstract class GameObject {
 
   public Property getProperty(ObjectProperty propertyName) {
     return gameProperty.get(propertyName);
+  }
+
+  private Consumer<GameObject> start;
+
+  public GameObject setStart(Consumer<GameObject> start) {
+    this.start = start;
+    return this;
+  }
+
+  public void start() {
+    for (var property : gameProperty.entrySet()) {
+      property.getValue().restart();
+    }
+    if (start != null)
+      start.accept(this);
   }
 
   public void update(Game game) {

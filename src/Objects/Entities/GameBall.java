@@ -55,7 +55,7 @@ public class GameBall extends GameSprite {
       @Override
       public void mouseReleased(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
-          game.CALL.add(x -> {
+          Game.CALL.add(x -> {
             out.println("Rel " + e.getPoint());
             final Vector2 change = Vector2.v(e.getPoint()).subtract(pressPoint);
             if (change.magnitude() != 0) {
@@ -155,17 +155,28 @@ public class GameBall extends GameSprite {
     }
   }
 
+  @Override
+  public void start() {
+    super.start();
+    removeHook();
+  }
+
   private void processCollisions(Game game) {
     var collided = game.getIntersectedObjects(getMesh());
     if (collided.isEmpty())
       return;
+    for (GameObject gameObject : collided) {
+      if (gameObject.hasTags(ObjectTag.Danger)) {
+        game.restartGame();
+        return;
+      }
+    }
     collided.removeIf(x -> !x.hasTags(ObjectTag.Touchable));
     double ballRadius = image.getWidth() / 2;
     double distanceToRadius = (ballRadius + 1) / Math.cos(3.14 / ballRadius / 2);
     double pointSumX = 0, pointSumY = 0;
     int colliderEdges = GameSettings.COLLIDER_EDGES;
     int counter = 0;
-    boolean coll = false;
     for (double theta = -90; theta < 270; theta += 360.0 / colliderEdges) {
       Vector2 collision = Vector2.v(ballRadius + distanceToRadius * Math.cos(theta * 3.14 / 180),
           ballRadius + distanceToRadius * Math.sin(theta * 3.14 / 180));

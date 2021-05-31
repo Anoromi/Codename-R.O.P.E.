@@ -44,75 +44,37 @@ public class Game implements Runnable {
     canvas = new Canvas();
     DRAWABLES = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
-
     ball = new GameBall(this, "icons\\Ball.png");
-/*    {
-      {
-        getTransform().setPosition(500, 500);
-      }
-    };*/
     DRAWABLES.add(ball);
 
-    DRAWABLES.add(new GameSprite("icons/QRect.png", 1) {
-      {
-        getTransform().setPosition(new Vector2(500, 200));
-        addTags(ObjectTag.Touchable);
-      }
+    LevelReader.createLevel(this, 1);
+    /*
+     * { { getTransform().setPosition(500, 500); } };
+     */
 
-      @Override
-      public void update(Game game) {
-        super.update(game);
-        // transform.rotate(0.001);
-      }
-    }.addTags(ObjectTag.Touchable));
+    /*
+     * DRAWABLES.add(new GameSprite("icons/Lvldec.png", 1) { {
+     * addTags(ObjectTag.Touchable); } }); DRAWABLES.add(new JumpPad() { {
+     * getTransform().setPosition(150,500);
+     * getTransform().getFullAffine().rotate(Math.toRadians(-90),
+     * JUMP_PAD_IMAGE.getWidth() / 2.0, JUMP_PAD_IMAGE.getHeight() / 2.0); } });
+     *
+     * DRAWABLES.add(new JumpPad() { { getTransform().setPosition(250,700);
+     * getTransform().setRotation(Math.toRadians(0)); } });
+     *
+     * DRAWABLES.add(new Spikes() { { getTransform().setPosition(600,700);
+     * getTransform().setRotation(Math.toRadians(0)); } });
+     *
+     * DRAWABLES.add(new BulletTurret(this, 600,100) { { } });
+     *
+     * DRAWABLES.add(new MovingSpikes(150,850, 180, 950){ {
+     *
+     * } });
+     */
 
-    DRAWABLES.add(new GameSprite("icons/QRect.png", 1) {
-      {
-        getTransform().setPosition(200, 200);
-        addTags(ObjectTag.Touchable);
-      }
-    });
+    new Timer(1000, e ->
 
-    LevelReader.createLevel(this,1);
-/*    DRAWABLES.add(new GameSprite("icons/Lvldec.png", 1) {
-      {
-        addTags(ObjectTag.Touchable);
-      }
-    });
-    DRAWABLES.add(new JumpPad() {
-      {
-        getTransform().setPosition(150,500);
-        getTransform().getFullAffine().rotate(Math.toRadians(-90),
-                JUMP_PAD_IMAGE.getWidth() / 2.0, JUMP_PAD_IMAGE.getHeight() / 2.0);
-      }
-    });
-
-    DRAWABLES.add(new JumpPad() {
-      {
-        getTransform().setPosition(250,700);
-        getTransform().setRotation(Math.toRadians(0));
-      }
-    });
-
-    DRAWABLES.add(new Spikes() {
-      {
-        getTransform().setPosition(600,700);
-        getTransform().setRotation(Math.toRadians(0));
-      }
-    });
-
-    DRAWABLES.add(new BulletTurret(this, 600,100) {
-      {
-      }
-    });
-
-    DRAWABLES.add(new MovingSpikes(150,850, 180, 950){
-      {
-
-      }
-    });*/
-
-    new Timer(1000, e -> {
+    {
       System.out.println(frames);
       System.out.println(updates);
       frames = 0;
@@ -120,11 +82,19 @@ public class Game implements Runnable {
     }).start();
 
     t = new Thread(this);
+    initObj();
   }
 
   public void start() {
     running = true;
     t.start();
+  }
+
+  public void initObj() {
+    DRAWABLES.removeIf(x -> x.hasTags(ObjectTag.Disposable));
+    for (GameObject object : DRAWABLES) {
+      object.start();
+    }
   }
 
   public void render() {
@@ -248,14 +218,19 @@ public class Game implements Runnable {
       if (collider.hasTags(ObjectTag.Compound)) {
         touchedObjects.addAll(processIntersectionsFor(((Compound) collider).getGameObjects(), mesh));
       }
-      if (!collider.hasAny(ObjectTag.Touchable))
-        return;
       var inter = collider.getProperty(ObjectProperty.Mesh);
       if (inter != mesh && inter != null && ((Mesh) inter).intersects(mesh)) {
         touchedObjects.add(collider);
       }
     });
     return touchedObjects;
+  }
+
+  public void restartGame() {
+    CALL.add(game -> {
+      CALL.clear();
+      initObj();
+    });
   }
 
   public Canvas getCanvas() {

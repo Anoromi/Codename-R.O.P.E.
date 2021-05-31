@@ -1,4 +1,5 @@
 package Properties;
+
 import java.util.function.Consumer;
 
 import Base.Game;
@@ -9,5 +10,8 @@ public class Property {
 
   public void update(Game game) {
     update.accept(game);
+  }
+
+  public void restart() {
   }
 }

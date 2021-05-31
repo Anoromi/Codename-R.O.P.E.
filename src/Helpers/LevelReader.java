@@ -14,13 +14,15 @@ bullet{x,y} - coordinate of the bullet turret enemy
 
 package Helpers;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import Base.Game;
-import Objects.Entities.*;
+import Objects.BlankSprite;
 import Objects.GameSprite;
 import Objects.ObjectTag;
-
-import java.io.*;
-import java.util.*;
+import Objects.Entities.*;
 
 public class LevelReader {
     private static ArrayList<File> LEVELS = new ArrayList<>();
@@ -81,13 +83,16 @@ public class LevelReader {
                 startingPoint = new Vector2(x, y);
 
                 GameBall ball = (GameBall) game.DRAWABLES.get(0);
-                ball.getTransform().setPosition(x, y);
+                ball.setStart(b -> {
+                    GameBall rb = (GameBall) b;
+                    rb.getTransform().setPosition(x, y);
+                });
 
                 return;
             }
 
             if (name.equals("background")) {
-                game.DRAWABLES.add(new GameSprite(info, 0));
+                game.DRAWABLES.add(new BlankSprite(info, 0));
             }
 
             if (name.equals("walls")) {
@@ -107,8 +112,11 @@ public class LevelReader {
                 double y = Double.parseDouble(info.substring(0, indexOfComma));
                 double angle = Double.parseDouble(info.substring(indexOfComma + 1));
 
-                game.DRAWABLES.add(new Spikes().setPosition(x, y).setRotation(Math.toRadians(angle),
-                        Spikes.SPIKES_IMAGE.getWidth() / 2.0, Spikes.SPIKES_IMAGE.getHeight() / 2.0));
+                game.DRAWABLES.add(new Spikes().setStart(s -> {
+                    Spikes sp = (Spikes) s;
+                    sp.setPosition(x, y).setRotation(Math.toRadians(angle), Spikes.SPIKES_IMAGE.getWidth() / 2.0,
+                            Spikes.SPIKES_IMAGE.getHeight() / 2.0);
+                }));
 
                 return;
             }
@@ -139,9 +147,11 @@ public class LevelReader {
                 }
 
                 double finalAngle = angle;
-                game.DRAWABLES.add(new MovingSpikes(x1, y1, x2, y2).setRotation(Math.toRadians(finalAngle),
-                        MovingSpikes.MOVING_SPIKES_IMAGE.getWidth() / 2.0,
-                        MovingSpikes.MOVING_SPIKES_IMAGE.getHeight() / 2.0));
+                game.DRAWABLES.add(new MovingSpikes(x1, y1, x2, y2).setStart(msp -> {
+                    MovingSpikes ms = (MovingSpikes) msp;
+                    ms.setRotation(Math.toRadians(finalAngle), MovingSpikes.MOVING_SPIKES_IMAGE.getWidth() / 2.0,
+                            MovingSpikes.MOVING_SPIKES_IMAGE.getHeight() / 2.0);
+                }));
 
                 return;
             }
@@ -155,15 +165,16 @@ public class LevelReader {
                 double y = Double.parseDouble(info.substring(0, indexOfComma));
                 double angle = Double.parseDouble(info.substring(indexOfComma + 1));
 
-                game.DRAWABLES.add(new JumpPad().setPosition(x, y).setRotation(Math.toRadians(angle),
-                        JumpPad.JUMP_PAD_IMAGE.getWidth() / 2.0, JumpPad.JUMP_PAD_IMAGE.getHeight() / 2.0));
-                /*game.DRAWABLES.add(new JumpPad() {
-                    {
-                        getTransform().setPosition(x, y);
-                        getTransform().getFullAffine().rotate(Math.toRadians(angle),
-                                JUMP_PAD_IMAGE.getWidth() / 2.0, JUMP_PAD_IMAGE.getHeight() / 2.0);
-                    }
-                });*/
+                game.DRAWABLES.add(new JumpPad().setStart(jp -> {
+                    JumpPad j = (JumpPad) jp;
+                    j.setPosition(x, y).setRotation(Math.toRadians(angle), JumpPad.JUMP_PAD_IMAGE.getWidth() / 2.0,
+                            JumpPad.JUMP_PAD_IMAGE.getHeight() / 2.0);
+                }));
+                /*
+                 * game.DRAWABLES.add(new JumpPad() { { getTransform().setPosition(x, y);
+                 * getTransform().getFullAffine().rotate(Math.toRadians(angle),
+                 * JUMP_PAD_IMAGE.getWidth() / 2.0, JUMP_PAD_IMAGE.getHeight() / 2.0); } });
+                 */
 
                 return;
             }

@@ -86,4 +86,10 @@ public class Transform extends Property {
     return Math.atan2(full.getShearY(), full.getScaleY());
   }
 
+  @Override
+  public void restart() {
+    setPosition(0, 0);
+    setRotation(0);
+  }
+
 }

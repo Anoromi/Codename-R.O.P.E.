@@ -32,21 +32,26 @@ public class BulletTurret extends GameSprite {
     private Rectangle2D ballBounds;
 
     private Rectangle2D turretBounds;
-    private final Vector2 turretCenter;
+    private Vector2 turretCenter;
 
     private Bullet bullet;
     private boolean bulletOnScreen = false;
     private boolean tmpBoolean;
 
-    private double prevAngle = 157;
+    private double prevAngle;
 
     public BulletTurret(Game game, double x, double y) {
         super(BULLET_TURRET_IMAGE, 3);
         addTags(ObjectTag.Danger);
         addTags(ObjectTag.Touchable);
-        setPosition(new Vector2(x, y));
-        turretCenter = new Vector2(getMesh().getRelativeRectangleBounds().getBounds2D().getCenterX(),
-                getMesh().getRelativeRectangleBounds().getBounds2D().getCenterY());
+        setStart(bt -> {
+            Game.CALL.add(g -> g.DRAWABLES.remove(bullet));
+            setPosition(new Vector2(x, y));
+            turretCenter = new Vector2(getMesh().getRelativeRectangleBounds().getBounds2D().getCenterX(),
+                    getMesh().getRelativeRectangleBounds().getBounds2D().getCenterY());
+            prevAngle = 157;
+            bulletOnScreen = false;
+        });
     }
 
     @Override
@@ -69,14 +74,14 @@ public class BulletTurret extends GameSprite {
         turretBounds = getMesh().getRelativeRectangleBounds().getBounds2D();
 
         AffineTransform at = transform.getFullAffine();
-        double angle = -(Math.atan2(turretCenter.getY() - ballBounds.getCenterY(), ballBounds.getCenterX() - turretCenter.getX()));
+        double angle = -(Math.atan2(turretCenter.getY() - ballBounds.getCenterY(),
+                ballBounds.getCenterX() - turretCenter.getX()));
         angle = angle - prevAngle;
         if (angle != 0) {
             at.rotate(angle, BULLET_TURRET_IMAGE.getWidth() / 2.0, BULLET_TURRET_IMAGE.getHeight() / 2.0);
             prevAngle = angle + prevAngle;
         }
     }
-
 
     /**
      * Check if there is a ball in sight of turret to open fire
@@ -87,8 +92,8 @@ public class BulletTurret extends GameSprite {
     private boolean ballInSight(Game game) {
         tmpBoolean = true;
 
-        double distance = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY()).
-                subtract(turretCenter).magnitude();
+        double distance = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY()).subtract(turretCenter)
+                .magnitude();
 
         Rectangle line = new Rectangle((int) turretBounds.getWidth() / 2, (int) turretBounds.getHeight() / 2,
                 (int) distance, 1);
@@ -101,10 +106,10 @@ public class BulletTurret extends GameSprite {
         };
 
         game.DRAWABLES.forEach(n -> {
-            if (n.getProperty(ObjectProperty.Mesh) != null &&
-                ((Mesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh) &&
-                !n.hasTags(ObjectTag.GameBall) && !n.equals(this))
-                //if (n.intersects(checkLine) && !n.equals(ball) && !n.equals(this))
+            if (n.getProperty(ObjectProperty.Mesh) != null
+                    && ((Mesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh)
+                    && !n.hasTags(ObjectTag.GameBall) && !n.equals(this))
+                // if (n.intersects(checkLine) && !n.equals(ball) && !n.equals(this))
                 tmpBoolean = false;
         });
         return tmpBoolean;
@@ -129,7 +134,8 @@ public class BulletTurret extends GameSprite {
      */
     private void initBullet() {
         Vector2 ballVector = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
-        //Shape tmpRect = getTransform().getFullAffine().createTransformedShape(new Rectangle(0, 0, 1, 1).getBounds2D());
+        // Shape tmpRect = getTransform().getFullAffine().createTransformedShape(new
+        // Rectangle(0, 0, 1, 1).getBounds2D());
 
         bullet = new Bullet(this, turretCenter, ballVector);
     }
@@ -141,8 +147,7 @@ public class BulletTurret extends GameSprite {
 }
 
 class Bullet extends GameSprite {
-    static final BufferedImage BULLET_IMAGE =
-            ImageHelper.rescale(ImageHelper.imageOrNull("icons/Bullet.png"), 20, 20);
+    static final BufferedImage BULLET_IMAGE = ImageHelper.rescale(ImageHelper.imageOrNull("icons/Bullet.png"), 20, 20);
 
     private RigidBody rigidBody;
     private BulletTurret turret;
@@ -164,6 +169,7 @@ class Bullet extends GameSprite {
         rigidBody.impulse(direction.subtract(position).normalized().multipliedBy(4));
 
         addProperty(ObjectProperty.RigidBody, rigidBody);
+        addTags(ObjectTag.Disposable);
     }
 
     @Override
@@ -174,7 +180,6 @@ class Bullet extends GameSprite {
             processCollisions();
         }
     }
-
 
     /**
      * Remove the bullet if it collide any Touchable object

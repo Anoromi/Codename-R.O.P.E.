@@ -30,6 +30,7 @@ public class Rope extends GameSprite {
         return Rope.this.getTransform().getFullAffine();
       }
     };
+    addTags(ObjectTag.Disposable);
     updatePos();
   }
 
