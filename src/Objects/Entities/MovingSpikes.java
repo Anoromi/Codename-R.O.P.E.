@@ -20,10 +20,9 @@ public class MovingSpikes extends GameSprite {
     public static final BufferedImage MOVING_SPIKES_IMAGE = ImageHelper
             .rescale(ImageHelper.imageOrNull("icons/Spikes.png"), 100, 20);
 
-    private double x1;
-    private double y1;
-    private double x2;
-    private double y2;
+    private double x1, y1, x2, y2;
+    private double currentX1, currentY1, currentX2, currentY2;
+
     private double increaseX;
     private double increaseY;
     private double startingX1;
@@ -45,6 +44,11 @@ public class MovingSpikes extends GameSprite {
             y2 = y1;
             y1 = tmp;
         }
+        this.currentX1 = x1;
+        this.currentY1 = y1;
+        this.currentX2 = x2;
+        this.currentY2 = y2;
+
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
@@ -55,15 +59,22 @@ public class MovingSpikes extends GameSprite {
     @Override
     public void start() {
         super.start();
-        increaseX = x2 - x1 > y2 - y1 ? GameSettings.SPIKES_SPEED : (x2 - x1) * GameSettings.SPIKES_SPEED / (y2 - y1);
-        increaseY = increaseX == GameSettings.SPIKES_SPEED ? (y2 - y1) * GameSettings.SPIKES_SPEED / (x2 - x1)
-                : GameSettings.SPIKES_SPEED;
 
-        startingX1 = x1;
-        startingY1 = y1;
+        currentX1 = x1;
+        currentY1 = y1;
+        currentX2 = x2;
+        currentY2 = y2;
+
+        increaseX = currentX2 - currentX1 > currentY2 - currentY1 ?
+                GameSettings.SPIKES_SPEED : (currentX2 - currentX1) * GameSettings.SPIKES_SPEED / (currentY2 - currentY1);
+        increaseY = increaseX == GameSettings.SPIKES_SPEED ?
+                (currentY2 - currentY1) * GameSettings.SPIKES_SPEED / (currentX2 - currentX1) : GameSettings.SPIKES_SPEED;
+
+        startingX1 = currentX1;
+        startingY1 = currentY1;
 
         movingDown = true;
-        setPosition(new Vector2(x1, y1));
+        setPosition(new Vector2(currentX1, currentY1));
     }
 
     @Override
@@ -78,20 +89,20 @@ public class MovingSpikes extends GameSprite {
      * repeat than movements
      */
     private void moveSpikes() {
-        if (movingDown && (x1 >= x2 || y1 >= y2) || !movingDown && (x1 <= x2 || y1 <= y2)) {
+        if (movingDown && (currentX1 >= currentX2 || currentY1 >= currentY2) || !movingDown && (currentX1 <= currentX2 || currentY1 <= currentY2)) {
             movingDown = !movingDown;
 
             increaseX = -increaseX;
             increaseY = -increaseY;
 
-            x2 = startingX1;
-            startingX1 = x1;
-            y2 = startingY1;
-            startingY1 = y1;
+            currentX2 = startingX1;
+            startingX1 = currentX1;
+            currentY2 = startingY1;
+            startingY1 = currentY1;
         }
 
         translate(increaseX, increaseY);
-        x1 += increaseX;
-        y1 += increaseY;
+        currentX1 += increaseX;
+        currentY1 += increaseY;
     }
 }
