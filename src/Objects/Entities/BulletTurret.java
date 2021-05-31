@@ -107,8 +107,8 @@ public class BulletTurret extends GameSprite {
 
         game.DRAWABLES.forEach(n -> {
             if (n.getProperty(ObjectProperty.Mesh) != null
-                    && ((Mesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh)
-                    && !n.hasTags(ObjectTag.GameBall) && !n.equals(this))
+                && ((Mesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh)
+                && !n.hasTags(ObjectTag.GameBall) && !n.equals(this))
                 // if (n.intersects(checkLine) && !n.equals(ball) && !n.equals(this))
                 tmpBoolean = false;
         });
@@ -134,10 +134,9 @@ public class BulletTurret extends GameSprite {
      */
     private void initBullet() {
         Vector2 ballVector = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
-        // Shape tmpRect = getTransform().getFullAffine().createTransformedShape(new
-        // Rectangle(0, 0, 1, 1).getBounds2D());
-
-        bullet = new Bullet(this, turretCenter, ballVector);
+        Vector2 bulletStart = new Vector2(turretCenter.getX() - Bullet.BULLET_IMAGE.getWidth() / 2,
+                turretCenter.getY() - Bullet.BULLET_IMAGE.getHeight() / 2);
+        bullet = new Bullet(this, bulletStart, ballVector);
     }
 
     public void setBulletOnScreen(boolean bulletOnScreen) {
