@@ -48,7 +48,8 @@ public class Game implements Runnable {
     ball = new GameBall(this, "icons\\Ball.png");
     DRAWABLES.add(ball);
 
-    LevelReader.createLevel(this, 1);
+    //LevelReader.createLevel(this, 1);
+    LevelReader.createLevel(this, 2);
     DRAWABLES.add(new Pointer());
     /*
      * { { getTransform().setPosition(500, 500); } };

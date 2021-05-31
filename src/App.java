@@ -1,6 +1,4 @@
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -25,6 +23,7 @@ public class App {
     JPanel p = new JPanel();
     p.add(g.getCanvas());
     // f.add(p);
+    g.getCanvas().setBackground(Color.BLACK);
     f.add(g.getCanvas());
     f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     // f.setResizable(false);
