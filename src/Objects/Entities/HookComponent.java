@@ -23,6 +23,7 @@ public class HookComponent extends GameCompound {
   private static Shape hookShape;
   private static Shape hookBallShape;
   private boolean stuck = false;
+  private double distance = 0;
   private GameSprite hookBall;
   static {
     hookImage = ImageHelper.imageOrNull("icons/Hook.png");
@@ -70,6 +71,10 @@ public class HookComponent extends GameCompound {
             double fullRotation = HookComponent.this.transform.getFullRotation();
             HookComponent.this.transform.setPosition(pos).setRotation(fullRotation - parentTransform.getFullRotation())
                 .setRelative(parentTransform);
+          } else {
+            distance += getRigidBody().getSpeed().magnitude();
+            if (distance >= GameSettings.HOOK_MAX_DISTANCE)
+              ball.removeHook();
           }
         }
       }
@@ -112,6 +117,10 @@ public class HookComponent extends GameCompound {
 
   public Transform getTransform() {
     return transform;
+  }
+
+  public RigidBody getRigidBody() {
+    return rigidBody;
   }
 
   public static int getHeight() {

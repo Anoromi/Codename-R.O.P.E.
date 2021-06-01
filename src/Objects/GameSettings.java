@@ -14,6 +14,7 @@ public class GameSettings {
   public static final int BALL_LAYER = 3;
   public static final int ROPE_HEIGHT = 5;
   public static final double HOOK_SPEED = 15;
+  public static final double HOOK_MAX_DISTANCE = 1000;
   public static final double APPROACH_SPEED = 0.01;
   public static final double SHIFT_SPEED = 3;
   public static final double SPIKES_SPEED = 0.3;
