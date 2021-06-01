@@ -18,8 +18,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public class JumpPad extends GameSprite {
-    public static final BufferedImage JUMP_PAD_IMAGE =
-            ImageHelper.rescale(ImageHelper.imageOrNull("icons/JumpPad.png"), 100, 20);
+    public static final BufferedImage JUMP_PAD_IMAGE = ImageHelper.rescale(ImageHelper.imageOrNull("icons/JumpPad.png"),
+            100, 20);
 
     public JumpPad() {
         super(JUMP_PAD_IMAGE, 2);
@@ -33,8 +33,8 @@ public class JumpPad extends GameSprite {
     }
 
     /**
-     * Check if there were any ball collisions.
-     * Add impulse to the ball after collision with a special side of a jump pad
+     * Check if there were any ball collisions. Add impulse to the ball after
+     * collision with a special side of a jump pad
      *
      * @param game object of a class Game to get info about the ball and collisions
      */
@@ -47,14 +47,9 @@ public class JumpPad extends GameSprite {
         Rectangle jumpSideOfAPad = new Rectangle(0, 0, JUMP_PAD_IMAGE.getWidth(), 1);
         Shape jumpSideBounds = getTransform().getFullAffine().createTransformedShape(jumpSideOfAPad.getBounds2D());
         if (ball.intersects(jumpSideBounds)) {
-
-            Rectangle2D ballBounds = ball.getMesh().getRelativeRectangleBounds().getBounds2D();
-            Vector2 ballVector = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
-            Rectangle2D jumpPadBounds = getMesh().getRelativeRectangleBounds().getBounds2D();
-            Vector2 jumpPadVector = new Vector2(jumpPadBounds.getCenterX(), jumpPadBounds.getCenterY());
-
-            Vector2 change = ballVector.subtract(jumpPadVector);
-            ball.getRigidBody().realImpulse(change.normalized().multipliedBy(GameSettings.SHIFT_SPEED * 3));
+            var directionAngle = getTransform().getFullRotation() - Math.PI / 2;
+            ball.getRigidBody().realImpulse(new Vector2(Math.cos(directionAngle), Math.sin(directionAngle))
+                    .multipliedBy(GameSettings.JUMP_PAD_SPEED));
         }
     }
 

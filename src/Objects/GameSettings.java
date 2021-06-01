@@ -20,6 +20,7 @@ public class GameSettings {
   public static final double SPIKES_SPEED = 0.3;
   public static final int FRAME_WIDTH;
   public static final int FRAME_HEIGHT;
+  public static final double JUMP_PAD_SPEED = 5;
 
   static {
     double scaling = (double)Toolkit.getDefaultToolkit().getScreenResolution() / 96;
