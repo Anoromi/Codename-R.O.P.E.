@@ -7,23 +7,24 @@ Always look at the ball
 
 package Objects.Entities;
 
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+
+import javax.sound.sampled.*;
+
 import Base.Game;
 import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Objects.GameObject;
-import Objects.GameSettings;
 import Objects.GameSprite;
 import Objects.ObjectTag;
-import Properties.Mesh;
-import Properties.ObjectProperty;
-import Properties.PointRigidBody;
-import Properties.RigidBody;
-
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.util.Optional;
+import Properties.*;
 
 public class BulletTurret extends GameSprite {
     public static final BufferedImage BULLET_TURRET_IMAGE = ImageHelper.imageOrNull("icons/BulletTurret.png");
@@ -107,8 +108,8 @@ public class BulletTurret extends GameSprite {
 
         game.DRAWABLES.forEach(n -> {
             if (n.getProperty(ObjectProperty.Mesh) != null
-                && ((Mesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh)
-                && !n.hasTags(ObjectTag.GameBall) && !n.equals(this))
+                    && ((Mesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh)
+                    && !n.hasTags(ObjectTag.GameBall) && !n.equals(this))
                 // if (n.intersects(checkLine) && !n.equals(ball) && !n.equals(this))
                 tmpBoolean = false;
         });
@@ -122,6 +123,17 @@ public class BulletTurret extends GameSprite {
         if (bulletOnScreen)
             return;
 
+        try {
+            AudioInputStream audioInputStream;
+            audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Shoot.wav").getAbsoluteFile());
+            var shootClip = AudioSystem.getClip();
+            shootClip.open(audioInputStream);
+            FloatControl control = (FloatControl) shootClip.getControl(FloatControl.Type.MASTER_GAIN);
+            control.setValue((float) (Math.log(0.3) / Math.log(10.0) * 20.0));
+            shootClip.start();
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        }
         initBullet();
 
         Game.CALL.add(x -> x.DRAWABLES.add(bullet));

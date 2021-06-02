@@ -1,9 +1,3 @@
-/*
-File: JumpPad.java
-Author: Danylo Nechyporchuk
-Task: make a class which describe jump pad. A special platform which increase ball speed after collision
- */
-
 package Objects.Entities;
 
 import Base.Game;
@@ -16,6 +10,14 @@ import Objects.ObjectTag;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+
+/**
+ * File: JumpPad.java.
+ * Task: make a class which describe jump pad. A special
+ * platform which increases ball speed after collision.
+ *
+ * @author Danylo Nechyporchuk
+ */
 
 public class JumpPad extends GameSprite {
     public static final BufferedImage JUMP_PAD_IMAGE = ImageHelper.rescale(ImageHelper.imageOrNull("icons/JumpPad.png"),

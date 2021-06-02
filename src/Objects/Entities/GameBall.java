@@ -182,7 +182,16 @@ public class GameBall extends GameSprite {
   }
 
   private void shiftSound() {
-    if (approachClip == null) {
+    try {
+      AudioInputStream audioInputStream;
+      audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Shift.wav").getAbsoluteFile());
+      var shiftClip = AudioSystem.getClip();
+      shiftClip.open(audioInputStream);
+      FloatControl control = (FloatControl) shiftClip.getControl(FloatControl.Type.MASTER_GAIN);
+      control.setValue((float) (Math.log(0.3) / Math.log(10.0) * 20.0));
+      shiftClip.start();
+    } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+      e.printStackTrace();
     }
   }
 
@@ -254,18 +263,19 @@ public class GameBall extends GameSprite {
     }
     if (counter == 0)
       return;
-    if (getRigidBody().getSpeed().magnitude() > 0.01)
+    if (getRigidBody().getSpeed().magnitude() > 0.01) {
       try {
         AudioInputStream audioInputStream;
         audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Bounce.wav").getAbsoluteFile());
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioInputStream);
-        FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        bounceClip = AudioSystem.getClip();
+        bounceClip.open(audioInputStream);
+        FloatControl control = (FloatControl) bounceClip.getControl(FloatControl.Type.MASTER_GAIN);
         control.setValue((float) (Math.log(0.05) / Math.log(10.0) * 20.0));
-        clip.start();
+        bounceClip.start();
       } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
         e.printStackTrace();
       }
+    }
     switchDirection(new Vector2(pointSumX / counter, pointSumY / counter), ballRadius);
   }
 
