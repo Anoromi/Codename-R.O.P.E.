@@ -17,10 +17,10 @@ public class GameSettings {
   public static final double HOOK_MAX_DISTANCE = 1000;
   public static final double APPROACH_SPEED = 0.01;
   public static final double SHIFT_SPEED = 3;
-  public static final double SPIKES_SPEED = 0.3;
+  public static final double SPIKES_SPEED = 1;
   public static final int FRAME_WIDTH;
   public static final int FRAME_HEIGHT;
-  public static final double JUMP_PAD_SPEED = 5;
+  public static final double JUMP_PAD_SPEED = 3;
 
   static {
     double scaling = (double)Toolkit.getDefaultToolkit().getScreenResolution() / 96;

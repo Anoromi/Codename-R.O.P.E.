@@ -18,8 +18,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public class JumpPad extends GameSprite {
-    public static final BufferedImage JUMP_PAD_IMAGE = ImageHelper.rescale(ImageHelper.imageOrNull("icons/JumpPad.png"),
-            100, 20);
+    public static final BufferedImage JUMP_PAD_IMAGE = ImageHelper.imageOrNull("icons/JumpPad.png");
 
     public JumpPad() {
         super(JUMP_PAD_IMAGE, 2);
@@ -44,7 +43,7 @@ public class JumpPad extends GameSprite {
 
         GameBall ball = (GameBall) game.DRAWABLES.get(0);
 
-        Rectangle jumpSideOfAPad = new Rectangle(0, 0, JUMP_PAD_IMAGE.getWidth(), 1);
+        Rectangle jumpSideOfAPad = new Rectangle(4, 0, JUMP_PAD_IMAGE.getWidth() - 8, 1);
         Shape jumpSideBounds = getTransform().getFullAffine().createTransformedShape(jumpSideOfAPad.getBounds2D());
         if (ball.intersects(jumpSideBounds)) {
             var directionAngle = getTransform().getFullRotation() - Math.PI / 2;

@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
 
 public class MovingSpikes extends GameSprite {
     public static final BufferedImage MOVING_SPIKES_IMAGE = ImageHelper
-            .rescale(ImageHelper.imageOrNull("icons/Spikes.png"), 100, 20);
+            .rescale(ImageHelper.imageOrNull("icons/Saw.png"), 223, 226);
 
     private double x1, y1, x2, y2;
     private double currentX1, currentY1, currentX2, currentY2;

@@ -1,15 +1,5 @@
-start{300,500}
-goal{1000,1000}
+start{1700,1590}
+goal{3100,1310}
 
-walls{icons/Lvldec.png}
-
-jump{150,500,-90}
-jump{250,750,0}
-
-trap{600,700,0}
-
-bullet{2000,1000}
-
-movingTrap{150,850,180,950,0}
-
-
+background{icons/backgrounds/back1.png}
+walls{icons/platforms/platforms1.png}
