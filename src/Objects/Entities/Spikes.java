@@ -13,8 +13,8 @@ import Objects.ObjectTag;
 import java.awt.image.BufferedImage;
 
 public class Spikes extends GameSprite {
-    public static final BufferedImage SPIKES_IMAGE =
-            ImageHelper.rescale(ImageHelper.imageOrNull("icons/Spikes.png"), 100, 20);
+    public static BufferedImage SPIKES_IMAGE = ImageHelper.imageOrNull("icons/Spikes.png");
+
 
     public Spikes() {
         super(SPIKES_IMAGE, 2);

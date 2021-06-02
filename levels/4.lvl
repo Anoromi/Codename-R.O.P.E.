@@ -1,0 +1,10 @@
+start{1301,1878}
+goal{3448,1582}
+
+background{icons/backgrounds/back2.png}
+walls{icons/platforms/platforms4.png}
+
+jump{1569,1940,0}
+jump{1851,864,180}
+
+jump{3324,564,180}

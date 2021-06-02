@@ -27,7 +27,8 @@ import Objects.ObjectTag;
 import Properties.*;
 
 public class BulletTurret extends GameSprite {
-    public static final BufferedImage BULLET_TURRET_IMAGE = ImageHelper.imageOrNull("icons/BulletTurret.png");
+    public static final BufferedImage BULLET_TURRET_IMAGE = ImageHelper.rescale
+            (ImageHelper.imageOrNull("icons/BulletTurret.png"), 256, 256);
 
     private Optional<GameObject> ball;
     private Rectangle2D ballBounds;

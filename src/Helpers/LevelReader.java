@@ -6,6 +6,7 @@ Task: will create level if we have file *.lvl; file can have line with tags:
 start{x,y} - coordinate of the start to create there a ball
 background{file.png} - file of the level background(0 layer)
 walls{file.png} - file which have walls(1 layer)
+smallTrap{x,y,z} - coordinates of the small spikes(x,y) trap and rotation angle(r)
 trap{x,y,r} - coordinates of the spikes(x,y) trap and rotation angle(r)
 movingTrap{x1,y1,x2,y2,r} - coordinates of the moving spikes trap (from x1,y1 to x2,y2) and rotation angle(r)
 jump{x,y,r} - coordinate of the jump pad (x,y) and rotation angle(r);
@@ -23,6 +24,7 @@ import Objects.BlankSprite;
 import Objects.GameSprite;
 import Objects.ObjectTag;
 import Objects.Entities.*;
+import Objects.Entities.SmallSpike;
 
 public class LevelReader {
     private static ArrayList<File> LEVELS = new ArrayList<>();
@@ -120,6 +122,33 @@ public class LevelReader {
                 });
             }
 
+            if (name.equals("dangerWalls")) {
+                game.DRAWABLES.add(new GameSprite(info, 1) {
+                    {
+                        addTags(ObjectTag.Touchable);
+                        addTags(ObjectTag.Danger);
+                    }
+                });
+            }
+
+            if (name.equals("smallTrap")) {
+                int indexOfComma = info.indexOf(',');
+                double x = Double.parseDouble(info.substring(0, indexOfComma));
+
+                info = info.substring(indexOfComma + 1);
+                indexOfComma = info.indexOf(',');
+                double y = Double.parseDouble(info.substring(0, indexOfComma));
+                double angle = Double.parseDouble(info.substring(indexOfComma + 1));
+
+                game.DRAWABLES.add(new SmallSpike().setStart(s -> {
+                    SmallSpike sp = (SmallSpike) s;
+                    sp.setPosition(x, y).setRotation(Math.toRadians(angle), SmallSpike.SMALL_SPIKE_IMAGE.getWidth() / 2.0,
+                            SmallSpike.SMALL_SPIKE_IMAGE.getHeight() / 2.0);
+                }));
+
+                return;
+            }
+
             if (name.equals("trap")) {
                 int indexOfComma = info.indexOf(',');
                 double x = Double.parseDouble(info.substring(0, indexOfComma));
@@ -145,20 +174,11 @@ public class LevelReader {
                     indexOfComma = info.indexOf(',');
 
                     switch (i) {
-                        case 0:
-                            x1 = Double.parseDouble(info.substring(0, indexOfComma));
-                            break;
-                        case 1:
-                            y1 = Double.parseDouble(info.substring(0, indexOfComma));
-                            break;
-                        case 2:
-                            x2 = Double.parseDouble(info.substring(0, indexOfComma));
-                            break;
-                        case 3:
-                            y2 = Double.parseDouble(info.substring(0, indexOfComma));
-                            break;
-                        case 4:
-                            angle = Double.parseDouble(info.substring(indexOfComma + 1));
+                        case 0 -> x1 = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 1 -> y1 = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 2 -> x2 = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 3 -> y2 = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 4 -> angle = Double.parseDouble(info.substring(indexOfComma + 1));
                     }
                     info = info.substring(indexOfComma + 1);
                 }

@@ -1,0 +1,19 @@
+start{1510,1860}
+goal{1500,1350}
+
+background{icons/backgrounds/back2.png}
+walls{icons/platforms/platforms2.png}
+
+trap{1623, 1705, 0}
+
+trap{1975, 1525, 180}
+trap{2232, 1525, 180}
+
+trap{2650, 1708, 0}
+trap{3415, 1534, -90}
+trap{2656, 1239, 0}
+
+smallTrap{2486, 1496, 0}
+smallTrap{2587, 1496, 180}
+smallTrap{3032,1494, 180}
+
