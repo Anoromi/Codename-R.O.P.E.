@@ -25,11 +25,10 @@ public class Game implements Runnable {
   public final List<GameObject> DRAWABLES;
   public static final List<Consumer<Game>> CALL = new ArrayList<>();
   public final Camera camera;
-  public final int STEP = 4;
-  public int currentStep = STEP;
+  public final double STEP = 1.5;
+  public double currentStep = STEP;
   private Goal goal;
 
-  private static final double DELAY = 1000 / 500;
   public int frames = 0;
   public int updates = 0;
   public final int second = 500;
@@ -161,13 +160,12 @@ public class Game implements Runnable {
       lastTime = now;
       // System.out.println(delta);
       if (delta >= 1) {
-        for (int i = 0; i < STEP; i++) {
+        for (; currentStep < STEP; currentStep++) {
           updateAll();
           processCalls();
         }
+        currentStep -= STEP;
         render();
-        currentStep = 0;
-        currentStep++;
         delta = 0;
       }
     }

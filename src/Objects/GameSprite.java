@@ -17,7 +17,7 @@ public class GameSprite extends BlankSprite {
 
   public GameSprite(BufferedImage image, int layer) {
     super(image, layer);
-    mesh = new Mesh(ImageHelper.areaFromImage(image)) {
+    mesh = new ImageMesh(ImageHelper.areaFromImage(image), image) {
       @Override
       protected AffineTransform getTransform() {
         return transform.getFullAffine();
@@ -28,7 +28,7 @@ public class GameSprite extends BlankSprite {
 
   public GameSprite(BufferedImage image, Shape shape, int layer) {
     super(image, layer);
-    mesh = new Mesh(shape) {
+    mesh = new ImageMesh(shape, image) {
       @Override
       protected AffineTransform getTransform() {
         return transform.getFullAffine();
