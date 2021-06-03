@@ -1,6 +1,7 @@
 package Base;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 
 import Helpers.Vector2;
@@ -15,7 +16,7 @@ public class Camera {
   public Camera(Vector2 pos) {
     super();
     this.pos = new AffineTransform();
-    scale = 1;
+    scale = 1.3;
     this.target = pos;
   }
 
@@ -24,9 +25,8 @@ public class Camera {
     // posChange.invert();
     pos = new AffineTransform();
     pos.translate(-target.x, -target.y);
-    graphics.scale(scale, scale);
-    double scaleChange = (scale - pos.getScaleX()) / 10;
-    pos.scale(scaleChange + pos.getScaleX(), scaleChange + pos.getScaleY());
+    // graphics.scale(scale, scale);
+    pos.scale(scale, scale);
     graphics.setTransform(pos);
   }
 
@@ -36,8 +36,11 @@ public class Camera {
   }
 
   private void setCenter(Game game, Vector2 newTarget) {
-    newTarget.x -= GameSettings.FRAME_WIDTH / 2 / scale;
-    newTarget.y -= GameSettings.FRAME_HEIGHT / 2 / scale;
+    newTarget.x *= scale;
+    newTarget.y *= scale;
+    newTarget.x -= GameSettings.FRAME_WIDTH / 2;
+    newTarget.y -= GameSettings.FRAME_HEIGHT / 2;
+
     target = newTarget;
   }
 
@@ -62,10 +65,18 @@ public class Camera {
   }
 
   public Vector2 getUpperBound() {
-    return target.added(new Vector2(GameSettings.FRAME_WIDTH, GameSettings.FRAME_HEIGHT));
+
+    return target.added(new Vector2(GameSettings.FRAME_WIDTH, GameSettings.FRAME_HEIGHT)).divideBy(scale);
   }
 
   public Vector2 getLowerBound() {
-    return target.copy();
+    return target.divideBy(scale);
+  }
+
+  public Point toRealResolution(Point p) {
+    Point n = new Point(p);
+    n.x *= GameSettings.SCALING / scale;
+    n.y *= GameSettings.SCALING / scale;
+    return n;
   }
 }

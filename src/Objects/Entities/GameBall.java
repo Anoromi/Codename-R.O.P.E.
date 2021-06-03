@@ -2,6 +2,7 @@ package Objects.Entities;
 
 import static java.lang.System.out;
 
+import java.awt.Point;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
@@ -67,7 +68,9 @@ public class GameBall extends GameSprite {
             out.println("Rel " + e.getPoint());
             Rectangle2D ballBounds = getMesh().getRelativeShape().getBounds2D();
             Vector2 ballCenter = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
-            final Vector2 change = new Vector2(ImageHelper.toRealResolution(e.getPoint())).added(camera.getLowerBound()).subtract(ballCenter);
+            var p = e.getPoint();
+            final Vector2 change = new Vector2(camera.toRealResolution(e.getPoint())).added(camera.getLowerBound())
+                .subtract(ballCenter);
             if (change.magnitude() != 0) {
               // camera.setTarget(change.normalized().multiplyBy(10).add(camera.getTarget()));
               /*
@@ -75,9 +78,8 @@ public class GameBall extends GameSprite {
                * DRAWABLES.get(0)).getProperty(ObjectProperty.RigidBody))
                * .impulse(change.normalized().multipliedBy(10));
                */
-              Vector2 pos = change.normalized().multipliedBy(image.getWidth() / 2)
-                  .added(ballCenter);
-              //getTransform().getFullAffine().transform(pos, pos);
+              Vector2 pos = change.normalized().multipliedBy(image.getWidth() / 2).added(ballCenter);
+              // getTransform().getFullAffine().transform(pos, pos);
               if (hook != null) {
                 Game.CALL.add(game -> {
                   game.DRAWABLES.remove(hook);

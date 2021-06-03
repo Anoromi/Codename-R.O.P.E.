@@ -68,10 +68,5 @@ public class ImageHelper {
 
   }
 
-  public static Point toRealResolution(Point p) {
-    Point n = new Point(p);
-    n.x *= GameSettings.SCALING;
-    n.y *= GameSettings.SCALING;
-    return n;
-  }
+
 }
