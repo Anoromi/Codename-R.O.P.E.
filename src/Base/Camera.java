@@ -9,13 +9,13 @@ import Objects.Entities.GameBall;
 
 public class Camera {
   private AffineTransform pos;
-  private double targetScale;
+  private double scale;
   private Vector2 target;
 
   public Camera(Vector2 pos) {
     super();
     this.pos = new AffineTransform();
-    targetScale = 1;
+    scale = 1;
     this.target = pos;
   }
 
@@ -24,8 +24,8 @@ public class Camera {
     // posChange.invert();
     pos = new AffineTransform();
     pos.translate(-target.x, -target.y);
-    // pos.translate(-posChange.x, -posChange.y);
-    double scaleChange = (targetScale - pos.getScaleX()) / 10;
+    graphics.scale(scale, scale);
+    double scaleChange = (scale - pos.getScaleX()) / 10;
     pos.scale(scaleChange + pos.getScaleX(), scaleChange + pos.getScaleY());
     graphics.setTransform(pos);
   }
@@ -33,12 +33,11 @@ public class Camera {
   public void updateTarget(Game game, GameBall ball) {
     var ballBounds = ball.getRelativeShape().getBounds2D();
     setCenter(game, new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY()));
-
   }
 
   private void setCenter(Game game, Vector2 newTarget) {
-    newTarget.x -= GameSettings.FRAME_WIDTH / 2;
-    newTarget.y -= GameSettings.FRAME_HEIGHT / 2;
+    newTarget.x -= GameSettings.FRAME_WIDTH / 2 / scale;
+    newTarget.y -= GameSettings.FRAME_HEIGHT / 2 / scale;
     target = newTarget;
   }
 
@@ -51,11 +50,11 @@ public class Camera {
   }
 
   public double getTargetScale() {
-    return targetScale;
+    return scale;
   }
 
-  public void setTargetScale(double targetScale) {
-    this.targetScale = targetScale;
+  public void setScale(double scale) {
+    this.scale = scale;
   }
 
   public AffineTransform getPos() {
