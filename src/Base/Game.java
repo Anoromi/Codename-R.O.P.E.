@@ -14,6 +14,7 @@ import Helpers.LevelReader;
 import Helpers.Vector2;
 import Objects.*;
 import Objects.Entities.*;
+import Properties.AbstractMesh;
 import Properties.Mesh;
 import Properties.ObjectProperty;
 
@@ -201,28 +202,28 @@ public class Game implements Runnable {
     return touchedObjects;
   }
 
-  public boolean checkForCollision(Mesh mesh) {
+  public boolean checkForCollision(AbstractMesh mesh) {
     return DRAWABLES.parallelStream().anyMatch(collider -> {
       var inter = collider.getProperty(ObjectProperty.Mesh);
-      if (inter != mesh && inter != null && ((Mesh) inter).intersects(mesh)) {
+      if (inter != mesh && inter != null && ((AbstractMesh) inter).intersects(mesh)) {
         return true;
       }
       return false;
     });
   }
 
-  public List<GameObject> getIntersectedObjects(Mesh mesh) {
+  public List<GameObject> getIntersectedObjects(AbstractMesh mesh) {
     return processIntersectionsFor(DRAWABLES, mesh);
   }
 
-  private List<GameObject> processIntersectionsFor(List<GameObject> elements, Mesh mesh) {
+  private List<GameObject> processIntersectionsFor(List<GameObject> elements, AbstractMesh mesh) {
     ArrayList<GameObject> touchedObjects = new ArrayList<>();
     elements.stream().parallel().forEachOrdered(collider -> {
       if (collider.hasTags(ObjectTag.Compound)) {
         touchedObjects.addAll(processIntersectionsFor(((Compound) collider).getGameObjects(), mesh));
       }
-      var inter = collider.getProperty(ObjectProperty.Mesh);
-      if (inter != mesh && inter != null && ((Mesh) inter).intersects(mesh)) {
+      var inter = (AbstractMesh) collider.getProperty(ObjectProperty.Mesh);
+      if (inter != mesh && inter != null && inter.intersects(mesh)) {
         touchedObjects.add(collider);
       }
     });

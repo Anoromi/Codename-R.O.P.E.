@@ -18,7 +18,7 @@ public abstract class RectangleMesh extends Mesh {
   }
 
   @Override
-  public boolean intersects(Mesh s) {
+  public boolean intersects(AbstractMesh s) {
     return super.intersects(s);
   }
 

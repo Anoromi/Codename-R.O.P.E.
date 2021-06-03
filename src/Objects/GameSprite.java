@@ -13,7 +13,7 @@ import Helpers.Vector2;
 import Properties.*;
 
 public class GameSprite extends BlankSprite {
-  protected Mesh mesh;
+  protected AbstractMesh mesh;
 
   public GameSprite(BufferedImage image, int layer) {
     super(image, layer);
@@ -125,7 +125,7 @@ public class GameSprite extends BlankSprite {
     return !area.isEmpty();
   }
 
-  public Mesh getMesh() {
+  public AbstractMesh getMesh() {
     return mesh;
   }
 

@@ -109,7 +109,7 @@ public class BulletTurret extends GameSprite {
 
         game.DRAWABLES.forEach(n -> {
             if (n.getProperty(ObjectProperty.Mesh) != null
-                    && ((Mesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh)
+                    && ((AbstractMesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh)
                     && !n.hasTags(ObjectTag.GameBall) && !n.equals(this))
                 // if (n.intersects(checkLine) && !n.equals(ball) && !n.equals(this))
                 tmpBoolean = false;

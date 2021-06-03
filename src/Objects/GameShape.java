@@ -9,14 +9,12 @@ import java.util.function.Consumer;
 
 import Base.Game;
 import Helpers.Vector2;
-import Properties.Mesh;
-import Properties.ObjectProperty;
-import Properties.Transform;
+import Properties.*;
 
 public class GameShape extends SingleGameObject {
 
   protected Transform transform;
-  protected Mesh mesh;
+  protected AbstractMesh mesh;
 
   public GameShape(Shape shape, int layer) {
     super(layer);
@@ -84,7 +82,7 @@ public class GameShape extends SingleGameObject {
     return !area.isEmpty();
   }
 
-  public Mesh getMesh() {
+  public AbstractMesh getMesh() {
     return mesh;
   }
 
