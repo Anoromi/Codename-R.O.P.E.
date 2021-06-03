@@ -7,6 +7,8 @@ import java.io.*;
 
 import javax.imageio.ImageIO;
 
+import Objects.GameSettings;
+
 public class ImageHelper {
 
   public static Area areaFromImage(BufferedImage image) {
@@ -64,5 +66,12 @@ public class ImageHelper {
     gr.dispose();
     return changed;
 
+  }
+
+  public static Point toRealResolution(Point p) {
+    Point n = new Point(p);
+    n.x *= GameSettings.SCALING;
+    n.y *= GameSettings.SCALING;
+    return n;
   }
 }

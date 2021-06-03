@@ -8,7 +8,8 @@ public class GameSettings {
   private GameSettings() {
   }
 
-  public static final double BALL_LOSS = 0.0025;
+  public static final double SCALING = (double) Toolkit.getDefaultToolkit().getScreenResolution() / 96;
+  public static final double BALL_LOSS = 0.01;
   public static final int COLLIDER_EDGES = 20;
   public static final int ROPE_LAYER = 2;
   public static final int BALL_LAYER = 3;
@@ -24,9 +25,8 @@ public class GameSettings {
   public static final double BULLET_SPEED = 6;
 
   static {
-    double scaling = (double)Toolkit.getDefaultToolkit().getScreenResolution() / 96;
-    FRAME_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() * scaling);
-    FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * scaling);
+    FRAME_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() * SCALING);
+    FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * SCALING);
   }
 
 }

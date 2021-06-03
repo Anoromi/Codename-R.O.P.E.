@@ -10,7 +10,9 @@ import java.io.IOException;
 
 import javax.sound.sampled.*;
 
+import Base.Camera;
 import Base.Game;
+import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Objects.*;
 import Properties.ObjectProperty;
@@ -30,7 +32,7 @@ public class GameBall extends GameSprite {
   protected Clip approachClip;
   protected Clip bounceClip;
 
-  public GameBall(Game game, String path) {
+  public GameBall(Camera camera, Game game, String path) {
     super(path, GameSettings.BALL_LAYER);
 
     rigidBody = new PointRigidBody(GameSettings.BALL_LOSS, true) {
@@ -63,7 +65,9 @@ public class GameBall extends GameSprite {
         if (e.getButton() == MouseEvent.BUTTON1) {
           Game.CALL.add(x -> {
             out.println("Rel " + e.getPoint());
-            final Vector2 change = Vector2.v(e.getPoint()).subtract(pressPoint);
+            Rectangle2D ballBounds = getMesh().getRelativeShape().getBounds2D();
+            Vector2 ballCenter = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
+            final Vector2 change = new Vector2(ImageHelper.toRealResolution(e.getPoint())).added(camera.getLowerBound()).subtract(ballCenter);
             if (change.magnitude() != 0) {
               // camera.setTarget(change.normalized().multiplyBy(10).add(camera.getTarget()));
               /*
@@ -71,10 +75,9 @@ public class GameBall extends GameSprite {
                * DRAWABLES.get(0)).getProperty(ObjectProperty.RigidBody))
                * .impulse(change.normalized().multipliedBy(10));
                */
-              Rectangle2D center = getMesh().getShape().getBounds2D();
               Vector2 pos = change.normalized().multipliedBy(image.getWidth() / 2)
-                  .added(new Vector2(center.getCenterX(), center.getCenterY()));
-              getTransform().getFullAffine().transform(pos, pos);
+                  .added(ballCenter);
+              //getTransform().getFullAffine().transform(pos, pos);
               if (hook != null) {
                 Game.CALL.add(game -> {
                   game.DRAWABLES.remove(hook);
