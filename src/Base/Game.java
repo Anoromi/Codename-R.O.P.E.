@@ -1,6 +1,8 @@
 package Base;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
@@ -45,10 +47,17 @@ public class Game implements Runnable {
     canvas = new Canvas();
     DRAWABLES = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
-    ball = new GameBall(this, "icons\\Ball.png");
+    ball = new GameBall(camera, this, "icons\\Ball.png");
     DRAWABLES.add(ball);
+    canvas.addKeyListener(new KeyAdapter() {
 
-    LevelReader.createLevel(this, 5);
+      @Override
+      public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_R)
+          restartGame();
+      }
+    });
+    LevelReader.createLevel(this, 1);
     DRAWABLES.add(new Pointer());
     /*
      * { { getTransform().setPosition(500, 500); } };
