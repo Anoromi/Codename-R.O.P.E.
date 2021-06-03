@@ -15,6 +15,11 @@ import Objects.BlankSprite;
 import Objects.ObjectTag;
 import Properties.Mesh;
 
+/**
+ * Responsible for creation and disposition of pointer to goal.
+ * File: Pointer.java
+ * @author Andrii Zahorulko
+ */
 public class Pointer extends BlankSprite {
   public static final BufferedImage POINTER_IMAGE = ImageHelper.imageOrNull("icons/Pointer.png");
   private boolean draw;

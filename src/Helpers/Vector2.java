@@ -3,6 +3,11 @@ package Helpers;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
+/**
+ * A wrapping for Point2D with useful methods.
+ * File: Vector2.java
+ * @author Andrii Zahorulko
+ */
 public class Vector2 extends Point2D.Double {
 
   public Vector2() {
@@ -28,11 +33,6 @@ public class Vector2 extends Point2D.Double {
     return new Vector2(p.getX(), p.getY());
   }
 
-  /**
-   * Returns magnitude of this vector
-   *
-   * @return - returns magnitude
-   */
   public double magnitude() {
     return Math.sqrt(x * x + y * y);
   }
@@ -99,6 +99,11 @@ public class Vector2 extends Point2D.Double {
     return copy().add(value);
   }
 
+  /**
+   * Rotates a vector around angle
+   * @param angle angle in degrees
+   * @return
+   */
   public Vector2 degRotateBy(double angle) {
     double rad = Math.toRadians(angle);
     double curX = x;

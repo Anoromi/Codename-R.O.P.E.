@@ -11,7 +11,7 @@ import Base.Game;
 import Helpers.Vector2;
 import Properties.*;
 
-public class GameShape extends SingleGameObject {
+public class  GameShape extends SingleGameObject {
 
   protected Transform transform;
   protected AbstractMesh mesh;

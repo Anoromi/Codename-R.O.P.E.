@@ -4,6 +4,9 @@ import static java.lang.System.out;
 
 import java.awt.Toolkit;
 
+/**
+ * Defines GameSetting for the game.
+ */
 public class GameSettings {
   private GameSettings() {
   }

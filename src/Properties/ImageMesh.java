@@ -7,6 +7,11 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
+/**
+ * Mesh with image acceleration. File: ImageMesh.java
+ *
+ * @author Andrii Zahorulko
+ */
 public abstract class ImageMesh extends Mesh {
   private BufferedImage image;
 
@@ -15,6 +20,9 @@ public abstract class ImageMesh extends Mesh {
     this.image = image;
   }
 
+  /**
+   * Finds if image contains this point
+   */
   @Override
   public boolean contains(Point2D p) {
     try {

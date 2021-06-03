@@ -9,8 +9,18 @@ import javax.imageio.ImageIO;
 
 import Objects.GameSettings;
 
+/**
+ * Helps with image processing. File: GeometryHelper.java
+ *
+ * @author Andrii Zahorulko
+ */
 public class ImageHelper {
 
+  /**
+   * Converts an image into area. Area will be defined by every pixel with non-zero alpha
+   * @param image
+   * @return
+   */
   public static Area areaFromImage(BufferedImage image) {
     Area area = new Area();
     int width = image.getWidth();
@@ -29,6 +39,11 @@ public class ImageHelper {
     return area;
   }
 
+  /**
+   * Gets a shape from file
+   * @param path
+   * @return
+   */
   public static Shape areaFromFile(String path) {
     try (FileInputStream fileInputStream = new FileInputStream(path);
         ObjectInputStream reader = new ObjectInputStream(fileInputStream)) {
@@ -39,6 +54,13 @@ public class ImageHelper {
 
   }
 
+  /**
+   * Finds out if the pixel can be counted as an outline of an object
+   * @param image
+   * @param x x coordinate of the pixel
+   * @param y y coordinate of the pixel
+   * @return
+   */
   public static boolean isOutline(BufferedImage image, int x, int y) {
     if (image.getRGB(x, y) >> 24 != 0x00 && ((x == 0 || (image.getRGB(x - 1, y) >> 24 == 0x00))
         || (x == image.getWidth() - 1 || (image.getRGB(x + 1, y) >> 24 == 0x00))
@@ -49,6 +71,11 @@ public class ImageHelper {
     return false;
   }
 
+  /**
+   * Returns null or image from the path
+   * @param path
+   * @return
+   */
   public static BufferedImage imageOrNull(String path) {
     try {
       return ImageIO.read(new File(path));
@@ -57,6 +84,13 @@ public class ImageHelper {
     }
   }
 
+  /**
+   * Rescales the image to certain width and height
+   * @param image
+   * @param width
+   * @param height
+   * @return
+   */
   public static BufferedImage rescale(BufferedImage image, int width, int height) {
     if (width < 1 || height < 1)
       return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);

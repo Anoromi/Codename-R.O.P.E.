@@ -1,4 +1,10 @@
 package Objects;
+
+/**
+ * Defines a GameObject which is located only on one layer.
+ * File SingleGameObject.java
+ * @author Andrii Zahorulko
+ */
 public abstract class SingleGameObject extends GameObject {
   protected int layer;
 

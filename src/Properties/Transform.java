@@ -4,6 +4,11 @@ import java.awt.geom.AffineTransform;
 
 import Helpers.Vector2;
 
+/**
+ * Defines Transform for GameObject. Used for transforming object to real coordinates.
+ * File: Transform.java
+ * @author Andrii Zahorulko
+ */
 public class Transform extends Property {
   protected AffineTransform t;
   protected Transform relative;
@@ -73,6 +78,10 @@ public class Transform extends Property {
     return relative;
   }
 
+  /**
+   * Sets parent of this transform
+   * @param relative
+   */
   public void setRelative(Transform relative) {
     this.relative = relative;
   }

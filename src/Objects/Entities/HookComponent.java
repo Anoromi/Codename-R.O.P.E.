@@ -15,6 +15,11 @@ import Helpers.Vector2;
 import Objects.*;
 import Properties.*;
 
+/**
+ * Responsible for hook movement, collision.
+ * File: HookComponent.java
+ * @author Andrii Zahorulko
+ */
 public class HookComponent extends GameCompound {
   protected Transform transform;
   protected RigidBody rigidBody;
@@ -58,7 +63,7 @@ public class HookComponent extends GameCompound {
           }
           if (!intersected.isEmpty()) {
             stuck = true;
-            rigidBody.setAcceleration(new Vector2());
+            rigidBody.setSpeed(new Vector2());
             GameObject parent = intersected.get(0);
             Transform parentTransform = ((Transform) parent.getProperty(ObjectProperty.Transform));
             Vector2 pos = new Vector2();

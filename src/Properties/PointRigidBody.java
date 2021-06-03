@@ -7,6 +7,10 @@ import java.awt.geom.NoninvertibleTransformException;
 import Base.Game;
 import Helpers.Vector2;
 
+/**
+ * Defines RigidBody with just one point. File: PointRigidBody.java
+ * @author Andrii Zahorulko
+ */
 public abstract class PointRigidBody extends RigidBody {
 
   private Vector2 acceleration;
@@ -57,7 +61,7 @@ public abstract class PointRigidBody extends RigidBody {
   }
 
   @Override
-  public void setAcceleration(Vector2 acceleration) {
+  public void setSpeed(Vector2 acceleration) {
     this.acceleration = acceleration;
   }
 

@@ -12,6 +12,11 @@ import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Properties.*;
 
+/**
+ * Defines a sprite with a mesh.
+ * File: GameSprite.java
+ * @author Andrii Zahorulko
+ */
 public class GameSprite extends BlankSprite {
   protected AbstractMesh mesh;
 

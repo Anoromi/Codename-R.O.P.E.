@@ -10,6 +10,11 @@ import java.util.List;
 import Base.Game;
 import Properties.Mesh;
 
+/**
+ * Defines a GameObject which is also a compound of GameObjects
+ * File: GameCompound.java
+ * @author Andrii Zahorulko
+ */
 public class GameCompound extends GameObject implements Compound {
   protected List<GameObject> gameObjects;
 
@@ -21,6 +26,9 @@ public class GameCompound extends GameObject implements Compound {
     this(new GameObject[0]);
   }
 
+  /**
+   * Updates every object in the compound
+   */
   @Override
   public void update(Game game) {
     super.update(game);
@@ -29,6 +37,9 @@ public class GameCompound extends GameObject implements Compound {
     }
   }
 
+  /**
+   * Draws every GameObject in the compound
+   */
   @Override
   public void draw(Graphics2D graphics, int layer) {
     for (GameObject gameObject : gameObjects) {
@@ -36,6 +47,11 @@ public class GameCompound extends GameObject implements Compound {
     }
   }
 
+  /**
+   * Finds if any GameObject in the compound contains point.
+   * @param p point in real coordinates
+   * @return
+   */
   @Override
   public boolean contains(Point2D p) {
     for (GameObject gameObject : gameObjects) {
@@ -45,6 +61,9 @@ public class GameCompound extends GameObject implements Compound {
     return false;
   }
 
+  /**
+   * Finds if any GameObject in the compound intersects object
+   */
   @Override
   public boolean intersects(Shape shape) {
     for (GameObject gameObject : gameObjects) {

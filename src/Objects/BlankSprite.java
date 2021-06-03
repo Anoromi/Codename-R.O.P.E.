@@ -12,6 +12,11 @@ import Properties.ObjectProperty;
 import Properties.Property;
 import Properties.Transform;
 
+/**
+ * Defines a sprite without mesh.
+ * File: BlankSprite.java
+ * @author Andrii Zahorulko
+ */
 public class BlankSprite extends SingleGameObject {
   protected BufferedImage image;
   protected Transform transform;

@@ -9,9 +9,16 @@ import Base.Game;
 import Helpers.GeometryHelper;
 import Helpers.ImageHelper;
 import Helpers.Vector2;
-import Objects.*;
-import Properties.RectangleMesh;
+import Objects.GameSettings;
+import Objects.GameSprite;
+import Objects.ObjectTag;
+import Properties.Mesh;
 
+/**
+ * Responsible for creation and painting of rope. File: Rope.java
+ *
+ * @author Andrii Zahorulko
+ */
 public class Rope extends GameSprite {
   public static final BufferedImage ROPE_IMAGE = ImageHelper.imageOrNull("icons\\Rope.png");
   private GameBall ball;
@@ -24,7 +31,8 @@ public class Rope extends GameSprite {
     super(ROPE_IMAGE, new Rectangle(), GameSettings.ROPE_LAYER);
     this.ball = ball;
     this.hook = hook;
-    mesh = new RectangleMesh(new Rectangle()) {
+    mesh = new Mesh(new Rectangle()) {
+
       @Override
       protected AffineTransform getTransform() {
         return Rope.this.getTransform().getFullAffine();
@@ -34,7 +42,11 @@ public class Rope extends GameSprite {
     updatePos();
   }
 
-
+  /**
+   * Invoked after {@link GameBall} update. Updates position of the rope.
+   *
+   * @param game
+   */
   public void realUpdate(Game game) {
     updatePos();
     getMesh().setShape(new Rectangle(0, 0, (int) direction.magnitude(), GameSettings.ROPE_HEIGHT));
@@ -45,6 +57,9 @@ public class Rope extends GameSprite {
       alive = true;
   }
 
+  /**
+   * Updates position of the rope.
+   */
   private void updatePos() {
     var ballBounds = ball.getMesh().getRelativeRectangleBounds().getBounds2D();
     var hookBallBounds = hook.getHookBall().getMesh().getRelativeRectangleBounds().getBounds2D();
@@ -56,6 +71,9 @@ public class Rope extends GameSprite {
     getTransform().translate(0, -GameSettings.ROPE_HEIGHT / 2);
   }
 
+  /**
+   * Draws rope in the direction.
+   */
   @Override
   public void draw(Graphics2D graphics, int layer) {
     if (this.layer == layer && direction != null) {
@@ -76,10 +94,5 @@ public class Rope extends GameSprite {
 
   public boolean isAlive() {
     return alive;
-  }
-
-  @Override
-  public RectangleMesh getMesh() {
-    return (RectangleMesh) super.getMesh();
   }
 }

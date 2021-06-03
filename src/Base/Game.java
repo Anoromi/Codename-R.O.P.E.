@@ -1,10 +1,10 @@
 package Base;
 
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +14,21 @@ import javax.swing.Timer;
 
 import Helpers.LevelReader;
 import Helpers.Vector2;
-import Objects.*;
-import Objects.Entities.*;
+import Objects.Compound;
+import Objects.GameObject;
+import Objects.ObjectTag;
+import Objects.Entities.GameBall;
+import Objects.Entities.Goal;
+import Objects.Entities.Pointer;
 import Properties.AbstractMesh;
 import Properties.Mesh;
 import Properties.ObjectProperty;
 
+/**
+ * Controls game flow, initiation, update and render.
+ * File: Game.java
+ * @author Andrii Zahorulko
+ */
 public class Game implements Runnable {
   private Thread t;
   private Canvas canvas;
@@ -43,11 +52,14 @@ public class Game implements Runnable {
 
   private Consumer<GameObject> draw = x -> x.draw(curGraphics, curLayer);
 
+  /**
+   * Creates and loads all important components for the game.
+   */
   public Game() {
     canvas = new Canvas();
     DRAWABLES = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
-    ball = new GameBall(camera, this, "icons\\Ball.png");
+    ball = new GameBall(camera, this);
     DRAWABLES.add(ball);
     canvas.addKeyListener(new KeyAdapter() {
 
@@ -96,11 +108,17 @@ public class Game implements Runnable {
     initObj();
   }
 
+  /**
+   * Starts a thread for the game.
+   */
   public void start() {
     running = true;
     t.start();
   }
 
+  /**
+   * Initializes all GameObjects.
+   */
   public void initObj() {
     DRAWABLES.removeIf(x -> x.hasTags(ObjectTag.Disposable));
     for (GameObject object : DRAWABLES) {
@@ -109,6 +127,9 @@ public class Game implements Runnable {
     processCalls();
   }
 
+  /**
+   * Draws all the objects on screen.
+   */
   public void render() {
     frames++;
     BufferStrategy bs = canvas.getBufferStrategy();
@@ -144,6 +165,12 @@ public class Game implements Runnable {
     graphics.dispose();
   }
 
+  /**
+   * Finds nex smallest layer to work with.
+   * @param min
+   * @param max
+   * @return
+   */
   private int nextSmallest(int min, int max) {
     int curMin = max + 1;
     for (int i = 0; i < DRAWABLES.size(); i++) {
@@ -157,6 +184,9 @@ public class Game implements Runnable {
     return curMin;
   }
 
+  /**
+   * Runs updates and renders.
+   */
   @Override
   public void run() {
     double timePerTick = 1000000000 / 60;
@@ -167,7 +197,6 @@ public class Game implements Runnable {
       now = System.nanoTime();
       delta += (now - lastTime) / timePerTick;
       lastTime = now;
-      // System.out.println(delta);
       if (delta >= 1) {
         for (; currentStep < STEP; currentStep++) {
           updateAll();
@@ -180,6 +209,9 @@ public class Game implements Runnable {
     }
   }
 
+  /**
+   * Process calls that were made during update.
+   */
   private void processCalls() {
     for (int i = 0; i < CALL.size(); i++) {
       CALL.get(i).accept(this);
@@ -187,15 +219,29 @@ public class Game implements Runnable {
     CALL.clear();
   }
 
+  /**
+   * Updates all GameObjects.
+   */
   private void updateAll() {
     DRAWABLES.parallelStream().forEachOrdered(x -> x.update(this));
     updates++;
   }
 
+  /**
+   * Gets all GameObjects with mesh on point.
+   * @param point point in real coordinates.
+   * @return
+   */
   public List<GameObject> getElementsAt(Vector2 point) {
     return processElementsAt(DRAWABLES, point);
   }
 
+  /**
+   * Gets all GameObjects from the list with mesh on point.
+   * @param elements
+   * @param point point in real coordinates.
+   * @return
+   */
   private List<GameObject> processElementsAt(List<GameObject> elements, Vector2 point) {
     ArrayList<GameObject> touchedObjects = new ArrayList<>();
     for (GameObject object : elements) {
@@ -209,6 +255,11 @@ public class Game implements Runnable {
     return touchedObjects;
   }
 
+  /**
+   * Checks for collision of any GameObject with mesh.
+   * @param mesh
+   * @return
+   */
   public boolean checkForCollision(AbstractMesh mesh) {
     return DRAWABLES.parallelStream().anyMatch(collider -> {
       var inter = collider.getProperty(ObjectProperty.Mesh);
@@ -219,10 +270,21 @@ public class Game implements Runnable {
     });
   }
 
+  /**
+   * Gets all GameObjects that were intersected.
+   * @param mesh
+   * @return
+   */
   public List<GameObject> getIntersectedObjects(AbstractMesh mesh) {
     return processIntersectionsFor(DRAWABLES, mesh);
   }
 
+  /**
+   * Gets all GameObjects from the list that were intersected.
+   * @param elements
+   * @param mesh
+   * @return
+   */
   private List<GameObject> processIntersectionsFor(List<GameObject> elements, AbstractMesh mesh) {
     ArrayList<GameObject> touchedObjects = new ArrayList<>();
     elements.stream().parallel().forEachOrdered(collider -> {
@@ -237,12 +299,16 @@ public class Game implements Runnable {
     return touchedObjects;
   }
 
+  /**
+   * Restarts current level.
+   */
   public void restartGame() {
     CALL.add(game -> {
       CALL.clear();
       initObj();
     });
   }
+
 
   public Canvas getCanvas() {
     return canvas;

@@ -20,6 +20,11 @@ import Properties.ObjectProperty;
 import Properties.PointRigidBody;
 import Properties.RigidBody;
 
+/**
+ * Responsible for control, collision of the main ball and creation of hooks.
+ * File: GameBall.java
+ * @author Andrii Zahorulko
+ */
 public class GameBall extends GameSprite {
   protected RigidBody rigidBody;
   protected HookComponent hook;
@@ -33,8 +38,13 @@ public class GameBall extends GameSprite {
   protected Clip approachClip;
   protected Clip bounceClip;
 
-  public GameBall(Camera camera, Game game, String path) {
-    super(path, GameSettings.BALL_LAYER);
+  /**
+   * Creates an instance of game ball.
+   * @param camera
+   * @param game
+   */
+  public GameBall(Camera camera, Game game) {
+    super("icons\\Ball.png", GameSettings.BALL_LAYER);
 
     rigidBody = new PointRigidBody(GameSettings.BALL_LOSS, true) {
       @Override
@@ -120,6 +130,9 @@ public class GameBall extends GameSprite {
     });
   }
 
+  /**
+   * Updates GameBall, collisions and rope.
+   */
   @Override
   public void update(Game game) {
     super.update(game);
@@ -127,6 +140,10 @@ public class GameBall extends GameSprite {
     processCollisions(game);
   }
 
+  /**
+   * Reacts to rope changes.
+   * @param game
+   */
   private void processRope(Game game) {
     if (hook == null || !hook.isStuck()) {
       stopApproachSound();
@@ -174,6 +191,9 @@ public class GameBall extends GameSprite {
     }
   }
 
+  /**
+   * Starts approach sound.
+   */
   private void approachSound() {
     if (approachClip != null && !approachClip.isActive()) {
       approachClip.loop(-1);
@@ -181,11 +201,17 @@ public class GameBall extends GameSprite {
     }
   }
 
+  /**
+   * Stops approach sound.
+   */
   private void stopApproachSound() {
     if (approachClip != null)
       approachClip.stop();
   }
 
+  /**
+   * Creates shift sound.
+   */
   private void shiftSound() {
     try {
       AudioInputStream audioInputStream;
@@ -232,6 +258,10 @@ public class GameBall extends GameSprite {
       approachClip.stop();
   }
 
+  /**
+   * Processes collisions of the ball with objects.
+   * @param game
+   */
   private void processCollisions(Game game) {
     var collided = game.getIntersectedObjects(getMesh());
     if (collided.isEmpty())
@@ -293,7 +323,7 @@ public class GameBall extends GameSprite {
     nCollVect.multiplyBy(cosine * 2);
     Vector2 move = new Vector2(nMoveDir.x - nCollVect.x, nMoveDir.y - nCollVect.y).normalized();
     move.multiplyBy(rigidBody.getSpeed().magnitude());
-    rigidBody.setAcceleration(move);
+    rigidBody.setSpeed(move);
   }
 
   public void removeHook() {

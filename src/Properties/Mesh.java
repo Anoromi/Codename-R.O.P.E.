@@ -4,6 +4,10 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.*;
 
+/**
+ * Defines standard mesh. File: Mesh.java
+ * @author Andrii Zahorulko
+ */
 public abstract class Mesh extends AbstractMesh {
   protected Shape shape;
 
