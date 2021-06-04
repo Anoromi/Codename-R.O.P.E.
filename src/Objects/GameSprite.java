@@ -22,10 +22,15 @@ public class GameSprite extends BlankSprite {
 
   public GameSprite(BufferedImage image, int layer) {
     super(image, layer);
-    mesh = new ImageMesh(ImageHelper.areaFromImage(image), image) {
+    mesh = new ImageMesh(ImageHelper.areaFromImage(image)) {
       @Override
       protected AffineTransform getTransform() {
         return transform.getFullAffine();
+      }
+
+      @Override
+      protected BufferedImage getImage() {
+        return GameSprite.this.getImage();
       }
     };
     addProperty(ObjectProperty.Mesh, mesh);
@@ -33,10 +38,15 @@ public class GameSprite extends BlankSprite {
 
   public GameSprite(BufferedImage image, Shape shape, int layer) {
     super(image, layer);
-    mesh = new ImageMesh(shape, image) {
+    mesh = new ImageMesh(shape) {
       @Override
       protected AffineTransform getTransform() {
         return transform.getFullAffine();
+      }
+
+      @Override
+      protected BufferedImage getImage() {
+        return GameSprite.this.getImage();
       }
     };
     addProperty(ObjectProperty.Mesh, mesh);

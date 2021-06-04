@@ -107,4 +107,7 @@ public class BlankSprite extends SingleGameObject {
     return new int[] { layer };
   }
 
+  public BufferedImage getImage() {
+    return image;
+  }
 }

@@ -13,11 +13,9 @@ import java.awt.image.BufferedImage;
  * @author Andrii Zahorulko
  */
 public abstract class ImageMesh extends Mesh {
-  private BufferedImage image;
 
-  protected ImageMesh(Shape shape, BufferedImage image) {
+  protected ImageMesh(Shape shape) {
     super(shape);
-    this.image = image;
   }
 
   /**
@@ -26,13 +24,16 @@ public abstract class ImageMesh extends Mesh {
   @Override
   public boolean contains(Point2D p) {
     try {
-      super.contains(p);
       var relP = getTransform().inverseTransform(p, null);
-      return ((image.getRGB((int) relP.getX(), (int) relP.getY()) >> 24) & 0xff) != 0;
+      var im = getImage();
+      if (relP.getX() >= im.getWidth() || relP.getX() < 0 || relP.getY() >= im.getHeight() || relP.getY() < 0)
+        return false;
+      return ((getImage().getRGB((int) relP.getX(), (int) relP.getY()) >> 24) & 0xff) != 0;
     } catch (NoninvertibleTransformException e) {
       e.printStackTrace();
     }
     return false;
   }
 
+  protected abstract BufferedImage getImage();
 }
