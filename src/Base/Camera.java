@@ -3,8 +3,11 @@ package Base;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
+import Helpers.ImageHelper;
 import Helpers.Vector2;
+import Objects.GameObject;
 import Objects.GameSettings;
 import Objects.Entities.GameBall;
 
@@ -15,9 +18,11 @@ public class Camera {
   private AffineTransform pos;
   private double scale;
   private Vector2 target;
+  private BufferedImage background;
 
   /**
    * Creates camera.
+   *
    * @param pos
    */
   public Camera(Vector2 pos) {
@@ -28,11 +33,15 @@ public class Camera {
   }
 
   /**
-   * Sets transform for graphics.
+   * Sets transform for graphics. Also, adds background
+   *
    * @param graphics
    */
   public void adjustCamera(Graphics2D graphics) {
     Vector2 posChange = target.subtracted(new Vector2(pos.getTranslateX(), pos.getTranslateY()));
+    if (background != null) {
+      graphics.drawImage(background, null, 0, 0);
+    }
     pos = new AffineTransform();
     pos.translate(-target.x, -target.y);
     pos.scale(scale, scale);
@@ -41,6 +50,7 @@ public class Camera {
 
   /**
    * Updates position of the target.
+   *
    * @param game
    * @param ball
    */
@@ -51,6 +61,7 @@ public class Camera {
 
   /**
    * Sets starting position of the camera.
+   *
    * @param game
    * @param newTarget center of the camera in real coordinates.
    */
@@ -85,6 +96,7 @@ public class Camera {
 
   /**
    * Gets highest point inside camera.
+   *
    * @return
    */
   public Vector2 getUpperBound() {
@@ -93,6 +105,7 @@ public class Camera {
 
   /**
    * Gets lowest point inside camera.
+   *
    * @return
    */
   public Vector2 getLowerBound() {
@@ -108,4 +121,14 @@ public class Camera {
     n.y *= GameSettings.SCALING / scale;
     return n;
   }
+
+  public BufferedImage getBackground() {
+    return background;
+  }
+
+  public void setBackground(BufferedImage background) {
+    this.background = ImageHelper.rescale(background, (int) Math.ceil(GameSettings.FRAME_WIDTH / scale),
+        (int) Math.ceil(GameSettings.FRAME_HEIGHT / scale));
+  }
+
 }

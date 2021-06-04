@@ -26,7 +26,6 @@ import Objects.ObjectTag;
 import Objects.Entities.*;
 import Objects.Entities.SmallSpike;
 
-
 public class LevelReader {
     private static ArrayList<File> LEVELS = new ArrayList<>();
     public static Vector2 startingPoint;
@@ -115,6 +114,10 @@ public class LevelReader {
                 game.DRAWABLES.add(new BlankSprite(info, 0));
             }
 
+            if (name.equals("staticBack")) {
+                game.camera.setBackground(ImageHelper.imageOrNull(info));
+            }
+
             if (name.equals("walls")) {
                 game.DRAWABLES.add(new GameSprite(info, 1) {
                     {
@@ -143,7 +146,8 @@ public class LevelReader {
 
                 game.DRAWABLES.add(new SmallSpike().setStart(s -> {
                     SmallSpike sp = (SmallSpike) s;
-                    sp.setPosition(x, y).setRotation(Math.toRadians(angle), SmallSpike.SMALL_SPIKE_IMAGE.getWidth() / 2.0,
+                    sp.setPosition(x, y).setRotation(Math.toRadians(angle),
+                            SmallSpike.SMALL_SPIKE_IMAGE.getWidth() / 2.0,
                             SmallSpike.SMALL_SPIKE_IMAGE.getHeight() / 2.0);
                 }));
 

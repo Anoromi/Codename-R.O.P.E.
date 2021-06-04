@@ -53,7 +53,7 @@ public class Game implements Runnable {
   private Consumer<GameObject> draw = x -> x.draw(curGraphics, curLayer);
 
   /**
-   * Creates and loads all important components for the game.
+   * Initializes and loads all important components for the game.
    */
   public Game() {
     canvas = new Canvas();
