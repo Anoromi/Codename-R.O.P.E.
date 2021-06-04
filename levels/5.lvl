@@ -1,9 +1,0 @@
-start{1057,1784}
-goal{3901,986}
-
-background{icons/backgrounds/back2.png}
-walls{icons/platforms/platforms5.png}
-
-bullet{1003,934}
-bullet{1725,1645}
-bullet{2812,1123}

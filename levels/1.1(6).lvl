@@ -1,0 +1,18 @@
+start{312,355}
+goal{2787,986}
+
+background{icons/backgrounds/back 1.png}
+background{icons/backgrounds/back 1.1.png}
+staticBack{icons/backgrounds/static/space.png}
+walls{icons/platforms/platforms 1.1.png}
+
+field{577,539,0.3}
+
+jump{3045,582,-90}
+
+movingTrap{1947,622,2541,623,2,160,162}
+movingTrap{1224,622,1752,623,2,160,162}
+movingTrap{285,526,286,625,2,160,162}
+
+bullet{2845,1301}
+bullet{1885,1301}

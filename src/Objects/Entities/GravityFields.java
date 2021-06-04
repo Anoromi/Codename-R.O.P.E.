@@ -6,15 +6,49 @@ Task: make a class which describe gravitational fields. Special areas where ball
 
 package Objects.Entities;
 
+import Base.Game;
 import Helpers.ImageHelper;
+import Helpers.Vector2;
+import Objects.GameSettings;
 import Objects.GameSprite;
+import Objects.ObjectTag;
+import Properties.Mesh;
+import Properties.ObjectProperty;
 
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public class GravityFields extends GameSprite {
-    public static final BufferedImage GRAVITY_FIELDS_IMAGE = null;
+    public static BufferedImage GRAVITY_FIELDS_IMAGE = ImageHelper.imageOrNull("icons/Field.png");
 
-    public GravityFields() {
+    private double speed;
+
+    public GravityFields(double speed) {
         super(GRAVITY_FIELDS_IMAGE, 2);
+        this.speed = speed;
     }
+
+    @Override
+    public void update(Game game) {
+        super.update(game);
+        checkBallInField(game);
+    }
+
+    private void checkBallInField(Game game) {
+        game.DRAWABLES.forEach(n -> {
+            if (n.getProperty(ObjectProperty.Mesh) != null
+                && ((Mesh) n.getProperty(ObjectProperty.Mesh)).intersects(getMesh())
+                && n.hasTags(ObjectTag.GameBall)) {
+                GameBall ball = (GameBall) n;
+                Rectangle2D ballBounds = ball.getMesh().getRelativeRectangleBounds().getBounds2D();
+                Vector2 ballVector = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
+
+                Rectangle2D fieldBounds = getMesh().getRelativeRectangleBounds().getBounds2D();
+                Vector2 fieldVector = new Vector2(fieldBounds.getCenterX(), fieldBounds.getCenterY());
+                ball.getRigidBody().realImpulse(fieldVector.subtract(ballVector).normalized().multipliedBy(speed));
+            }
+            // if (n.intersects(checkLine) && !n.equals(ball) && !n.equals(this))
+        });
+    }
+
 }

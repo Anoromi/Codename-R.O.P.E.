@@ -1,6 +1,0 @@
-start{1700,1590}
-goal{3100,1310}
-
-background{icons/backgrounds/back1.png}
-staticBack{icons/backgrounds/static/space.png}
-walls{icons/platforms/platforms1.png}

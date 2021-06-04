@@ -31,7 +31,7 @@ public class Camera {
   public Camera(Vector2 pos) {
     super();
     this.pos = new AffineTransform();
-    scale = 0.3;
+    scale = 1.3;
     this.target = pos;
   }
 

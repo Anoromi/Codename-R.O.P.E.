@@ -21,7 +21,6 @@ public class GameSettings {
   public static final double HOOK_MAX_DISTANCE = 1000;
   public static final double APPROACH_SPEED = 0.1;
   public static final double SHIFT_SPEED = 6;
-  public static final double SPIKES_SPEED = 2;
   public static final int FRAME_WIDTH;
   public static final int FRAME_HEIGHT;
   public static final double JUMP_PAD_SPEED = 6;

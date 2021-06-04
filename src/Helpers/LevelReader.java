@@ -4,11 +4,15 @@ Author: Danylo Nechyporchuk
 Task: will create level if we have file *.lvl; file can have line with tags:
 
 start{x,y} - coordinate of the start to create there a ball
+goal{x,y} - coordinate of the finish
 background{file.png} - file of the level background(0 layer)
+staticBack{file.png} - file of the static background
 walls{file.png} - file which have walls(1 layer)
-smallTrap{x,y,z} - coordinates of the small spikes(x,y) trap and rotation angle(r)
-trap{x,y,r} - coordinates of the spikes(x,y) trap and rotation angle(r)
-movingTrap{x1,y1,x2,y2,r} - coordinates of the moving spikes trap (from x1,y1 to x2,y2) and rotation angle(r)
+smallTrap{x,y,r,width,height} - coordinates of the small spikes(x,y) trap, rotation angle(r) and (optional) size to rescale
+trap{x,y,r,width,height} - coordinates of the spikes(x,y) trap, rotation angle(r) and (optional) size to rescale
+movingTrap{x1,y1,x2,y2,speed,width,height} - coordinates of the moving spikes trap (from x1,y1 to x2,y2), speed
+ and (optional) size to rescale
+field{x,y,speed,width,height} - gravitational field coordinates, speed and (optional) size to rescale
 jump{x,y,r} - coordinate of the jump pad (x,y) and rotation angle(r);
 bullet{x,y} - coordinate of the bullet turret enemy
  */
@@ -136,17 +140,37 @@ public class LevelReader {
             }
 
             if (name.equals("smallTrap")) {
-                int indexOfComma = info.indexOf(',');
-                double x = Double.parseDouble(info.substring(0, indexOfComma));
+                int indexOfComma = 0;
+                double x = 0, y = 0, angle = 0;
+                int width = 0, height = 0;
+                for (int i = 0; i <= 4; i++) {
+                    indexOfComma = info.indexOf(',');
 
-                info = info.substring(indexOfComma + 1);
-                indexOfComma = info.indexOf(',');
-                double y = Double.parseDouble(info.substring(0, indexOfComma));
-                double angle = Double.parseDouble(info.substring(indexOfComma + 1));
+                    if (indexOfComma == -1 && i == 2) {
+                        indexOfComma = info.lastIndexOf(',');
+                        angle = Double.parseDouble(info.substring(indexOfComma + 1));
+                        break;
+                    }
 
+                    switch (i) {
+                        case 0 -> x = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 1 -> y = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 2 -> angle = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 3 -> width = Integer.parseInt(info.substring(0, indexOfComma));
+                        case 4 -> height = Integer.parseInt(info.substring(indexOfComma + 1));
+                    }
+                    info = info.substring(indexOfComma + 1);
+                }
+
+                if (width != 0 && height != 0)
+                    SmallSpike.SMALL_SPIKE_IMAGE = ImageHelper.rescale(SmallSpike.SMALL_SPIKE_IMAGE, width, height);
+
+                double finalX = x;
+                double finalY = y;
+                double finalAngle = angle;
                 game.DRAWABLES.add(new SmallSpike().setStart(s -> {
                     SmallSpike sp = (SmallSpike) s;
-                    sp.setPosition(x, y).setRotation(Math.toRadians(angle),
+                    sp.setPosition(finalX, finalY).setRotation(Math.toRadians(finalAngle),
                             SmallSpike.SMALL_SPIKE_IMAGE.getWidth() / 2.0,
                             SmallSpike.SMALL_SPIKE_IMAGE.getHeight() / 2.0);
                 }));
@@ -155,17 +179,37 @@ public class LevelReader {
             }
 
             if (name.equals("trap")) {
-                int indexOfComma = info.indexOf(',');
-                double x = Double.parseDouble(info.substring(0, indexOfComma));
+                int indexOfComma = 0;
+                double x = 0, y = 0, angle = 0;
+                int width = 0, height = 0;
+                for (int i = 0; i <= 4; i++) {
+                    indexOfComma = info.indexOf(',');
 
-                info = info.substring(indexOfComma + 1);
-                indexOfComma = info.indexOf(',');
-                double y = Double.parseDouble(info.substring(0, indexOfComma));
-                double angle = Double.parseDouble(info.substring(indexOfComma + 1));
+                    if (indexOfComma == -1 && i == 2) {
+                        indexOfComma = info.lastIndexOf(',');
+                        angle = Double.parseDouble(info.substring(indexOfComma + 1));
+                        break;
+                    }
 
+                    switch (i) {
+                        case 0 -> x = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 1 -> y = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 2 -> angle = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 3 -> width = Integer.parseInt(info.substring(0, indexOfComma));
+                        case 4 -> height = Integer.parseInt(info.substring(indexOfComma + 1));
+                    }
+                    info = info.substring(indexOfComma + 1);
+                }
+
+                if (width != 0 && height != 0)
+                    Spikes.SPIKES_IMAGE = ImageHelper.rescale(Spikes.SPIKES_IMAGE, width, height);
+
+                double finalX = x;
+                double finalY = y;
+                double finalAngle = angle;
                 game.DRAWABLES.add(new Spikes().setStart(s -> {
                     Spikes sp = (Spikes) s;
-                    sp.setPosition(x, y).setRotation(Math.toRadians(angle), Spikes.SPIKES_IMAGE.getWidth() / 2.0,
+                    sp.setPosition(finalX, finalY).setRotation(Math.toRadians(finalAngle), Spikes.SPIKES_IMAGE.getWidth() / 2.0,
                             Spikes.SPIKES_IMAGE.getHeight() / 2.0);
                 }));
 
@@ -173,26 +217,73 @@ public class LevelReader {
             }
 
             if (name.equals("movingTrap")) {
-                int indexOfComma;
-                double x1 = 0, y1 = 0, x2 = 0, y2 = 0, angle = 0;
-                for (int i = 0; i <= 4; i++) {
+                int indexOfComma = 0;
+                double x1 = 0, y1 = 0, x2 = 0, y2 = 0, speed = 0;
+                int width = 0, height = 0;
+                for (int i = 0; i <= 6; i++) {
                     indexOfComma = info.indexOf(',');
+
+                    if (indexOfComma == -1 && i == 4) {
+                        indexOfComma = info.lastIndexOf(',');
+                        speed = Double.parseDouble(info.substring(indexOfComma + 1));
+                        break;
+                    }
 
                     switch (i) {
                         case 0 -> x1 = Double.parseDouble(info.substring(0, indexOfComma));
                         case 1 -> y1 = Double.parseDouble(info.substring(0, indexOfComma));
                         case 2 -> x2 = Double.parseDouble(info.substring(0, indexOfComma));
                         case 3 -> y2 = Double.parseDouble(info.substring(0, indexOfComma));
-                        case 4 -> angle = Double.parseDouble(info.substring(indexOfComma + 1));
+                        case 4 -> speed = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 5 -> width = Integer.parseInt(info.substring(0, indexOfComma));
+                        case 6 -> height = Integer.parseInt(info.substring(indexOfComma + 1));
                     }
                     info = info.substring(indexOfComma + 1);
                 }
 
-                double finalAngle = angle;
-                game.DRAWABLES.add(new MovingSpikes(x1, y1, x2, y2).setStart(msp -> {
-                    MovingSpikes ms = (MovingSpikes) msp;
-                    ms.setRotation(Math.toRadians(finalAngle), MovingSpikes.MOVING_SPIKES_IMAGE.getWidth() / 2.0,
-                            MovingSpikes.MOVING_SPIKES_IMAGE.getHeight() / 2.0);
+                if (width != 0 && height != 0)
+                    MovingSpikes.MOVING_SPIKES_IMAGE = ImageHelper.rescale(MovingSpikes.MOVING_SPIKES_IMAGE, width, height);
+
+                game.DRAWABLES.add(new MovingSpikes(x1, y1, x2, y2, speed).setStart(msp -> {
+                    //MovingSpikes ms = (MovingSpikes) msp;
+                    //ms.setRotation(Math.toRadians(finalAngle), MovingSpikes.MOVING_SPIKES_IMAGE.getWidth() / 2.0,
+                    //        MovingSpikes.MOVING_SPIKES_IMAGE.getHeight() / 2.0);
+                }));
+
+                return;
+            }
+
+            if (name.equals("field")) {
+                int indexOfComma = 0;
+                double x = 0, y = 0, speed = 0;
+                int width = 0, height = 0;
+                for (int i = 0; i <= 4; i++) {
+                    indexOfComma = info.indexOf(',');
+
+                    if (indexOfComma == -1 && i == 2) {
+                        indexOfComma = info.lastIndexOf(',');
+                        speed = Double.parseDouble(info.substring(indexOfComma + 1));
+                        break;
+                    }
+
+                    switch (i) {
+                        case 0 -> x = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 1 -> y = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 2 -> speed = Double.parseDouble(info.substring(0, indexOfComma));
+                        case 3 -> width = Integer.parseInt(info.substring(0, indexOfComma));
+                        case 4 -> height = Integer.parseInt(info.substring(indexOfComma + 1));
+                    }
+                    info = info.substring(indexOfComma + 1);
+                }
+
+                if (width != 0 && height != 0)
+                    GravityFields.GRAVITY_FIELDS_IMAGE = ImageHelper.rescale(GravityFields.GRAVITY_FIELDS_IMAGE, width, height);
+
+                double finalX = x;
+                double finalY = y;
+                game.DRAWABLES.add(new GravityFields(speed).setStart(f -> {
+                    GravityFields gf = (GravityFields) f;
+                    gf.setPosition(finalX, finalY);
                 }));
 
                 return;

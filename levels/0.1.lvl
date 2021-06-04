@@ -1,0 +1,5 @@
+start{1700,1590}
+goal{3100,1310}
+
+background{icons/backgrounds/back 0.1.png}
+walls{icons/platforms/platforms 0.1.png}
