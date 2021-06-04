@@ -109,7 +109,7 @@ public class Camera {
    * @return
    */
   public Vector2 getLowerBound() {
-    return target.divideBy(scale);
+    return target.dividedBy(scale);
   }
 
   /**

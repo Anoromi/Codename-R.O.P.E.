@@ -69,7 +69,7 @@ public class Game implements Runnable {
           restartGame();
       }
     });
-    LevelReader.createLevel(this, 1);
+    LevelReader.createLevel(this, 4);
     DRAWABLES.add(new Pointer(goal, ball, camera));
     /*
      * { { getTransform().setPosition(500, 500); } };
