@@ -4,6 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.FileOutputStream;
+
+import javax.imageio.ImageIO;
 
 import Helpers.ImageHelper;
 import Helpers.Vector2;
@@ -28,7 +31,7 @@ public class Camera {
   public Camera(Vector2 pos) {
     super();
     this.pos = new AffineTransform();
-    scale = 1.3;
+    scale = 0.3;
     this.target = pos;
   }
 
@@ -100,7 +103,7 @@ public class Camera {
    * @return
    */
   public Vector2 getUpperBound() {
-    return target.added(new Vector2(GameSettings.FRAME_WIDTH, GameSettings.FRAME_HEIGHT)).divideBy(scale);
+    return target.added(new Vector2(GameSettings.FRAME_WIDTH, GameSettings.FRAME_HEIGHT)).dividedBy(scale);
   }
 
   /**
@@ -127,8 +130,8 @@ public class Camera {
   }
 
   public void setBackground(BufferedImage background) {
-    this.background = ImageHelper.rescale(background, (int) Math.ceil(GameSettings.FRAME_WIDTH / scale),
-        (int) Math.ceil(GameSettings.FRAME_HEIGHT / scale));
+    this.background = ImageHelper.rescale(background, (int) Math.ceil(GameSettings.FRAME_WIDTH),
+        (int) Math.ceil(GameSettings.FRAME_HEIGHT));
   }
 
 }
