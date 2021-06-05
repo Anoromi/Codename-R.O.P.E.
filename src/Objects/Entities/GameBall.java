@@ -29,6 +29,7 @@ import Properties.RigidBody;
 public class GameBall extends GameSprite {
   protected RigidBody rigidBody;
   protected HookComponent hook;
+  protected HookComponent flyingHook;
   protected Rope rope;
   protected boolean tied;
   protected boolean approach;
@@ -89,18 +90,11 @@ public class GameBall extends GameSprite {
                  */
                 Vector2 pos = change.normalized().multipliedBy(image.getWidth() / 2).added(ballCenter);
                 // getTransform().getFullAffine().transform(pos, pos);
-                if (hook != null) {
-                  Game.CALL.add(game -> {
-                    game.DRAWABLES.remove(hook);
-                    game.DRAWABLES.remove(rope);
-                    rope = null;
-                  });
-                }
-
                 Game.CALL.add(game -> {
-                  hook = new HookComponent(GameBall.this, pos, change.normalized());
-                  hook.getTransform().translate(0, -HookComponent.getHeight() / 2);
-                  game.DRAWABLES.add(hook);
+                  game.DRAWABLES.remove(flyingHook);
+                  flyingHook = new HookComponent(GameBall.this, pos, change.normalized());
+                  flyingHook.getTransform().translate(0, -HookComponent.getHeight() / 2);
+                  game.DRAWABLES.add(flyingHook);
                 });
               }
             });
@@ -340,7 +334,24 @@ public class GameBall extends GameSprite {
 
   }
 
+  public void newHookStuck() {
+    Game.CALL.add(game -> {
+      game.DRAWABLES.remove(hook);
+      game.DRAWABLES.remove(rope);
+      rope = null;
+      hook = flyingHook;
+      flyingHook = null;
+    });
+  }
+
   public RigidBody getRigidBody() {
     return rigidBody;
+  }
+
+  public void removeNewHook() {
+    Game.CALL.add(x -> {
+      x.DRAWABLES.remove(flyingHook);
+      flyingHook = null;
+    });
   }
 }

@@ -16,8 +16,8 @@ import Objects.*;
 import Properties.*;
 
 /**
- * Responsible for hook movement, collision.
- * File: HookComponent.java
+ * Responsible for hook movement, collision. File: HookComponent.java
+ *
  * @author Andrii Zahorulko
  */
 public class HookComponent extends GameCompound {
@@ -63,6 +63,7 @@ public class HookComponent extends GameCompound {
           }
           if (!intersected.isEmpty()) {
             stuck = true;
+            ball.newHookStuck();
             rigidBody.setSpeed(new Vector2());
             GameObject parent = intersected.get(0);
             Transform parentTransform = ((Transform) parent.getProperty(ObjectProperty.Transform));
@@ -79,7 +80,7 @@ public class HookComponent extends GameCompound {
           } else {
             distance += getRigidBody().getSpeed().magnitude();
             if (distance >= GameSettings.HOOK_MAX_DISTANCE)
-              ball.removeHook();
+              ball.removeNewHook();
           }
         }
       }
