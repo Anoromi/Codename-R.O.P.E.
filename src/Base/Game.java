@@ -75,13 +75,12 @@ public class Game implements Runnable {
             restartGame();
           else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             stop();
-            frameController.getFrame().remove(canvas);
             frameController.pauseScreen();
           }
         }
       }
     };
-    frameController.getFrame().addKeyListener(keyReactions);
+    //frameController.getFrame().addKeyListener(keyReactions);
     canvas.addKeyListener(keyReactions);
     running = new AtomicBoolean(false);
     /*

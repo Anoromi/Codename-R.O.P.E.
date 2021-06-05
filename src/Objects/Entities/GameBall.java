@@ -60,7 +60,14 @@ public class GameBall extends GameSprite {
     addTags(ObjectTag.Touchable);
     addTags(ObjectTag.GameBall);
 
-    game.getFrameController().getFrame().addMouseListener(new MouseAdapter() {
+    game.getCanvas().addMouseListener(new MouseAdapter() {
+
+      @Override
+      public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON3)
+          tied = true;
+
+      }
 
       @Override
       public void mouseReleased(MouseEvent e) {
@@ -102,7 +109,7 @@ public class GameBall extends GameSprite {
         }
       }
     });
-    game.getFrameController().getFrame().addKeyListener(new KeyAdapter() {
+    game.getCanvas().addKeyListener(new KeyAdapter() {
 
       @Override
       public void keyPressed(KeyEvent e) {

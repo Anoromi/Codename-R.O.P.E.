@@ -1,13 +1,17 @@
 package Base;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class FrameController {
   private Frame frame;
   private Game game;
+  private boolean inGame;
 
   public FrameController() {
     frame = new Frame();
@@ -19,8 +23,10 @@ public class FrameController {
     frame.setState(JFrame.MAXIMIZED_BOTH);
     frame.setUndecorated(true);
     game = new Game(this);
-    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    game.getCanvas().setFocusable(true);
+    frame.setFocusable(false);
     frame.setVisible(true);
+    game.getCanvas().requestFocus();
     startGame(1);
   }
 
@@ -34,6 +40,8 @@ public class FrameController {
     frame.add(game.getCanvas());
     frame.revalidate();
     frame.repaint();
+    inGame = true;
+    game.getCanvas().requestFocus();
   }
 
   public void startGame(int level) {
@@ -44,12 +52,14 @@ public class FrameController {
 
   public void pauseScreen() {
     frame.removeAll();
-    Panel p = new Panel(new FlowLayout(FlowLayout.CENTER));
+    JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JButton resume = new JButton("Continue");
     resume.addActionListener(e -> {
       showGame();
       game.start();
+
     });
+
     JButton menu = new JButton("Main menu");
     menu.addActionListener(e -> {
     });
@@ -59,5 +69,18 @@ public class FrameController {
     frame.add(p, BorderLayout.CENTER);
     frame.revalidate();
     frame.repaint();
+    inGame = false;
+  }
+
+  public Frame getFrame() {
+    return frame;
+  }
+
+  public boolean isInGame() {
+    return inGame;
+  }
+
+  public void setInGame(boolean inGame) {
+    this.inGame = inGame;
   }
 }
