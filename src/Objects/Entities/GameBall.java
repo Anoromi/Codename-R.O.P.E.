@@ -74,7 +74,6 @@ public class GameBall extends GameSprite {
             Game.CALL.add(x -> {
               Rectangle2D ballBounds = getMesh().getRelativeShape().getBounds2D();
               Vector2 ballCenter = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
-              var p = e.getPoint();
               final Vector2 change = new Vector2(camera.toRealResolution(e.getPoint())).added(camera.getLowerBound())
                   .subtract(ballCenter);
               if (change.magnitude() != 0) {
@@ -212,6 +211,20 @@ public class GameBall extends GameSprite {
     }
   }
 
+  private void deathSound() {
+    try {
+      AudioInputStream audioInputStream;
+      audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Death.wav").getAbsoluteFile());
+      var deathClip = AudioSystem.getClip();
+      deathClip.open(audioInputStream);
+      FloatControl control = (FloatControl) deathClip.getControl(FloatControl.Type.MASTER_GAIN);
+      control.setValue((float) (Math.log(0.2) / Math.log(10.0) * 20.0));
+      deathClip.start();
+    } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   @Override
   public void start() {
     super.start();
@@ -236,7 +249,7 @@ public class GameBall extends GameSprite {
         approachClip = AudioSystem.getClip();
         approachClip.open(audioInputStream);
         FloatControl control = (FloatControl) approachClip.getControl(FloatControl.Type.MASTER_GAIN);
-        control.setValue((float) (Math.log(0.05) / Math.log(10.0) * 20.0));
+        control.setValue((float) (Math.log(0.3) / Math.log(10.0) * 20.0));
       } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
         e.printStackTrace();
       }
@@ -250,14 +263,6 @@ public class GameBall extends GameSprite {
    * @param game
    */
   private void processCollisions(Game game) {
-    // var collided = game.getIntersectedObjects(getMesh());
-    // if (collided.isEmpty())
-    /*
-     * for (GameObject gameObject : collided) { if
-     * (gameObject.hasTags(ObjectTag.Danger)) { game.restartGame(); return; } }
-     */
-    // collided.removeIf(x -> !x.hasTags(ObjectTag.Touchable));
-
     double ballRadius = image.getWidth() / 2;
     double distanceToRadius = (ballRadius) / Math.cos(3.14 / ballRadius / 2);
     double pointSumX = 0, pointSumY = 0;
@@ -268,10 +273,10 @@ public class GameBall extends GameSprite {
           ballRadius + distanceToRadius * Math.sin(theta * 3.14 / 180));
       Vector2 transformed = new Vector2();
       getTransform().getFullAffine().transform(collision, transformed);
-      boolean present = false;
       List<GameObject> o = game.getElementsAt(transformed);
       for (GameObject gameObject : o) {
         if (gameObject.hasTags(ObjectTag.Danger)) {
+          deathSound();
           game.restartGame();
           return;
         }
