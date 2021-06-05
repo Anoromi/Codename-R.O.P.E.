@@ -6,7 +6,9 @@ import Helpers.ImageHelper;
 import Objects.GameSprite;
 
 /**
- * Defines a goal you need to reach
+ * Defines a goal you need to reach.
+ * File: Goal.java
+ * @author Andrii Zahorulko
  */
 public class Goal extends GameSprite {
 

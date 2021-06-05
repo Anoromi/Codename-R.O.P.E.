@@ -22,10 +22,18 @@ public class Transform extends Property {
     this.relative = relative;
   }
 
+  /**
+   * Returns just this transform
+   * @return
+   */
   public AffineTransform getAffine() {
     return t;
   }
 
+  /**
+   * Returns all affine transforms concatenated
+   * @return
+   */
   public AffineTransform getFullAffine() {
     if (relative == null)
       return getAffine();

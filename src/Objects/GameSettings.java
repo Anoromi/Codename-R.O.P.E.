@@ -5,7 +5,9 @@ import static java.lang.System.out;
 import java.awt.Toolkit;
 
 /**
- * Defines GameSetting for the game.
+ * Defines settings for the game.
+ * File: GameSettings.java
+ * @author Andrii Zahorulko
  */
 public class GameSettings {
   private GameSettings() {
@@ -13,7 +15,7 @@ public class GameSettings {
 
   public static final double SCALING = (double) Toolkit.getDefaultToolkit().getScreenResolution() / 96;
   public static final double BALL_LOSS = 0.01;
-  public static final int COLLIDER_EDGES = 20;
+  public static final int COLLIDER_EDGES = 30;
   public static final int ROPE_LAYER = 2;
   public static final int BALL_LAYER = 3;
   public static final int ROPE_HEIGHT = 5;
