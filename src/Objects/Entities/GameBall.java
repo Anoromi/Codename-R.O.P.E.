@@ -1,19 +1,16 @@
 package Objects.Entities;
 
-import static java.lang.System.out;
-
-import java.awt.Point;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.sound.sampled.*;
 
 import Base.Camera;
 import Base.Game;
-import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Objects.*;
 import Properties.ObjectProperty;
@@ -49,7 +46,7 @@ public class GameBall extends GameSprite {
   public GameBall(Camera camera, Game game) {
     super("icons\\Ball.png", GameSettings.BALL_LAYER);
 
-    rigidBody = new PointRigidBody(GameSettings.BALL_LOSS, true) {
+    rigidBody = new PointRigidBody(GameSettings.BALL_LOSS, false) {
       @Override
       public AffineTransform getTransform() {
         return GameBall.this.getTransform().getFullAffine();
@@ -75,21 +72,13 @@ public class GameBall extends GameSprite {
         if (game.getFrameController().isInGame()) {
           if (e.getButton() == MouseEvent.BUTTON1) {
             Game.CALL.add(x -> {
-              out.println("Rel " + e.getPoint());
               Rectangle2D ballBounds = getMesh().getRelativeShape().getBounds2D();
               Vector2 ballCenter = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
               var p = e.getPoint();
               final Vector2 change = new Vector2(camera.toRealResolution(e.getPoint())).added(camera.getLowerBound())
                   .subtract(ballCenter);
               if (change.magnitude() != 0) {
-                // camera.setTarget(change.normalized().multiplyBy(10).add(camera.getTarget()));
-                /*
-                 * ((PointRigidBody) ((GameBall)
-                 * DRAWABLES.get(0)).getProperty(ObjectProperty.RigidBody))
-                 * .impulse(change.normalized().multipliedBy(10));
-                 */
                 Vector2 pos = change.normalized().multipliedBy(image.getWidth() / 2).added(ballCenter);
-                // getTransform().getFullAffine().transform(pos, pos);
                 Game.CALL.add(game -> {
                   game.DRAWABLES.remove(flyingHook);
                   flyingHook = new HookComponent(GameBall.this, pos, change.normalized());
@@ -261,16 +250,14 @@ public class GameBall extends GameSprite {
    * @param game
    */
   private void processCollisions(Game game) {
-    var collided = game.getIntersectedObjects(getMesh());
-    if (collided.isEmpty())
-      return;
-    for (GameObject gameObject : collided) {
-      if (gameObject.hasTags(ObjectTag.Danger)) {
-        game.restartGame();
-        return;
-      }
-    }
-    collided.removeIf(x -> !x.hasTags(ObjectTag.Touchable));
+    // var collided = game.getIntersectedObjects(getMesh());
+    // if (collided.isEmpty())
+    /*
+     * for (GameObject gameObject : collided) { if
+     * (gameObject.hasTags(ObjectTag.Danger)) { game.restartGame(); return; } }
+     */
+    // collided.removeIf(x -> !x.hasTags(ObjectTag.Touchable));
+
     double ballRadius = image.getWidth() / 2;
     double distanceToRadius = (ballRadius) / Math.cos(3.14 / ballRadius / 2);
     double pointSumX = 0, pointSumY = 0;
@@ -282,13 +269,15 @@ public class GameBall extends GameSprite {
       Vector2 transformed = new Vector2();
       getTransform().getFullAffine().transform(collision, transformed);
       boolean present = false;
-      for (GameObject gameObject : collided) {
-        if (gameObject.contains(transformed)) {
-          present = true;
-          break;
+      List<GameObject> o = game.getElementsAt(transformed);
+      for (GameObject gameObject : o) {
+        if (gameObject.hasTags(ObjectTag.Danger)) {
+          game.restartGame();
+          return;
         }
       }
-      if (present) {
+      o.removeIf(x -> !x.hasTags(ObjectTag.Touchable) || x.hasTags(ObjectTag.GameBall));
+      if (!o.isEmpty()) {
         pointSumX += collision.x;
         pointSumY += collision.y;
         counter++;
