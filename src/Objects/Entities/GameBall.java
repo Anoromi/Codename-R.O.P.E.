@@ -298,7 +298,7 @@ public class GameBall extends GameSprite {
     }
     if (counter == 0)
       return;
-    if (getRigidBody().getSpeed().magnitude() > 0.1) {
+    if (getRigidBody().getSpeed().magnitude() > 0.8) {
       try {
         AudioInputStream audioInputStream;
         audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Bounce.wav").getAbsoluteFile());
