@@ -10,6 +10,7 @@ import java.util.List;
 import javax.sound.sampled.*;
 
 import Base.Camera;
+import Base.FrameController;
 import Base.Game;
 import Helpers.Vector2;
 import Objects.*;
@@ -36,6 +37,7 @@ public class GameBall extends GameSprite {
 
   protected Clip approachClip;
   protected Clip bounceClip;
+  protected FrameController controller;
 
   /**
    * Creates an instance of game ball.
@@ -43,8 +45,10 @@ public class GameBall extends GameSprite {
    * @param camera
    * @param game
    */
-  public GameBall(Camera camera, Game game) {
+  public GameBall(Camera camera, Game game, FrameController controller) {
     super("icons\\Ball.png", GameSettings.BALL_LAYER);
+
+    this.controller = controller;
 
     rigidBody = new PointRigidBody(GameSettings.BALL_LOSS, false) {
       @Override
@@ -180,7 +184,7 @@ public class GameBall extends GameSprite {
    * Starts approach sound.
    */
   private void approachSound() {
-    if (approachClip != null && !approachClip.isActive()) {
+    if (approachClip != null && !approachClip.isActive() && controller.isSoundsOn()) {
       approachClip.loop(-1);
       approachClip.start();
     }
@@ -198,31 +202,33 @@ public class GameBall extends GameSprite {
    * Creates shift sound.
    */
   private void shiftSound() {
-    try {
-      AudioInputStream audioInputStream;
-      audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Shift.wav").getAbsoluteFile());
-      var shiftClip = AudioSystem.getClip();
-      shiftClip.open(audioInputStream);
-      FloatControl control = (FloatControl) shiftClip.getControl(FloatControl.Type.MASTER_GAIN);
-      control.setValue((float) (Math.log(0.3) / Math.log(10.0) * 20.0));
-      shiftClip.start();
-    } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
-      e.printStackTrace();
-    }
+    if(controller.isSoundsOn())
+        try {
+                AudioInputStream audioInputStream;
+                audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Shift.wav").getAbsoluteFile());
+                var shiftClip = AudioSystem.getClip();
+                shiftClip.open(audioInputStream);
+                FloatControl control = (FloatControl) shiftClip.getControl(FloatControl.Type.MASTER_GAIN);
+                control.setValue((float) (Math.log(0.3) / Math.log(10.0) * 20.0));
+                shiftClip.start();
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        }
   }
 
   private void deathSound() {
-    try {
-      AudioInputStream audioInputStream;
-      audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Death.wav").getAbsoluteFile());
-      var deathClip = AudioSystem.getClip();
-      deathClip.open(audioInputStream);
-      FloatControl control = (FloatControl) deathClip.getControl(FloatControl.Type.MASTER_GAIN);
-      control.setValue((float) (Math.log(0.2) / Math.log(10.0) * 20.0));
-      deathClip.start();
-    } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
-      e.printStackTrace();
-    }
+      if(controller.isSoundsOn())
+          try {
+                AudioInputStream audioInputStream;
+                audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Death.wav").getAbsoluteFile());
+                var deathClip = AudioSystem.getClip();
+                deathClip.open(audioInputStream);
+                FloatControl control = (FloatControl) deathClip.getControl(FloatControl.Type.MASTER_GAIN);
+                control.setValue((float) (Math.log(0.2) / Math.log(10.0) * 20.0));
+                deathClip.start();
+          } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+             e.printStackTrace();
+          }
   }
 
   @Override
@@ -294,7 +300,7 @@ public class GameBall extends GameSprite {
     }
     if (counter == 0)
       return;
-    if (getRigidBody().getSpeed().magnitude() > 0.8) {
+    if (getRigidBody().getSpeed().magnitude() > 0.8 && controller.isSoundsOn()) {
       try {
         AudioInputStream audioInputStream;
         audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Bounce.wav").getAbsoluteFile());

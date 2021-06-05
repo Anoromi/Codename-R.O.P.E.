@@ -1,10 +1,3 @@
-/*
-File: BulletTurret.java
-Author: Danylo Nechyporchuk
-Task: make a class which describe bullet turret. An enemy which shoots high speed bullets, when ball is nearby.
-Always look at the ball
- */
-
 package Objects.Entities;
 
 import java.awt.Rectangle;
@@ -18,17 +11,25 @@ import java.util.Optional;
 
 import javax.sound.sampled.*;
 
+import Base.FrameController;
 import Base.Game;
 import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Objects.GameObject;
+import Objects.GameSettings;
 import Objects.GameSprite;
 import Objects.ObjectTag;
 import Properties.*;
 
+/**
+ * A class which describe bullet turret. An enemy which shoots high speed bullets, when ball is in sight.
+ * Always look towards the ball
+ * File: BulletTurret.java
+ *
+ * @author Danylo Nechyporchuk
+ */
 public class BulletTurret extends GameSprite {
-    public static final BufferedImage BULLET_TURRET_IMAGE = ImageHelper
-            .rescale(ImageHelper.imageOrNull("icons/BulletTurret.png"), 256, 256);
+    public static final BufferedImage BULLET_TURRET_IMAGE = ImageHelper.imageOrNull("icons/BulletTurret.png");
 
     private GameBall ball;
     private Rectangle2D ballBounds;
@@ -41,22 +42,35 @@ public class BulletTurret extends GameSprite {
     private boolean tmpBoolean;
 
     private double prevAngle;
+    private FrameController controller;
 
-    public BulletTurret(Game game, double x, double y) {
+    /**
+     * Create bullet turret, which shoots deadly bullet towards the ball
+     *
+     * @param x coordinate to set turret position
+     * @param y coordinate to set turret position
+     */
+    public BulletTurret(FrameController controller, Game game, double x, double y) {
         super(BULLET_TURRET_IMAGE, 3);
+
+        this.controller = controller;
+
         addTags(ObjectTag.Danger);
         addTags(ObjectTag.Touchable);
         setStart(bt -> {
             Game.CALL.add(g -> g.DRAWABLES.remove(bullet));
             setPosition(new Vector2(x, y));
-            turretCenter = new Vector2(getMesh().getRelativeRectangleBounds().getBounds2D().getCenterX(),
-                    getMesh().getRelativeRectangleBounds().getBounds2D().getCenterY());
+            turretCenter = new Vector2(getMesh().getRelativeRectangleBounds().getBounds2D().getCenterX() - 2.5,
+                    getMesh().getRelativeRectangleBounds().getBounds2D().getCenterY() - 3.9);
             prevAngle = 157;
             bulletOnScreen = false;
             rotateTurret(game);
         });
     }
 
+    /**
+     * Update turret rotation and shoot the bullet if it is possible
+     */
     @Override
     public void update(Game game) {
         super.update(game);
@@ -81,7 +95,7 @@ public class BulletTurret extends GameSprite {
                 ballBounds.getCenterX() - turretCenter.getX()));
         angle = angle - prevAngle;
         if (angle != 0) {
-            at.rotate(angle, BULLET_TURRET_IMAGE.getWidth() / 2.0, BULLET_TURRET_IMAGE.getHeight() / 2.0);
+            at.rotate(angle, (BULLET_TURRET_IMAGE.getWidth() / 2.0) - 2.5, (BULLET_TURRET_IMAGE.getHeight() / 2.0) - 3.9);
             prevAngle = angle + prevAngle;
         }
     }
@@ -110,8 +124,8 @@ public class BulletTurret extends GameSprite {
 
         game.DRAWABLES.forEach(n -> {
             if (n.getProperty(ObjectProperty.Mesh) != null
-                    && ((AbstractMesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh)
-                    && !n.hasTags(ObjectTag.GameBall) && !n.equals(this))
+                && ((AbstractMesh) n.getProperty(ObjectProperty.Mesh)).intersects(lineMesh)
+                && !n.hasTags(ObjectTag.GameBall) && !n.equals(this))
                 // if (n.intersects(checkLine) && !n.equals(ball) && !n.equals(this))
                 tmpBoolean = false;
         });
@@ -125,17 +139,18 @@ public class BulletTurret extends GameSprite {
         if (bulletOnScreen)
             return;
 
-        try {
-            AudioInputStream audioInputStream;
-            audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Shoot.wav").getAbsoluteFile());
-            var shootClip = AudioSystem.getClip();
-            shootClip.open(audioInputStream);
-            FloatControl control = (FloatControl) shootClip.getControl(FloatControl.Type.MASTER_GAIN);
-            control.setValue((float) (Math.log(0.3) / Math.log(10.0) * 20.0));
-            shootClip.start();
-        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
-            e.printStackTrace();
-        }
+        if (controller.isSoundsOn())
+            try {
+                AudioInputStream audioInputStream;
+                audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Shoot.wav").getAbsoluteFile());
+                var shootClip = AudioSystem.getClip();
+                shootClip.open(audioInputStream);
+                FloatControl control = (FloatControl) shootClip.getControl(FloatControl.Type.MASTER_GAIN);
+                control.setValue((float) (Math.log(0.3) / Math.log(10.0) * 20.0));
+                shootClip.start();
+            } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+                e.printStackTrace();
+            }
         initBullet();
 
         Game.CALL.add(x -> x.DRAWABLES.add(bullet));
@@ -148,8 +163,8 @@ public class BulletTurret extends GameSprite {
      */
     private void initBullet() {
         Vector2 ballVector = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
-        Vector2 bulletStart = new Vector2(turretCenter.getX() - Bullet.BULLET_IMAGE.getWidth() / 2,
-                turretCenter.getY() - Bullet.BULLET_IMAGE.getHeight() / 2);
+        Vector2 bulletStart = new Vector2(turretCenter.getX() - Bullet.BULLET_IMAGE.getWidth() / 2.0,
+                turretCenter.getY() - Bullet.BULLET_IMAGE.getHeight() / 2.0);
         bullet = new Bullet(this, bulletStart, ballVector);
     }
 
@@ -159,18 +174,35 @@ public class BulletTurret extends GameSprite {
 
 }
 
+/**
+ * Object which kill the ball after collision. Move towards the ball
+ * File: BulletTurret.java
+ *
+ * @author Danylo Nechyporchuk
+ */
 class Bullet extends GameSprite {
-    static final BufferedImage BULLET_IMAGE = ImageHelper.rescale(ImageHelper.imageOrNull("icons/Bullet.png"), 20, 20);
+    static final BufferedImage BULLET_IMAGE = ImageHelper.rescale(ImageHelper.imageOrNull("icons/Bullet.png"), 12, 12);
 
     private RigidBody rigidBody;
     private BulletTurret turret;
 
+    /**
+     * Create bullet which will move towards the ball
+     *
+     * @param turret    turret which shoot this bullet
+     * @param position  start position for bullet
+     * @param direction position of the ball
+     */
     public Bullet(BulletTurret turret, Vector2 position, Vector2 direction) {
         super(BULLET_IMAGE, 2);
         this.turret = turret;
         addTags(ObjectTag.Danger);
-
         setPosition(new Vector2(position.x, position.y));
+
+        double x = Math.cos(turret.getTransform().getFullRotation()) * 88;
+        double y = Math.sin(turret.getTransform().getFullRotation()) * 88;
+
+        getTransform().translate(x, y);
 
         rigidBody = new PointRigidBody(1) {
             @Override
@@ -179,12 +211,15 @@ class Bullet extends GameSprite {
             }
 
         };
-        rigidBody.impulse(direction.subtract(position).normalized().multipliedBy(4));
+        rigidBody.impulse(direction.subtract(position).normalized().multipliedBy(GameSettings.BULLET_SPEED));
 
         addProperty(ObjectProperty.RigidBody, rigidBody);
         addTags(ObjectTag.Disposable);
     }
 
+    /**
+     * Check bullet collisions
+     */
     @Override
     public void update(Game game) {
         super.update(game);

@@ -1,28 +1,10 @@
-/*
-File: LevelReader.java
-Author: Danylo Nechyporchuk
-Task: will create level if we have file *.lvl; file can have line with tags:
-
-start{x,y} - coordinate of the start to create there a ball
-goal{x,y} - coordinate of the finish
-background{file.png} - file of the level background(0 layer)
-staticBack{file.png} - file of the static background
-walls{file.png} - file which have walls(1 layer)
-smallTrap{x,y,r,width,height} - coordinates of the small spikes(x,y) trap, rotation angle(r) and (optional) size to rescale
-trap{x,y,r,width,height} - coordinates of the spikes(x,y) trap, rotation angle(r) and (optional) size to rescale
-movingTrap{x1,y1,x2,y2,speed,width,height} - coordinates of the moving spikes trap (from x1,y1 to x2,y2), speed
- and (optional) size to rescale
-field{x,y,speed,width,height} - gravitational field coordinates, speed and (optional) size to rescale
-jump{x,y,r} - coordinate of the jump pad (x,y) and rotation angle(r);
-bullet{x,y} - coordinate of the bullet turret enemy
- */
-
 package Helpers;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import Base.FrameController;
 import Base.Game;
 import Objects.BlankSprite;
 import Objects.GameSprite;
@@ -30,6 +12,25 @@ import Objects.ObjectTag;
 import Objects.Entities.*;
 import Objects.Entities.SmallSpike;
 
+/**
+ * Class will create level if we have file *.lvl; file can have line with tags:
+ * <p>
+ * start{x,y} - coordinate of the start to create there a ball.
+ * goal{x,y} - coordinate of the finish
+ * background{file.png} - file of the level background(0 layer)
+ * staticBack{file.png} - file of the static background(behind background)
+ * walls{file.png} - file which have walls(1 layer)
+ * smallTrap{x,y,r,width,height} - coordinates of the small spikes(x,y) trap, rotation angle(r) and (optional) size to rescale
+ * trap{x,y,r,width,height} - coordinates of the spikes(x,y) trap, rotation angle(r) and (optional) size to rescale
+ * movingTrap{x1,y1,x2,y2,speed,width,height} - coordinates of the moving spikes trap (from x1,y1 to x2,y2), speed
+ * and (optional) size to rescale
+ * field{x,y,speed,width,height} - gravitational field coordinates, speed and (optional) size to rescale
+ * jump{x,y,r} - coordinate of the jump pad (x,y) and rotation angle(r);
+ * bullet{x,y} - coordinate of the bullet turret enemy
+ * File: LevelReader.java
+ *
+ * @author Danylo Nechyporchuk
+ */
 public class LevelReader {
     private static ArrayList<File> LEVELS = new ArrayList<>();
     public static Vector2 startingPoint;
@@ -49,7 +50,7 @@ public class LevelReader {
      * @param game        object of class Game to fill DRAWABLES array
      * @param levelNumber number of level to create
      */
-    public static void createLevel(Game game, int levelNumber) {
+    public static void createLevel(Game game, FrameController controller,int levelNumber) {
         File file = LEVELS.get(levelNumber - 1);
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -58,7 +59,7 @@ public class LevelReader {
                 String line = br.readLine();
                 if (line == null)
                     break;
-                processLevelInfo(game, line);
+                processLevelInfo(controller, game, line);
             }
 
             br.close();
@@ -73,7 +74,7 @@ public class LevelReader {
      * @param game object of class Game to fill DRAWABLES array
      * @param line which may contains info about the object
      */
-    private static void processLevelInfo(Game game, String line) {
+    private static void processLevelInfo(FrameController controller, Game game, String line) {
         if (line.equals("") || line.charAt(0) == ' ' || line.indexOf('{') == -1 || line.indexOf('}') == -1)
             return;
         int endOfNameChar = line.indexOf('{');
@@ -317,7 +318,7 @@ public class LevelReader {
                 double x = Double.parseDouble(info.substring(0, indexOfComma));
                 double y = Double.parseDouble(info.substring(indexOfComma + 1));
 
-                game.DRAWABLES.add(new BulletTurret(game, x, y));
+                game.DRAWABLES.add(new BulletTurret(controller, game, x, y));
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();

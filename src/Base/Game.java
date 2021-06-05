@@ -67,7 +67,7 @@ public class Game implements Runnable {
     canvas = new Canvas();
     DRAWABLES = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
-    ball = new GameBall(camera, this);
+    ball = new GameBall(camera, this, frameController);
     keyReactions = new KeyAdapter() {
 
       @Override
@@ -103,7 +103,7 @@ public class Game implements Runnable {
     DRAWABLES.clear();
     CALL.clear();
     DRAWABLES.add(ball);
-    LevelReader.createLevel(this, level);
+    LevelReader.createLevel(this, frameController,level);
     if (goal != null)
       DRAWABLES.add(new Pointer(goal, ball, camera));
     initObj();
