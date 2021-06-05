@@ -19,7 +19,7 @@ import Objects.Entities.SmallSpike;
  * goal{x,y} - coordinate of the finish
  * background{file.png} - file of the level background(0 layer)
  * staticBack{file.png} - file of the static background(behind background)
- * walls{file.png} - file which have walls(1 layer)
+ * walls{file.png,file.shp} - image of file which have walls(1 layer) and it shape file
  * smallTrap{x,y,r,width,height} - coordinates of the small spikes(x,y) trap, rotation angle(r) and (optional) size to rescale
  * trap{x,y,r,width,height} - coordinates of the spikes(x,y) trap, rotation angle(r) and (optional) size to rescale
  * movingTrap{x1,y1,x2,y2,speed,width,height} - coordinates of the moving spikes trap (from x1,y1 to x2,y2), speed
@@ -50,7 +50,7 @@ public class LevelReader {
      * @param game        object of class Game to fill DRAWABLES array
      * @param levelNumber number of level to create
      */
-    public static void createLevel(Game game, FrameController controller,int levelNumber) {
+    public static void createLevel(Game game, FrameController controller, int levelNumber) {
         File file = LEVELS.get(levelNumber - 1);
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -124,7 +124,11 @@ public class LevelReader {
             }
 
             if (name.equals("walls")) {
-                game.DRAWABLES.add(new GameSprite(info, 1) {
+                int indexOfComma = info.indexOf(',');
+                String image = info.substring(0, indexOfComma);
+                String shape = info.substring(indexOfComma + 1);
+
+                game.DRAWABLES.add(new GameSprite(image, shape, 1) {
                     {
                         addTags(ObjectTag.Touchable);
                     }
@@ -132,7 +136,11 @@ public class LevelReader {
             }
 
             if (name.equals("dangerWalls")) {
-                game.DRAWABLES.add(new GameSprite(info, 1) {
+                int indexOfComma = info.indexOf(',');
+                String image = info.substring(0, indexOfComma);
+                String shape = info.substring(indexOfComma + 1);
+
+                game.DRAWABLES.add(new GameSprite(image, shape, 1) {
                     {
                         addTags(ObjectTag.Touchable);
                         addTags(ObjectTag.Danger);

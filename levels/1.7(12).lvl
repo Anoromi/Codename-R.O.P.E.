@@ -3,7 +3,7 @@ start{1511,573}
 background{icons/backgrounds/back 1.png}
 background{icons/backgrounds/finish back.png}
 staticBack{icons/backgrounds/static/space.png}
-walls{icons/platforms/platforms 1.7.png}
+walls{icons/platforms/platforms 1.7.png,icons/platforms/shapes/platforms 1.7.shp}
 
 jump{0,1885,90}
 jump{0,1785,90}

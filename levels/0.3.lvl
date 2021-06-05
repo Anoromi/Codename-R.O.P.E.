@@ -2,8 +2,8 @@ start{1350,1425}
 goal{3400,1660}
 
 background{icons/backgrounds/back 0.2-0.5.png}
-walls{icons/platforms/platforms 0.3.png}
-dangerWalls{icons/platforms/borders.png}
+walls{icons/platforms/platforms 0.3.png,icons/platforms/shapes/platforms 0.3.shp}
+dangerWalls{icons/platforms/borders.png,icons/platforms/shapes/borders.shp}
 
 movingTrap{1571,1039,1572,1528,2}
 movingTrap{2095,1062,2096,1569,2}

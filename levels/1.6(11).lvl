@@ -3,7 +3,7 @@ goal{2336,138}
 
 background{icons/backgrounds/back 1.png}
 staticBack{icons/backgrounds/static/space.png}
-walls{icons/platforms/platforms 1.6.png}
+walls{icons/platforms/platforms 1.6.png,icons/platforms/shapes/platforms 1.6.shp}
 
 trap{398,1808,0,150,150}
 trap{548,1808,0,150,150}

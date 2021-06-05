@@ -2,7 +2,7 @@ start{1057,1784}
 goal{3901,986}
 
 background{icons/backgrounds/back 0.2-0.5.png}
-walls{icons/platforms/platforms 0.5.png}
+walls{icons/platforms/platforms 0.5.png,icons/platforms/shapes/platforms 0.5.shp}
 
 bullet{1003,934}
 bullet{1725,1645}

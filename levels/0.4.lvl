@@ -2,7 +2,7 @@ start{1301,1878}
 goal{3448,1582}
 
 background{icons/backgrounds/back 0.2-0.5.png}
-walls{icons/platforms/platforms 0.4.png}
+walls{icons/platforms/platforms 0.4.png,icons/platforms/shapes/platforms 0.4.shp}
 
 jump{1569,1940,0}
 jump{1851,864,180}

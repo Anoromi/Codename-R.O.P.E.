@@ -2,7 +2,7 @@ start{1510,1860}
 goal{1500,1350}
 
 background{icons/backgrounds/back 0.2-0.5.png}
-walls{icons/platforms/platforms 0.2.png}
+walls{icons/platforms/platforms 0.2.png,icons/platforms/shapes/platforms 0.2.shp}
 
 trap{1623, 1705, 0}
 

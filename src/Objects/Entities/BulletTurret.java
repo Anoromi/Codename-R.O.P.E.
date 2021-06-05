@@ -181,7 +181,7 @@ public class BulletTurret extends GameSprite {
  * @author Danylo Nechyporchuk
  */
 class Bullet extends GameSprite {
-    static final BufferedImage BULLET_IMAGE = ImageHelper.rescale(ImageHelper.imageOrNull("icons/Bullet.png"), 12, 12);
+    static final BufferedImage BULLET_IMAGE = ImageHelper.rescale(ImageHelper.imageOrNull("icons/Bullet.png"), 15, 15);
 
     private RigidBody rigidBody;
     private BulletTurret turret;

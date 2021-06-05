@@ -3,7 +3,7 @@ goal{2626,137}
 
 background{icons/backgrounds/back 1.png}
 staticBack{icons/backgrounds/static/space.png}
-walls{icons/platforms/platforms 1.3.png}
+walls{icons/platforms/platforms 1.3.png,icons/platforms/shapes/platforms 1.3.shp}
 
 bullet{42,1641}
 bullet{2809,1635}

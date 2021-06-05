@@ -26,7 +26,7 @@ public class GameSettings {
   public static final int FRAME_WIDTH;
   public static final int FRAME_HEIGHT;
   public static final double JUMP_PAD_SPEED = 6;
-  public static final double BULLET_SPEED = 6;
+  public static final double BULLET_SPEED = 8;
 
   static {
     FRAME_WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() * SCALING);

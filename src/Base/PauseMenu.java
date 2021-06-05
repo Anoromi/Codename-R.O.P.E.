@@ -70,12 +70,12 @@ public class PauseMenu extends JPanel {
         mainMenuButton = new ReactiveButton("Main menu", Color.WHITE, MainMenu.FOCUSED_COLOR);
         mainMenuButton.setForeground(Color.WHITE);
         mainMenuButton.setFont(MainMenu.BUTTON_FONT);
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         add(mainMenuButton, gbc);
 
         musicButtonsInit();
 
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         add(frame.isSoundsOn() ? musicOnButton : musicOffButton, gbc);
 
 
@@ -110,7 +110,7 @@ public class PauseMenu extends JPanel {
         musicOnButton.addActionListener(e -> {
             frame.stopOrStartSounds();
             remove(musicOnButton);
-            gbc.gridy = 3;
+            gbc.gridy = 2;
             add(musicOffButton, gbc);
             revalidate();
             repaint();
@@ -119,7 +119,7 @@ public class PauseMenu extends JPanel {
         musicOffButton.addActionListener(e -> {
             frame.stopOrStartSounds();
             remove(musicOffButton);
-            gbc.gridy = 3;
+            gbc.gridy = 2;
             add(musicOnButton, gbc);
             revalidate();
             repaint();
