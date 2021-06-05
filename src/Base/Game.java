@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,8 @@ public class Game implements Runnable {
 
   private Consumer<GameObject> draw = x -> x.draw(curGraphics, curLayer);
 
+  private KeyListener keyReactions;
+
   /**
    * Initializes and loads all important components for the game.
    */
@@ -63,18 +66,23 @@ public class Game implements Runnable {
     DRAWABLES = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
     ball = new GameBall(camera, this);
-    canvas.addKeyListener(new KeyAdapter() {
+    keyReactions = new KeyAdapter() {
 
       @Override
       public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_R)
-          restartGame();
-        else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-          stop();
-          frameController.pauseScreen();
+        if (frameController.isInGame()) {
+          if (e.getKeyCode() == KeyEvent.VK_R)
+            restartGame();
+          else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            stop();
+            frameController.getFrame().remove(canvas);
+            frameController.pauseScreen();
+          }
         }
       }
-    });
+    };
+    frameController.getFrame().addKeyListener(keyReactions);
+    canvas.addKeyListener(keyReactions);
     running = new AtomicBoolean(false);
     /*
      * { { getTransform().setPosition(500, 500); } };
@@ -360,5 +368,9 @@ public class Game implements Runnable {
 
   public void setGoal(Goal goal) {
     this.goal = goal;
+  }
+
+  public FrameController getFrameController() {
+    return frameController;
   }
 }
