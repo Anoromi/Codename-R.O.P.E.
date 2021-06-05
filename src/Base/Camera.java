@@ -41,7 +41,6 @@ public class Camera {
    * @param graphics
    */
   public void adjustCamera(Graphics2D graphics) {
-    Vector2 posChange = target.subtracted(new Vector2(pos.getTranslateX(), pos.getTranslateY()));
     if (background != null) {
       graphics.drawImage(background, null, 0, 0);
     }

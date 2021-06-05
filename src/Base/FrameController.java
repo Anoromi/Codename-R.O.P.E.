@@ -27,7 +27,7 @@ public class FrameController {
     frame.setFocusable(false);
     frame.setVisible(true);
     game.getCanvas().requestFocus();
-    startGame(1);
+    startGame(5);
   }
 
   private void initMenu() {
@@ -53,6 +53,7 @@ public class FrameController {
   public void pauseScreen() {
     frame.removeAll();
     JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    p.setAlignmentY(JPanel.CENTER_ALIGNMENT);
     JButton resume = new JButton("Continue");
     resume.addActionListener(e -> {
       showGame();

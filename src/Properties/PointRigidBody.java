@@ -24,6 +24,11 @@ public abstract class PointRigidBody extends RigidBody {
     linear = false;
   }
 
+  /**
+   * Creates an instance of the ball with linear or quadratic loss
+   * @param loss
+   * @param linear the loss will always be the same.
+   */
   protected PointRigidBody(double loss, boolean linear) {
     super();
     acceleration = new Vector2();

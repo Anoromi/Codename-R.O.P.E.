@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import javax.swing.Timer;
 
@@ -39,7 +40,7 @@ public class Game implements Runnable {
   public final List<GameObject> DRAWABLES;
   public static final List<Consumer<Game>> CALL = new ArrayList<>();
   public final Camera camera;
-  public final double STEP = 1.5;
+  public final double STEP = 2;
   public double currentStep = STEP;
   private Goal goal;
 
@@ -80,32 +81,8 @@ public class Game implements Runnable {
         }
       }
     };
-    //frameController.getFrame().addKeyListener(keyReactions);
     canvas.addKeyListener(keyReactions);
     running = new AtomicBoolean(false);
-    /*
-     * { { getTransform().setPosition(500, 500); } };
-     */
-
-    /*
-     * DRAWABLES.add(new GameSprite("icons/Lvldec.png", 1) { {
-     * addTags(ObjectTag.Touchable); } }); DRAWABLES.add(new JumpPad() { {
-     * getTransform().setPosition(150,500);
-     * getTransform().getFullAffine().rotate(Math.toRadians(-90),
-     * JUMP_PAD_IMAGE.getWidth() / 2.0, JUMP_PAD_IMAGE.getHeight() / 2.0); } });
-     *
-     * DRAWABLES.add(new JumpPad() { { getTransform().setPosition(250,700);
-     * getTransform().setRotation(Math.toRadians(0)); } });
-     *
-     * DRAWABLES.add(new Spikes() { { getTransform().setPosition(600,700);
-     * getTransform().setRotation(Math.toRadians(0)); } });
-     *
-     * DRAWABLES.add(new BulletTurret(this, 600,100) { { } });
-     *
-     * DRAWABLES.add(new MovingSpikes(150,850, 180, 950){ {
-     *
-     * } });
-     */
 
     new Timer(1000, e ->
 
@@ -125,7 +102,8 @@ public class Game implements Runnable {
     CALL.clear();
     DRAWABLES.add(ball);
     LevelReader.createLevel(this, level);
-    DRAWABLES.add(new Pointer(goal, ball, camera));
+    if (goal != null)
+      DRAWABLES.add(new Pointer(goal, ball, camera));
     initObj();
   }
 
@@ -241,10 +219,6 @@ public class Game implements Runnable {
         render();
         delta = 0;
       }
-    }
-    try {
-      t.stop();
-    } catch (Exception e) {
     }
   }
 

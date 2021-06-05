@@ -27,10 +27,10 @@ import Objects.ObjectTag;
 import Properties.*;
 
 public class BulletTurret extends GameSprite {
-    public static final BufferedImage BULLET_TURRET_IMAGE = ImageHelper.rescale
-            (ImageHelper.imageOrNull("icons/BulletTurret.png"), 256, 256);
+    public static final BufferedImage BULLET_TURRET_IMAGE = ImageHelper
+            .rescale(ImageHelper.imageOrNull("icons/BulletTurret.png"), 256, 256);
 
-    private Optional<GameObject> ball;
+    private GameBall ball;
     private Rectangle2D ballBounds;
 
     private Rectangle2D turretBounds;
@@ -53,6 +53,7 @@ public class BulletTurret extends GameSprite {
                     getMesh().getRelativeRectangleBounds().getBounds2D().getCenterY());
             prevAngle = 157;
             bulletOnScreen = false;
+            rotateTurret(game);
         });
     }
 
@@ -70,9 +71,9 @@ public class BulletTurret extends GameSprite {
      * @param game object of a class Game to get info about the ball
      */
     private void rotateTurret(Game game) {
-        ball = game.DRAWABLES.stream().filter(x -> (x.hasTags(ObjectTag.GameBall))).findFirst();
+        ball = game.getBall();
 
-        ballBounds = ((GameBall) ball.get()).getMesh().getRelativeRectangleBounds().getBounds2D();
+        ballBounds = ball.getMesh().getRelativeRectangleBounds().getBounds2D();
         turretBounds = getMesh().getRelativeRectangleBounds().getBounds2D();
 
         AffineTransform at = transform.getFullAffine();
