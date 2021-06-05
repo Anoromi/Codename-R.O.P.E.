@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import javax.swing.Timer;
@@ -25,13 +26,14 @@ import Properties.Mesh;
 import Properties.ObjectProperty;
 
 /**
- * Controls game flow, initiation, update and render.
- * File: Game.java
+ * Controls game flow, initiation, update and render. File: Game.java
+ *
  * @author Andrii Zahorulko
  */
 public class Game implements Runnable {
   private Thread t;
   private Canvas canvas;
+  private FrameController frameController;
 
   public final List<GameObject> DRAWABLES;
   public static final List<Consumer<Game>> CALL = new ArrayList<>();
@@ -43,7 +45,7 @@ public class Game implements Runnable {
   public int frames = 0;
   public int updates = 0;
   public final int second = 500;
-  private boolean running;
+  private AtomicBoolean running;
 
   private GameBall ball;
 
@@ -55,22 +57,25 @@ public class Game implements Runnable {
   /**
    * Initializes and loads all important components for the game.
    */
-  public Game() {
+  public Game(FrameController frameController) {
+    this.frameController = frameController;
     canvas = new Canvas();
     DRAWABLES = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
     ball = new GameBall(camera, this);
-    DRAWABLES.add(ball);
     canvas.addKeyListener(new KeyAdapter() {
 
       @Override
       public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_R)
           restartGame();
+        else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+          stop();
+          frameController.pauseScreen();
+        }
       }
     });
-    LevelReader.createLevel(this, 6);
-    DRAWABLES.add(new Pointer(goal, ball, camera));
+    running = new AtomicBoolean(false);
     /*
      * { { getTransform().setPosition(500, 500); } };
      */
@@ -105,6 +110,15 @@ public class Game implements Runnable {
     }).start();
 
     t = new Thread(this);
+
+  }
+
+  public void loadLevel(int level) {
+    DRAWABLES.clear();
+    CALL.clear();
+    DRAWABLES.add(ball);
+    LevelReader.createLevel(this, level);
+    DRAWABLES.add(new Pointer(goal, ball, camera));
     initObj();
   }
 
@@ -112,8 +126,13 @@ public class Game implements Runnable {
    * Starts a thread for the game.
    */
   public void start() {
-    running = true;
+    running.set(true);
+    t = new Thread(this);
     t.start();
+  }
+
+  public void stop() {
+    running.set(false);
   }
 
   /**
@@ -132,10 +151,18 @@ public class Game implements Runnable {
    */
   public void render() {
     frames++;
-    BufferStrategy bs = canvas.getBufferStrategy();
-    if (bs == null) {
-      canvas.createBufferStrategy(3);
+
+    BufferStrategy bs = null;
+
+    try {
       bs = canvas.getBufferStrategy();
+      if (bs == null) {
+        canvas.createBufferStrategy(3);
+        bs = canvas.getBufferStrategy();
+      }
+    } catch (IllegalStateException e) {
+      e.printStackTrace();
+      return;
     }
     Graphics2D graphics = (Graphics2D) bs.getDrawGraphics();
     graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -167,6 +194,7 @@ public class Game implements Runnable {
 
   /**
    * Finds nex smallest layer to work with.
+   *
    * @param min
    * @param max
    * @return
@@ -193,7 +221,7 @@ public class Game implements Runnable {
     double delta = 0;
     long now;
     long lastTime = System.nanoTime();
-    while (running) {
+    while (running.get()) {
       now = System.nanoTime();
       delta += (now - lastTime) / timePerTick;
       lastTime = now;
@@ -206,6 +234,10 @@ public class Game implements Runnable {
         render();
         delta = 0;
       }
+    }
+    try {
+      t.stop();
+    } catch (Exception e) {
     }
   }
 
@@ -229,6 +261,7 @@ public class Game implements Runnable {
 
   /**
    * Gets all GameObjects with mesh on point.
+   *
    * @param point point in real coordinates.
    * @return
    */
@@ -238,8 +271,9 @@ public class Game implements Runnable {
 
   /**
    * Gets all GameObjects from the list with mesh on point.
+   *
    * @param elements
-   * @param point point in real coordinates.
+   * @param point    point in real coordinates.
    * @return
    */
   private List<GameObject> processElementsAt(List<GameObject> elements, Vector2 point) {
@@ -257,6 +291,7 @@ public class Game implements Runnable {
 
   /**
    * Checks for collision of any GameObject with mesh.
+   *
    * @param mesh
    * @return
    */
@@ -272,6 +307,7 @@ public class Game implements Runnable {
 
   /**
    * Gets all GameObjects that were intersected.
+   *
    * @param mesh
    * @return
    */
@@ -281,6 +317,7 @@ public class Game implements Runnable {
 
   /**
    * Gets all GameObjects from the list that were intersected.
+   *
    * @param elements
    * @param mesh
    * @return
@@ -308,7 +345,6 @@ public class Game implements Runnable {
       initObj();
     });
   }
-
 
   public Canvas getCanvas() {
     return canvas;
