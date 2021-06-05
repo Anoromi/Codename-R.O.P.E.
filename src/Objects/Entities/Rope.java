@@ -24,6 +24,7 @@ public class Rope extends GameSprite {
   private GameBall ball;
   private HookComponent hook;
   private Vector2 direction;
+  private Vector2 fullDirection;
   private boolean alive;
   private BufferedImage curImage;
 
@@ -65,10 +66,14 @@ public class Rope extends GameSprite {
     var hookBallBounds = hook.getHookBall().getMesh().getRelativeRectangleBounds().getBounds2D();
     var ballCenter = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
     var hookBallCenter = new Vector2(hookBallBounds.getCenterX(), hookBallBounds.getCenterY());
+    fullDirection = hookBallCenter.subtracted(ballCenter);
+    var oposDir = ballCenter.subtracted(hookBallCenter).normalized();
+    oposDir.multiplyBy(hookBallBounds.getWidth() / 2);
+    hookBallCenter.add(oposDir);
     direction = hookBallCenter.subtracted(ballCenter);
     getTransform().setPosition(ballCenter);
     getTransform().setRotation(GeometryHelper.vectorToAngle(hookBallCenter.subtracted(ballCenter)));
-    getTransform().translate(0, -GameSettings.ROPE_HEIGHT / 2);
+    getTransform().translate(0, -GameSettings.ROPE_HEIGHT / 2 - 1);
   }
 
   /**
@@ -77,7 +82,7 @@ public class Rope extends GameSprite {
   @Override
   public void draw(Graphics2D graphics, int layer) {
     if (this.layer == layer && direction != null) {
-      curImage = ImageHelper.rescale(image, (int) direction.magnitude(), GameSettings.ROPE_HEIGHT);
+      curImage = ImageHelper.rescale(image, (int) fullDirection.magnitude(), GameSettings.ROPE_HEIGHT);
       if (alive && curImage != null)
         graphics.drawImage(curImage, transform.getFullAffine(), null);
     }
