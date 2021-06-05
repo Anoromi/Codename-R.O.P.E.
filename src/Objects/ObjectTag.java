@@ -5,5 +5,5 @@ package Objects;
  * @author Andrii Zahorulko
  */
 public enum ObjectTag {
-  Touchable, GameBall, Compound, Danger, Disposable
+  Touchable, GameBall, Compound, Danger, Disposable, Goal
 }

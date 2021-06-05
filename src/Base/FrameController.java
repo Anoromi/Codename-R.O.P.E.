@@ -1,9 +1,10 @@
 package Base;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.sound.sampled.*;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -26,8 +27,19 @@ public class FrameController {
     game.getCanvas().setFocusable(true);
     frame.setFocusable(false);
     frame.setVisible(true);
-    game.getCanvas().requestFocus();
-    startGame(5);
+    try {
+      AudioInputStream audioInputStream;
+      audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Back.wav").getAbsoluteFile());
+      Clip backClip = AudioSystem.getClip();
+      backClip.open(audioInputStream);
+      FloatControl control = (FloatControl) backClip.getControl(FloatControl.Type.MASTER_GAIN);
+      control.setValue((float) (Math.log(0.05) / Math.log(10.0) * 20.0));
+      backClip.loop(-1);
+      backClip.start();
+    } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+      e.printStackTrace();
+    }
+    startGame(1);
   }
 
   private void initMenu() {

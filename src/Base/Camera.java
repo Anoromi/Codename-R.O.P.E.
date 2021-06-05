@@ -129,8 +129,7 @@ public class Camera {
   }
 
   public void setBackground(BufferedImage background) {
-    this.background = ImageHelper.rescale(background, (int) Math.ceil(GameSettings.FRAME_WIDTH),
-        (int) Math.ceil(GameSettings.FRAME_HEIGHT));
+    this.background = ImageHelper.rescale(background, GameSettings.FRAME_WIDTH, GameSettings.FRAME_HEIGHT);
   }
 
 }

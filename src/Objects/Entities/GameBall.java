@@ -275,6 +275,10 @@ public class GameBall extends GameSprite {
           game.restartGame();
           return;
         }
+        if (gameObject.hasTags(ObjectTag.Goal)) {
+          game.nextLevel();
+          return;
+        }
       }
       o.removeIf(x -> !x.hasTags(ObjectTag.Touchable) || x.hasTags(ObjectTag.GameBall));
       if (!o.isEmpty()) {

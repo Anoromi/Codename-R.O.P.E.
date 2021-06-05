@@ -40,7 +40,7 @@ public class Game implements Runnable {
   public final List<GameObject> DRAWABLES;
   public static final List<Consumer<Game>> CALL = new ArrayList<>();
   public final Camera camera;
-  public final double STEP = 2;
+  public final double STEP = 2.2;
   public double currentStep = STEP;
   private Goal goal;
 
@@ -57,6 +57,7 @@ public class Game implements Runnable {
   private Consumer<GameObject> draw = x -> x.draw(curGraphics, curLayer);
 
   private KeyListener keyReactions;
+  private int currentLevel;
 
   /**
    * Initializes and loads all important components for the game.
@@ -98,6 +99,7 @@ public class Game implements Runnable {
   }
 
   public void loadLevel(int level) {
+    currentLevel = level;
     DRAWABLES.clear();
     CALL.clear();
     DRAWABLES.add(ball);
@@ -202,7 +204,7 @@ public class Game implements Runnable {
    */
   @Override
   public void run() {
-    double timePerTick = 1000000000 / 60;
+    double timePerTick = 1000000000 / 30;
     double delta = 0;
     long now;
     long lastTime = System.nanoTime();
@@ -324,6 +326,12 @@ public class Game implements Runnable {
     CALL.add(game -> {
       CALL.clear();
       initObj();
+    });
+  }
+
+  public void nextLevel() {
+    CALL.add(game -> {
+      game.loadLevel(currentLevel + 1);
     });
   }
 

@@ -4,10 +4,11 @@ import java.awt.image.BufferedImage;
 
 import Helpers.ImageHelper;
 import Objects.GameSprite;
+import Objects.ObjectTag;
 
 /**
- * Defines a goal you need to reach.
- * File: Goal.java
+ * Defines a goal you need to reach. File: Goal.java
+ *
  * @author Andrii Zahorulko
  */
 public class Goal extends GameSprite {
@@ -16,6 +17,7 @@ public class Goal extends GameSprite {
 
   public Goal() {
     super(GOAL_IMAGE, 4);
+    addTags(ObjectTag.Goal);
   }
 
 }
