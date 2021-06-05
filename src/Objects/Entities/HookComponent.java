@@ -58,7 +58,7 @@ public class HookComponent extends GameCompound {
               danger = true;
           }
           if (danger) {
-            ball.removeHook();
+            ball.removeNewHook();
             return;
           }
           if (!intersected.isEmpty()) {
