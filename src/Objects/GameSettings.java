@@ -14,7 +14,7 @@ public class GameSettings {
   }
 
   public static final double SCALING = (double) Toolkit.getDefaultToolkit().getScreenResolution() / 96;
-  public static final double BALL_LOSS = 0.01;
+  public static final double BALL_LOSS = 1.0025;
   public static final int COLLIDER_EDGES = 30;
   public static final int ROPE_LAYER = 2;
   public static final int BALL_LAYER = 3;
