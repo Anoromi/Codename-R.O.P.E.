@@ -75,7 +75,7 @@ public class MainMenu extends JPanel {
         gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.CENTER;
 
-        newGameButton = new ReactiveButton("New game", Color.WHITE, FOCUSED_COLOR);
+        newGameButton = new ReactiveButton("Start", Color.WHITE, FOCUSED_COLOR);
         newGameButton.setForeground(Color.WHITE);
         newGameButton.setFont(BUTTON_FONT);
         gbc.gridy = 2;
@@ -111,7 +111,7 @@ public class MainMenu extends JPanel {
      * Add listeners to buttons new game and quit
      */
     private void addListeners(FrameController frame) {
-        newGameButton.addActionListener(e -> frame.startGame(8));
+        newGameButton.addActionListener(e -> frame.startGame(12));
 
         musicOnButton.addActionListener(e -> {
             frame.stopOrStartSounds();
