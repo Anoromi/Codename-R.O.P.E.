@@ -1,9 +1,3 @@
-/*
-File: GravityFields.java
-Author: Danylo Nechyporchuk
-Task: make a class which describe gravitational fields. Special areas where ball gravitate to specific object
- */
-
 package Objects.Entities;
 
 import Base.Game;
@@ -18,22 +12,42 @@ import Properties.ObjectProperty;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+/**
+ * A class which describe gravitational fields. Special areas where ball gravitate to it center
+ * File: GravityFields.java
+ *
+ * @author Danylo Nechyporchuk
+ */
 public class GravityFields extends GameSprite {
     public static BufferedImage GRAVITY_FIELDS_IMAGE = ImageHelper.imageOrNull("icons/Field.png");
 
     private double speed;
 
+    /**
+     * Create gravitational fields which make the ball move towards the fields center
+     *
+     * @param speed of the ball movement towards the field center
+     */
     public GravityFields(double speed) {
         super(GRAVITY_FIELDS_IMAGE, 2);
         this.speed = speed;
     }
 
+    /**
+     * Check collisions with gravity field
+     */
     @Override
     public void update(Game game) {
         super.update(game);
         checkBallInField(game);
     }
 
+    /**
+     * Check if the ball collides the gravity field. If them collide,
+     * the ball start moving towards the center of the field
+     *
+     * @param game object of class Game to check ball posit
+     */
     private void checkBallInField(Game game) {
         game.DRAWABLES.forEach(n -> {
             if (n.getProperty(ObjectProperty.Mesh) != null

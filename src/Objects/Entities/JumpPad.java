@@ -12,9 +12,9 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
- * File: JumpPad.java.
- * Task: make a class which describe jump pad. A special
+ * A class which describe jump pad. A special
  * platform which increases ball speed after collision.
+ * File: JumpPad.java.
  *
  * @author Danylo Nechyporchuk
  */
@@ -22,11 +22,17 @@ import java.awt.image.BufferedImage;
 public class JumpPad extends GameSprite {
     public static final BufferedImage JUMP_PAD_IMAGE = ImageHelper.imageOrNull("icons/JumpPad.png");
 
+    /**
+     * Create jump pad which boost ball speed after collision with it
+     */
     public JumpPad() {
         super(JUMP_PAD_IMAGE, 2);
         addTags(ObjectTag.Touchable);
     }
 
+    /**
+     * Process jump pad collisions with the ball
+     */
     @Override
     public void update(Game game) {
         super.update(game);

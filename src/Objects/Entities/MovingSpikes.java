@@ -1,21 +1,20 @@
-/*
-File: MovingSpikes.java
-Author: Danylo Nechyporchuk
-Task: make a class which describe moving spikes. As deadly as the usual spikes,
-but they also move from point1 to point2, then back to point1 and repeat movements from the beginning
- */
-
 package Objects.Entities;
 
 import Base.Game;
 import Helpers.ImageHelper;
 import Helpers.Vector2;
-import Objects.GameSettings;
 import Objects.GameSprite;
 import Objects.ObjectTag;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * A class which describe moving spikes. As deadly as the usual spikes,
+ * but they also move from point1 to point2, then back to point1 and repeat movements from the beginning
+ * File: MovingSpikes.java
+ *
+ * @author Danylo Nechyporchuk
+ */
 public class MovingSpikes extends GameSprite {
     public static BufferedImage MOVING_SPIKES_IMAGE = ImageHelper
             .rescale(ImageHelper.imageOrNull("icons/Saw.png"), 223, 226);
@@ -32,6 +31,15 @@ public class MovingSpikes extends GameSprite {
 
     private double speed;
 
+    /**
+     * Create deadly spikes which moves from x1,y1 to x2,y2
+     *
+     * @param x1    first point coordinate of the spikes
+     * @param y1    first point coordinate of the spikes
+     * @param x2    second point coordinate of the spikes
+     * @param y2    second point coordinate of the spikes
+     * @param speed speed of the moving spikes (how many pixels it moves for one update)
+     */
     public MovingSpikes(double x1, double y1, double x2, double y2, double speed) {
         super(MOVING_SPIKES_IMAGE, 3);
         addTags(ObjectTag.Danger);
@@ -65,6 +73,9 @@ public class MovingSpikes extends GameSprite {
 
     }
 
+    /**
+     * Initialize start values for moving spikes
+     */
     @Override
     public void start() {
         super.start();
@@ -86,6 +97,9 @@ public class MovingSpikes extends GameSprite {
         setPosition(new Vector2(currentX1, currentY1));
     }
 
+    /**
+     * Move spikes if it has to move
+     */
     @Override
     public void update(Game game) {
         super.update(game);
