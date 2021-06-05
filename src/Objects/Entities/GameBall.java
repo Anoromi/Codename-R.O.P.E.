@@ -23,6 +23,7 @@ import Properties.RigidBody;
 /**
  * Responsible for control, collision of the main ball and creation of hooks.
  * File: GameBall.java
+ *
  * @author Andrii Zahorulko
  */
 public class GameBall extends GameSprite {
@@ -40,6 +41,7 @@ public class GameBall extends GameSprite {
 
   /**
    * Creates an instance of game ball.
+   *
    * @param camera
    * @param game
    */
@@ -58,67 +60,60 @@ public class GameBall extends GameSprite {
     addTags(ObjectTag.Touchable);
     addTags(ObjectTag.GameBall);
 
-    game.getCanvas().addMouseListener(new MouseAdapter() {
-      Vector2 pressPoint;
-
-      @Override
-      public void mousePressed(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-          pressPoint = Vector2.v(e.getPoint());
-          out.println("Pr " + e.getPoint());
-        } else if (e.getButton() == MouseEvent.BUTTON3)
-          tied = true;
-
-      }
+    game.getFrameController().getFrame().addMouseListener(new MouseAdapter() {
 
       @Override
       public void mouseReleased(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-          Game.CALL.add(x -> {
-            out.println("Rel " + e.getPoint());
-            Rectangle2D ballBounds = getMesh().getRelativeShape().getBounds2D();
-            Vector2 ballCenter = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
-            var p = e.getPoint();
-            final Vector2 change = new Vector2(camera.toRealResolution(e.getPoint())).added(camera.getLowerBound())
-                .subtract(ballCenter);
-            if (change.magnitude() != 0) {
-              // camera.setTarget(change.normalized().multiplyBy(10).add(camera.getTarget()));
-              /*
-               * ((PointRigidBody) ((GameBall)
-               * DRAWABLES.get(0)).getProperty(ObjectProperty.RigidBody))
-               * .impulse(change.normalized().multipliedBy(10));
-               */
-              Vector2 pos = change.normalized().multipliedBy(image.getWidth() / 2).added(ballCenter);
-              // getTransform().getFullAffine().transform(pos, pos);
-              if (hook != null) {
+        if (game.getFrameController().isInGame()) {
+          if (e.getButton() == MouseEvent.BUTTON1) {
+            Game.CALL.add(x -> {
+              out.println("Rel " + e.getPoint());
+              Rectangle2D ballBounds = getMesh().getRelativeShape().getBounds2D();
+              Vector2 ballCenter = new Vector2(ballBounds.getCenterX(), ballBounds.getCenterY());
+              var p = e.getPoint();
+              final Vector2 change = new Vector2(camera.toRealResolution(e.getPoint())).added(camera.getLowerBound())
+                  .subtract(ballCenter);
+              if (change.magnitude() != 0) {
+                // camera.setTarget(change.normalized().multiplyBy(10).add(camera.getTarget()));
+                /*
+                 * ((PointRigidBody) ((GameBall)
+                 * DRAWABLES.get(0)).getProperty(ObjectProperty.RigidBody))
+                 * .impulse(change.normalized().multipliedBy(10));
+                 */
+                Vector2 pos = change.normalized().multipliedBy(image.getWidth() / 2).added(ballCenter);
+                // getTransform().getFullAffine().transform(pos, pos);
+                if (hook != null) {
+                  Game.CALL.add(game -> {
+                    game.DRAWABLES.remove(hook);
+                    game.DRAWABLES.remove(rope);
+                    rope = null;
+                  });
+                }
+
                 Game.CALL.add(game -> {
-                  game.DRAWABLES.remove(hook);
-                  game.DRAWABLES.remove(rope);
-                  rope = null;
+                  hook = new HookComponent(GameBall.this, pos, change.normalized());
+                  hook.getTransform().translate(0, -HookComponent.getHeight() / 2);
+                  game.DRAWABLES.add(hook);
                 });
               }
-
-              Game.CALL.add(game -> {
-                hook = new HookComponent(GameBall.this, pos, change.normalized());
-                hook.getTransform().translate(0, -HookComponent.getHeight() / 2);
-                game.DRAWABLES.add(hook);
-              });
-            }
-          });
-        } else if (e.getButton() == MouseEvent.BUTTON3)
-          tied = false;
+            });
+          } else if (e.getButton() == MouseEvent.BUTTON3)
+            tied = false;
+        }
       }
     });
-    game.getCanvas().addKeyListener(new KeyAdapter() {
+    game.getFrameController().getFrame().addKeyListener(new KeyAdapter() {
 
       @Override
       public void keyPressed(KeyEvent e) {
-        checkSetValue(e, true);
+        if (game.getFrameController().isInGame())
+          checkSetValue(e, true);
       }
 
       @Override
       public void keyReleased(KeyEvent e) {
-        checkSetValue(e, false);
+        if (game.getFrameController().isInGame())
+          checkSetValue(e, false);
       }
 
       private synchronized void checkSetValue(KeyEvent e, boolean value) {
@@ -142,6 +137,7 @@ public class GameBall extends GameSprite {
 
   /**
    * Reacts to rope changes.
+   *
    * @param game
    */
   private void processRope(Game game) {
@@ -260,6 +256,7 @@ public class GameBall extends GameSprite {
 
   /**
    * Processes collisions of the ball with objects.
+   *
    * @param game
    */
   private void processCollisions(Game game) {
