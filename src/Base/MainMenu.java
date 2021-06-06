@@ -117,7 +117,7 @@ public class MainMenu extends JPanel {
      * Add listeners to buttons new game and quit
      */
     private void addListeners(FrameController frame) {
-        newGameButton.addActionListener(e -> frame.startGame(11));
+        newGameButton.addActionListener(e -> frame.startGame(1));
 
         musicOnButton.addActionListener(e -> {
             frame.stopOrStartSounds();

@@ -239,10 +239,7 @@ public class Game implements Runnable {
    * Updates all GameObjects.
    */
   private void updateAll() {
-    // DRAWABLES.parallelStream().forEachOrdered(x -> x.update(this));
-    for (GameObject object : DRAWABLES) {
-      object.update(this);
-    }
+    DRAWABLES.parallelStream().forEachOrdered(x -> x.update(this));
     updates++;
   }
 
