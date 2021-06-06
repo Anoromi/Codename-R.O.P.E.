@@ -53,7 +53,6 @@ public class FrameController {
         frame.add(mainMenu, BorderLayout.CENTER);
         frame.revalidate();
         frame.repaint();
-
         game = new Game(this);
         game.getCanvas().setFocusable(true);
         frame.setFocusable(false);

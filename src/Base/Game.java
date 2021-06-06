@@ -37,7 +37,7 @@ public class Game implements Runnable {
   public final List<GameObject> DRAWABLES;
   public static final List<Consumer<Game>> CALL = new ArrayList<>();
   public final Camera camera;
-  public final double STEP = 2.2;
+  public final double STEP = 1.1;
   public double currentStep = STEP;
   private Goal goal;
 
@@ -205,7 +205,7 @@ public class Game implements Runnable {
    */
   @Override
   public void run() {
-    double timePerTick = 1000000000 / 30;
+    double timePerTick = 1000000000 / 60;
     double delta = 0;
     long now;
     long lastTime = System.nanoTime();
