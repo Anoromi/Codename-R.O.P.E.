@@ -59,7 +59,8 @@ public class MainMenu extends JPanel {
      */
     private void labelsInit() {
         gbc.anchor = GridBagConstraints.CENTER;
-
+        gbc.weighty = 1;
+        gbc.weightx = 1;
         title = new JLabel("CODENAME: R.O.P.E.");
         title.setFont(TITLE_FONT);
         title.setForeground(Color.WHITE);
@@ -69,7 +70,8 @@ public class MainMenu extends JPanel {
         madeBy.setFont(new Font("Monospaced", Font.BOLD, 30));
         madeBy.setForeground(Color.WHITE);
         gbc.gridy = 5;
-        gbc.insets = new Insets(500, 0, 0, 0);
+        gbc.weighty = 1;
+        //gbc.insets = new Insets(500, 0, 0, 0);
         gbc.anchor = GridBagConstraints.SOUTH;
         add(madeBy, gbc);
     }
@@ -85,7 +87,7 @@ public class MainMenu extends JPanel {
         newGameButton.setForeground(Color.WHITE);
         newGameButton.setFont(BUTTON_FONT);
         gbc.gridy = 2;
-        gbc.insets = new Insets(200, 0, -200, 0);
+        //gbc.insets = new Insets(200, 0, -200, 0);
         add(newGameButton, gbc);
 
         musicButtonsInit();
