@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.DoubleStream;
 
 import javax.sound.sampled.*;
 
@@ -272,6 +275,20 @@ public class GameBall extends GameSprite {
       approachClip.stop();
   }
 
+  private double pointSumX;
+  private double pointSumY;
+  private int counter;
+
+  private synchronized void addToSum(double pointX, double pointY) {
+    pointSumX += pointX;
+    pointSumY += pointY;
+
+  }
+
+  private synchronized void incrementCounter() {
+    counter++;
+  }
+
   /**
    * Processes collisions of the ball with objects.
    *
@@ -280,36 +297,45 @@ public class GameBall extends GameSprite {
   private void processCollisions(Game game) {
     double ballRadius = image.getWidth() / 2;
     double distanceToRadius = (ballRadius) / Math.cos(3.14 / ballRadius / 2);
-    double pointSumX = 0, pointSumY = 0;
-    int colliderEdges = GameSettings.COLLIDER_EDGES;
-    int counter = 0;
-    for (double theta = -90; theta < 270; theta += 360.0 / colliderEdges) {
+    pointSumX = 0;
+    pointSumY = 0;
+    counter = 0;
+    AtomicBoolean death = new AtomicBoolean(false);
+    AtomicBoolean goal = new AtomicBoolean(false);
+
+    angleStream().parallel().forEach(theta -> {
       Vector2 collision = Vector2.v(ballRadius + distanceToRadius * Math.cos(theta * 3.14 / 180),
           ballRadius + distanceToRadius * Math.sin(theta * 3.14 / 180));
       Vector2 transformed = new Vector2();
       getTransform().getFullAffine().transform(collision, transformed);
       List<GameObject> o = game.getElementsAt(transformed);
       for (GameObject gameObject : o) {
-        if (gameObject.hasTags(ObjectTag.Danger)) {
-          deathSound();
-          game.restartGame();
-          return;
-        }
-        if (gameObject.hasTags(ObjectTag.Goal)) {
-          game.nextLevel();
-          return;
-        }
-        var inter = (Interaction) gameObject.getProperty(ObjectProperty.Interaction);
-        if (inter != null) {
-          interactionSet.add(inter);
+        if (gameObject.hasTags(ObjectTag.Danger))
+          death.set(true);
+        else if (gameObject.hasTags(ObjectTag.Goal))
+          goal.set(true);
+        else {
+          var inter = (Interaction) gameObject.getProperty(ObjectProperty.Interaction);
+          if (inter != null) {
+            synchronized (this) {
+              interactionSet.add(inter);
+            }
+          }
         }
       }
       o.removeIf(x -> !x.hasTags(ObjectTag.Touchable) || x.hasTags(ObjectTag.GameBall));
       if (!o.isEmpty()) {
-        pointSumX += collision.x;
-        pointSumY += collision.y;
-        counter++;
+        addToSum(collision.x, collision.y);
+        incrementCounter();
       }
+    });
+    if (death.get()) {
+      deathSound();
+      game.restartGame();
+    }
+    if (goal.get()) {
+      game.nextLevel();
+      return;
     }
     if (counter == 0)
       return;
@@ -339,6 +365,11 @@ public class GameBall extends GameSprite {
     Vector2 move = new Vector2(nMoveDir.x - nCollVect.x, nMoveDir.y - nCollVect.y).normalized();
     move.multiplyBy(rigidBody.getSpeed().magnitude());
     rigidBody.setSpeed(move);
+  }
+
+  private DoubleStream angleStream() {
+    int colliderEdges = GameSettings.COLLIDER_EDGES;
+    return DoubleStream.iterate(0, x -> x += 360. / colliderEdges).limit(colliderEdges);
   }
 
   public void removeHook() {
