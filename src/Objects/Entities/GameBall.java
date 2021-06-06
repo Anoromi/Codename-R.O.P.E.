@@ -50,7 +50,7 @@ public class GameBall extends GameSprite {
 
     this.controller = controller;
 
-    rigidBody = new PointRigidBody(GameSettings.BALL_LOSS, false) {
+    rigidBody = new PointRigidBody(GameSettings.BALL_LOSS, false, GameSettings.BALL_MAX_SPEED) {
       @Override
       public AffineTransform getTransform() {
         return GameBall.this.getTransform().getFullAffine();
@@ -202,33 +202,33 @@ public class GameBall extends GameSprite {
    * Creates shift sound.
    */
   private void shiftSound() {
-    if(controller.isSoundsOn())
-        try {
-                AudioInputStream audioInputStream;
-                audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Shift.wav").getAbsoluteFile());
-                var shiftClip = AudioSystem.getClip();
-                shiftClip.open(audioInputStream);
-                FloatControl control = (FloatControl) shiftClip.getControl(FloatControl.Type.MASTER_GAIN);
-                control.setValue((float) (Math.log(0.3) / Math.log(10.0) * 20.0));
-                shiftClip.start();
-        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
-            e.printStackTrace();
-        }
+    if (controller.isSoundsOn())
+      try {
+        AudioInputStream audioInputStream;
+        audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Shift.wav").getAbsoluteFile());
+        var shiftClip = AudioSystem.getClip();
+        shiftClip.open(audioInputStream);
+        FloatControl control = (FloatControl) shiftClip.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue((float) (Math.log(0.3) / Math.log(10.0) * 20.0));
+        shiftClip.start();
+      } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+        e.printStackTrace();
+      }
   }
 
   private void deathSound() {
-      if(controller.isSoundsOn())
-          try {
-                AudioInputStream audioInputStream;
-                audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Death.wav").getAbsoluteFile());
-                var deathClip = AudioSystem.getClip();
-                deathClip.open(audioInputStream);
-                FloatControl control = (FloatControl) deathClip.getControl(FloatControl.Type.MASTER_GAIN);
-                control.setValue((float) (Math.log(0.2) / Math.log(10.0) * 20.0));
-                deathClip.start();
-          } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
-             e.printStackTrace();
-          }
+    if (controller.isSoundsOn())
+      try {
+        AudioInputStream audioInputStream;
+        audioInputStream = AudioSystem.getAudioInputStream(new File("sounds/Death.wav").getAbsoluteFile());
+        var deathClip = AudioSystem.getClip();
+        deathClip.open(audioInputStream);
+        FloatControl control = (FloatControl) deathClip.getControl(FloatControl.Type.MASTER_GAIN);
+        control.setValue((float) (Math.log(0.2) / Math.log(10.0) * 20.0));
+        deathClip.start();
+      } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+        e.printStackTrace();
+      }
   }
 
   @Override

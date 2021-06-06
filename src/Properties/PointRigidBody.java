@@ -9,6 +9,7 @@ import Helpers.Vector2;
 
 /**
  * Defines RigidBody with just one point. File: PointRigidBody.java
+ *
  * @author Andrii Zahorulko
  */
 public abstract class PointRigidBody extends RigidBody {
@@ -16,6 +17,7 @@ public abstract class PointRigidBody extends RigidBody {
   private Vector2 acceleration;
   private double loss;
   private boolean linear;
+  private Double maxSpeed;
 
   protected PointRigidBody(double loss) {
     super();
@@ -26,8 +28,9 @@ public abstract class PointRigidBody extends RigidBody {
 
   /**
    * Creates an instance of the ball with linear or quadratic loss
+   *
    * @param loss
-   * @param linear the loss will always be the same.
+   * @param linear when true, the loss will always be the same
    */
   protected PointRigidBody(double loss, boolean linear) {
     super();
@@ -36,8 +39,24 @@ public abstract class PointRigidBody extends RigidBody {
     this.linear = linear;
   }
 
+  /**
+   * Creates an instance of the ball with linear or quadratic loss
+   *
+   * @param loss
+   * @param linear the loss will always be the same.
+   */
+  protected PointRigidBody(double loss, boolean linear, double maxSpeed) {
+    super();
+    acceleration = new Vector2();
+    this.loss = loss;
+    this.linear = linear;
+    this.maxSpeed = maxSpeed;
+  }
+
   @Override
   public void updateForces(Game game) {
+    if (maxSpeed != null && acceleration.magnitude() > maxSpeed)
+      acceleration = acceleration.normalized().multipliedBy(maxSpeed);
     getTransform().translate(acceleration.getX(), acceleration.getY());
     if (linear && acceleration.magnitude() != 0) {
       acceleration.subtract(acceleration.normalized().multiplyBy(loss));
