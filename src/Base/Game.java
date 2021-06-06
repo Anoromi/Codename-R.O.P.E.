@@ -1,8 +1,6 @@
 package Base;
 
-import java.awt.Canvas;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -65,6 +63,7 @@ public class Game implements Runnable {
   public Game(FrameController frameController) {
     this.frameController = frameController;
     canvas = new Canvas();
+    canvas.setBackground(Color.black);
     DRAWABLES = new ArrayList<>();
     camera = new Camera(Vector2.v(0, 0));
     ball = new GameBall(camera, this, frameController);
@@ -100,10 +99,11 @@ public class Game implements Runnable {
 
   public void loadLevel(int level) {
     currentLevel = level;
+    renderBlack();
     DRAWABLES.clear();
     CALL.clear();
     DRAWABLES.add(ball);
-    LevelReader.createLevel(this, frameController,level);
+    LevelReader.createLevel(this, frameController, level);
     if (goal != null)
       DRAWABLES.add(new Pointer(goal, ball, camera));
     initObj();
@@ -144,7 +144,7 @@ public class Game implements Runnable {
     try {
       bs = canvas.getBufferStrategy();
       if (bs == null) {
-        canvas.createBufferStrategy(3);
+        canvas.createBufferStrategy(2);
         bs = canvas.getBufferStrategy();
       }
     } catch (IllegalStateException e) {
@@ -152,7 +152,8 @@ public class Game implements Runnable {
       return;
     }
     Graphics2D graphics = (Graphics2D) bs.getDrawGraphics();
-    graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    graphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    graphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     curGraphics = graphics;
     graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF));
     graphics.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED));
@@ -331,8 +332,28 @@ public class Game implements Runnable {
 
   public void nextLevel() {
     CALL.add(game -> {
+      renderBlack();
       game.loadLevel(currentLevel + 1);
     });
+  }
+
+  private void renderBlack() {
+    BufferStrategy bs = null;
+
+    try {
+      bs = canvas.getBufferStrategy();
+      if (bs == null) {
+        canvas.createBufferStrategy(2);
+        bs = canvas.getBufferStrategy();
+      }
+    } catch (IllegalStateException e) {
+      e.printStackTrace();
+      return;
+    }
+    Graphics2D graphics = (Graphics2D) bs.getDrawGraphics();
+    graphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    bs.show();
+    graphics.dispose();
   }
 
   public Canvas getCanvas() {

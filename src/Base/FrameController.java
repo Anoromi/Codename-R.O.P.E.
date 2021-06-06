@@ -3,6 +3,11 @@ package Base;
 import java.awt.*;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.OverlayLayout;
+
+import Objects.GameSettings;
+
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
@@ -13,11 +18,15 @@ public class FrameController {
     private Game game;
     private boolean inGame;
     private Clip backClip;
+    private PauseMenu pauseMenu = new PauseMenu(this);
+    private MainMenu mainMenu = new MainMenu(this);
 
     public FrameController() {
         initFrame();
         initMainMenu();
         frame.setVisible(true);
+        frame.createBufferStrategy(2);
+        frame.repaint();
 
         try {
             AudioInputStream audioInputStream;
@@ -35,6 +44,7 @@ public class FrameController {
 
     private void initFrame() {
         frame = new Frame();
+        frame.setBackground(Color.black);
         frame.setLayout(new BorderLayout());
         frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         frame.setResizable(false);
@@ -45,7 +55,7 @@ public class FrameController {
 
     public void initMainMenu() {
         frame.removeAll();
-        frame.add(new MainMenu(this), BorderLayout.CENTER);
+        frame.add(mainMenu, BorderLayout.CENTER);
         frame.revalidate();
         frame.repaint();
 
@@ -81,7 +91,7 @@ public class FrameController {
 
     public void pauseScreen() {
         frame.removeAll();
-        frame.add(new PauseMenu(this), BorderLayout.CENTER);
+        frame.add(pauseMenu, BorderLayout.CENTER);
         frame.revalidate();
         frame.repaint();
         inGame = false;

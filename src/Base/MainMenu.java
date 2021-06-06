@@ -2,13 +2,14 @@ package Base;
 
 import Helpers.ImageHelper;
 import Helpers.ReactiveButton;
+import Objects.GameSettings;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
- * Panel which appear after game was opened
- * File: MainMenu.java
+ * Panel which appear after game was opened File: MainMenu.java
  *
  * @author Danylo Nechyporchuk
  */
@@ -17,7 +18,6 @@ public class MainMenu extends JPanel {
     public static Font TITLE_FONT = new Font("SansSerif", Font.BOLD, 60);
     public static Color FOCUSED_COLOR = new Color(51, 102, 204);
     public static Color MUSIC_OFF_FOCUSED_COLOR = new Color(51, 102, 204, 100);
-
 
     private JButton newGameButton;
     private JButton musicOnButton;
@@ -29,11 +29,17 @@ public class MainMenu extends JPanel {
 
     private GridBagConstraints gbc = new GridBagConstraints();
 
+    private BufferedImage im = ImageHelper.rescale(ImageHelper.imageOrNull("icons/backgrounds/static/main.jpg"),
+            GameSettings.FRAME_WIDTH, GameSettings.FRAME_HEIGHT);
+
     /**
-     * Create start menu JPanel with game name, made by label, buttons new game and quit
+     * Create start menu JPanel with game name, made by label, buttons new game and
+     * quit
      */
     public MainMenu(FrameController frame) {
         super(new GridBagLayout());
+        setBackground(Color.black);
+        setDoubleBuffered(true);
         labelsInit();
         buttonsInit(frame);
         addListeners(frame);
@@ -45,7 +51,7 @@ public class MainMenu extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(ImageHelper.imageOrNull("icons/backgrounds/static/main.jpg"), 0, 0, null);
+        g.drawImage(im, 0, 0, null);
     }
 
     /**
@@ -134,5 +140,3 @@ public class MainMenu extends JPanel {
         exitButton.addActionListener(e -> System.exit(0));
     }
 }
-
-

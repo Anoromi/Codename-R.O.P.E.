@@ -17,7 +17,9 @@ import Objects.GameSettings;
 public class ImageHelper {
 
   /**
-   * Converts an image into area. Area will be defined by every pixel with non-zero alpha
+   * Converts an image into area. Area will be defined by every pixel with
+   * non-zero alpha
+   *
    * @param image
    * @return
    */
@@ -41,6 +43,7 @@ public class ImageHelper {
 
   /**
    * Gets a shape from file
+   *
    * @param path
    * @return
    */
@@ -56,9 +59,10 @@ public class ImageHelper {
 
   /**
    * Finds out if the pixel can be counted as an outline of an object
+   *
    * @param image
-   * @param x x coordinate of the pixel
-   * @param y y coordinate of the pixel
+   * @param x     x coordinate of the pixel
+   * @param y     y coordinate of the pixel
    * @return
    */
   public static boolean isOutline(BufferedImage image, int x, int y) {
@@ -73,6 +77,7 @@ public class ImageHelper {
 
   /**
    * Returns null or image from the path
+   *
    * @param path
    * @return
    */
@@ -86,6 +91,7 @@ public class ImageHelper {
 
   /**
    * Rescales the image to certain width and height
+   *
    * @param image
    * @param width
    * @param height
@@ -96,11 +102,11 @@ public class ImageHelper {
       return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     BufferedImage changed = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D gr = changed.createGraphics();
+    gr.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
     gr.drawImage(image.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
     gr.dispose();
     return changed;
 
   }
-
 
 }

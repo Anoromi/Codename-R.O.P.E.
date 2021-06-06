@@ -1,14 +1,18 @@
 package Base;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import Helpers.ImageHelper;
 import Helpers.ReactiveButton;
-
-import javax.swing.*;
-import java.awt.*;
+import Objects.GameSettings;
 
 /**
- * Panel which appear after game was paused
- * File: PauseMenu.java
+ * Panel which appear after game was paused File: PauseMenu.java
  *
  * @author Danylo Nechyporchuk
  */
@@ -23,11 +27,17 @@ public class PauseMenu extends JPanel {
     private JLabel pauseLabel;
     private GridBagConstraints gbc = new GridBagConstraints();
 
+    private BufferedImage pauseImage = ImageHelper.rescale(
+            ImageHelper.imageOrNull("icons/backgrounds/static/pause.jpg"), GameSettings.FRAME_WIDTH,
+            GameSettings.FRAME_HEIGHT);
+
     /**
      * Create pause menu JPanel with "Pause" label, buttons resume and quit
      */
     public PauseMenu(FrameController frame) {
         super(new GridBagLayout());
+        setBackground(Color.black);
+        setDoubleBuffered(true);
         labelsInit();
         buttonsInit(frame);
         addListeners(frame);
@@ -39,7 +49,7 @@ public class PauseMenu extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(ImageHelper.imageOrNull("icons/backgrounds/static/pause.jpg"), 0, 0, null);
+        g.drawImage(pauseImage, 0, 0, null);
     }
 
     /**
@@ -77,7 +87,6 @@ public class PauseMenu extends JPanel {
 
         gbc.gridy = 2;
         add(frame.isSoundsOn() ? musicOnButton : musicOffButton, gbc);
-
 
         exitButton = new ReactiveButton("Quit", Color.WHITE, MainMenu.FOCUSED_COLOR);
         exitButton.setForeground(Color.WHITE);
