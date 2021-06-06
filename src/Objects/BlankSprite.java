@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.function.Consumer;
 
 import Helpers.ImageHelper;
 import Helpers.Vector2;

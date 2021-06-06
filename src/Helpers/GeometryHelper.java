@@ -56,6 +56,7 @@ public class GeometryHelper {
 
   /**
    * Tells if a point is inside a rectangle defined by two points.
+   *
    * @param r1
    * @param r2
    * @param point

@@ -57,7 +57,7 @@ public class Vector2 extends Point2D.Double {
   /**
    * Multiplies current vector on some number
    *
-   * @param magnitude - number on which the vector is muliplied
+   * @param magnitude - number on which the vector is multiplied
    */
   public Vector2 multiplyBy(double magnitude) {
     x *= magnitude;

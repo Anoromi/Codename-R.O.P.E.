@@ -1,6 +1,5 @@
 package Properties;
 
-import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 

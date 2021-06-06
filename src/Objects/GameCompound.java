@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import Base.Game;
-import Properties.Mesh;
 
 /**
  * Defines a GameObject which is also a compound of GameObjects

@@ -1,7 +1,5 @@
 package Properties;
 
-import static java.lang.System.out;
-
 import java.awt.Shape;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;

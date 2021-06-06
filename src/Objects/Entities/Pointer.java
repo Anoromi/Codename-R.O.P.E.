@@ -1,10 +1,7 @@
 package Objects.Entities;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-
-import javax.swing.text.StyledEditorKit.BoldAction;
 
 import Base.Camera;
 import Base.Game;
@@ -12,8 +9,6 @@ import Helpers.GeometryHelper;
 import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Objects.BlankSprite;
-import Objects.ObjectTag;
-import Properties.Mesh;
 
 /**
  * Responsible for creation and disposition of pointer to goal.

@@ -101,17 +101,7 @@ public class HookComponent extends GameCompound {
         getTransform().setPosition(hook.getShape().getBounds2D().getWidth() - 1, 0);
       }
     };
-    GameShape collisionShape = new GameShape(new Rectangle(4, 10), 4) {
-      {
-        transform = new Transform(HookComponent.this.transform);
-        getTransform().setPosition(hook.getShape().getBounds2D().getCenterX() - 4,
-            hook.getShape().getBounds2D().getHeight() - 5);
-      }
 
-      @Override
-      public void draw(Graphics2D graphics, int layer) {
-      }
-    };
     addProperty(ObjectProperty.Transform, transform);
     addProperty(ObjectProperty.RigidBody, rigidBody);
 

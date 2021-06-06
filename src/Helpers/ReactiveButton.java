@@ -5,8 +5,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
-import javax.swing.JTextField;
 
+/**
+ * Defines a button which reacts to mouse being on top of it
+ */
 public class ReactiveButton extends JButton {
 
     Color standardColor;

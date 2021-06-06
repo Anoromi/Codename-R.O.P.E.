@@ -7,8 +7,6 @@ import java.io.*;
 
 import javax.imageio.ImageIO;
 
-import Objects.GameSettings;
-
 /**
  * Helps with image processing. File: GeometryHelper.java
  *

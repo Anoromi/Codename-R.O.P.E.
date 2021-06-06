@@ -5,7 +5,9 @@ import java.util.function.Consumer;
 import Base.Game;
 
 /**
- * Defines basis for every property
+ * Defines basis for every property. File: Property.java
+ *
+ * @author Andrii Zahorulko
  */
 public class Property {
   protected Consumer<Game> update = g -> {
@@ -13,6 +15,7 @@ public class Property {
 
   /**
    * Updates all properties
+   *
    * @param game
    */
   public void update(Game game) {

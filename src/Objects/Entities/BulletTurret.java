@@ -7,7 +7,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 import javax.sound.sampled.*;
 
@@ -15,7 +14,6 @@ import Base.FrameController;
 import Base.Game;
 import Helpers.ImageHelper;
 import Helpers.Vector2;
-import Objects.GameObject;
 import Objects.GameSettings;
 import Objects.GameSprite;
 import Objects.ObjectTag;

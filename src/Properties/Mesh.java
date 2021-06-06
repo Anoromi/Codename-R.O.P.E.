@@ -1,8 +1,9 @@
 package Properties;
 
-import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Point2D;
 
 /**
  * Defines standard mesh. File: Mesh.java

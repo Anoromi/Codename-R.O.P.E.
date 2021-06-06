@@ -6,15 +6,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.function.Consumer;
 
 import Helpers.ImageHelper;
 import Helpers.Vector2;
 import Properties.*;
 
 /**
- * Defines a sprite with a mesh.
- * File: GameSprite.java
+ * Defines a sprite with a mesh. File: GameSprite.java
+ *
  * @author Andrii Zahorulko
  */
 public class GameSprite extends BlankSprite {
@@ -80,7 +79,6 @@ public class GameSprite extends BlankSprite {
     return (GameSprite) super.addProperty(propertyName, property);
   }
 
-
   @Override
   public boolean contains(Point2D p) {
     return getMesh().contains(p);
@@ -96,36 +94,43 @@ public class GameSprite extends BlankSprite {
     return this;
   }
 
+  @Override
   public GameSprite setPosition(Vector2 vector) {
     getTransform().translate(vector.x, vector.y);
     return this;
   }
 
+  @Override
   public GameSprite setRotation(double theta, double anchorX, double anchorY) {
     getTransform().setRotation(theta, anchorX, anchorY);
     return this;
   }
 
+  @Override
   public GameSprite setRotation(double theta) {
     getTransform().setRotation(theta);
     return this;
   }
 
+  @Override
   public GameSprite translate(double dx, double dy) {
     getTransform().getAffine().translate(dx, dy);
     return this;
   }
 
+  @Override
   public GameSprite translate(Vector2 vector) {
     getTransform().getAffine().translate(vector.x, vector.y);
     return this;
   }
 
+  @Override
   public GameSprite rotate(double theta) {
     getTransform().getAffine().rotate(theta);
     return this;
   }
 
+  @Override
   public GameSprite rotate(double theta, double anchorX, double anchorY) {
     getTransform().getAffine().rotate(theta, anchorX, anchorY);
     return this;
@@ -142,10 +147,6 @@ public class GameSprite extends BlankSprite {
 
   public AbstractMesh getMesh() {
     return mesh;
-  }
-
-  public Transform getTransform() {
-    return transform;
   }
 
   public Shape getRelativeShape() {

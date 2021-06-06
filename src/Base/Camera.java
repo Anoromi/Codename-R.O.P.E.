@@ -4,13 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
-
-import javax.imageio.ImageIO;
 
 import Helpers.ImageHelper;
 import Helpers.Vector2;
-import Objects.GameObject;
 import Objects.GameSettings;
 import Objects.Entities.GameBall;
 

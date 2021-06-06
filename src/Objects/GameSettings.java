@@ -1,7 +1,5 @@
 package Objects;
 
-import static java.lang.System.out;
-
 import java.awt.Toolkit;
 
 /**

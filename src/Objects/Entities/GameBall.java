@@ -5,6 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.sound.sampled.*;
@@ -14,9 +15,7 @@ import Base.FrameController;
 import Base.Game;
 import Helpers.Vector2;
 import Objects.*;
-import Properties.ObjectProperty;
-import Properties.PointRigidBody;
-import Properties.RigidBody;
+import Properties.*;
 
 /**
  * Responsible for control, collision of the main ball and creation of hooks.
@@ -38,6 +37,8 @@ public class GameBall extends GameSprite {
   protected Clip approachClip;
   protected Clip bounceClip;
   protected FrameController controller;
+
+  protected HashSet<Interaction> interactionSet = new HashSet<>();
 
   /**
    * Creates an instance of game ball.
@@ -126,6 +127,14 @@ public class GameBall extends GameSprite {
     super.update(game);
     processRope(game);
     processCollisions(game);
+    processInteractions();
+  }
+
+  private void processInteractions() {
+    for (Interaction interaction : interactionSet) {
+      interaction.interact(this);
+    }
+    interactionSet.clear();
   }
 
   /**
@@ -289,6 +298,10 @@ public class GameBall extends GameSprite {
         if (gameObject.hasTags(ObjectTag.Goal)) {
           game.nextLevel();
           return;
+        }
+        var inter = (Interaction) gameObject.getProperty(ObjectProperty.Interaction);
+        if (inter != null) {
+          interactionSet.add(inter);
         }
       }
       o.removeIf(x -> !x.hasTags(ObjectTag.Touchable) || x.hasTags(ObjectTag.GameBall));
