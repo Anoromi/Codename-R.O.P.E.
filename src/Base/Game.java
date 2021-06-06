@@ -103,6 +103,7 @@ public class Game implements Runnable {
     DRAWABLES.clear();
     CALL.clear();
     DRAWABLES.add(ball);
+    goal = null;
     LevelReader.createLevel(this, frameController, level);
     if (goal != null)
       DRAWABLES.add(new Pointer(goal, ball, camera));
