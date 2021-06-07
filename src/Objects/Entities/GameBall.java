@@ -225,6 +225,9 @@ public class GameBall extends GameSprite {
       }
   }
 
+  /**
+   * Creates death sound
+   */
   private void deathSound() {
     if (controller.isSoundsOn())
       try {
@@ -240,6 +243,9 @@ public class GameBall extends GameSprite {
       }
   }
 
+  /**
+   * Initializes components that change on restart
+   */
   @Override
   public void start() {
     super.start();
@@ -329,6 +335,11 @@ public class GameBall extends GameSprite {
     switchDirection(new Vector2(pointSumX / counter, pointSumY / counter), ballRadius);
   }
 
+  /**
+   * Changes direction in which the ball is flying
+   * @param collisionPoint
+   * @param ballRadius
+   */
   private void switchDirection(Vector2 collisionPoint, double ballRadius) {
     Vector2 realPos = new Vector2();
     getTransform().getFullAffine().transform(new Vector2(0, 0), realPos);

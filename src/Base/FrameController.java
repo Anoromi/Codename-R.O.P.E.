@@ -7,6 +7,13 @@ import java.io.IOException;
 import javax.sound.sampled.*;
 import javax.swing.JFrame;
 
+/**
+ * Responsible for the creation of the frame and control. File:
+ * FrameController.java
+ *
+ * @author Andrii Zahorulko
+ * @author Danylo Nechyporchuk
+ */
 public class FrameController {
     public static boolean soundsOn = true;
     private Frame frame;

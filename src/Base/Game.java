@@ -96,6 +96,10 @@ public class Game implements Runnable {
 
   }
 
+  /**
+   * Restarts game and loads assets for specific level
+   * @param level
+   */
   public void loadLevel(int level) {
     currentLevel = level;
     renderBlack();
