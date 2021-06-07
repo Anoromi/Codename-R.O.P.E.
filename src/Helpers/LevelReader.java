@@ -312,11 +312,6 @@ public class LevelReader {
                     j.setPosition(x, y).setRotation(Math.toRadians(angle), JumpPad.JUMP_PAD_IMAGE.getWidth() / 2.0,
                             JumpPad.JUMP_PAD_IMAGE.getHeight() / 2.0);
                 }));
-                /*
-                 * game.DRAWABLES.add(new JumpPad() { { getTransform().setPosition(x, y);
-                 * getTransform().getFullAffine().rotate(Math.toRadians(angle),
-                 * JUMP_PAD_IMAGE.getWidth() / 2.0, JUMP_PAD_IMAGE.getHeight() / 2.0); } });
-                 */
 
                 return;
             }
