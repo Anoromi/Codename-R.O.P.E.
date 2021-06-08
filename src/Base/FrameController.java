@@ -27,7 +27,6 @@ public class FrameController {
         initFrame();
         initMainMenu();
         frame.setVisible(true);
-        frame.createBufferStrategy(2);
         frame.repaint();
 
         try {
